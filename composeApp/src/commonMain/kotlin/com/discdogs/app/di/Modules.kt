@@ -13,7 +13,9 @@ import com.discdogs.app.presentation.SelectedBookViewModel
 import com.discdogs.app.presentation.book_detail.BookDetailViewModel
 import com.discdogs.app.presentation.book_list.BookListViewModel
 import com.discdogs.app.core.data.HttpClientFactory
+import com.discdogs.app.data.repository.ExternalRepositoryImpl
 import com.discdogs.app.data.repository.NetworkRepositoryImpl
+import com.discdogs.app.domain.ExternalRepository
 import com.discdogs.app.domain.NetworkRepository
 import com.discdogs.app.presentation.detail.DetailViewModel
 import com.discdogs.app.presentation.search.SearchViewModel
@@ -30,6 +32,7 @@ val sharedModule = module {
     singleOf(::KtorRemoteDataSource).bind<RemoteDataSource>()
     singleOf(::DefaultBookRepository).bind<BookRepository>()
     singleOf(::NetworkRepositoryImpl).bind<NetworkRepository>()
+    singleOf(::ExternalRepositoryImpl).bind<ExternalRepository>()
     singleOf(::AudioRepositoryImpl).bind<AudioRepository>()
 
     single {

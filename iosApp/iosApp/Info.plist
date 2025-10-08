@@ -46,5 +46,15 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+		<string>spotify</string>
+		<string>music</string>
+		<string>soundcloud</string>
+		<string>youtube</string>
+		<string>youtubemusic</string>
+	</array>
 </dict>
 </plist>

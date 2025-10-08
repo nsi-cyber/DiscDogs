@@ -1,5 +1,6 @@
 package com.discdogs.app.presentation.detail
 
+import androidx.compose.ui.platform.UriHandler
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -8,6 +9,7 @@ import com.discdogs.app.core.audioPlayer.AudioRepository
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.presentation.BaseViewModel
 import com.discdogs.app.core.presentation.UiText
+import com.discdogs.app.domain.ExternalRepository
 import com.discdogs.app.domain.NetworkRepository
 import com.discdogs.app.presentation.model.ExternalWebsites
 import com.discdogs.app.presentation.model.TrackListUiModel
@@ -23,10 +25,15 @@ import kotlinx.coroutines.launch
 class DetailViewModel(
     private val audioRepository: AudioRepository,
     private val networkRepository: NetworkRepository,
+    private val externalRepository: ExternalRepository,
     private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<DetailState, DetailEffect, DetailEvent, DetailNavigator>() {
 
+    private var uriHandler: UriHandler? = null
 
+    fun setUriHandler(handler: UriHandler) {
+        this.uriHandler = handler
+    }
     private val _state =
         MutableStateFlow(DetailState(backgroundImage = savedStateHandle.toRoute<Route.ReleaseDetail>().image))
     override val state: StateFlow<DetailState> get() = _state.asStateFlow()
@@ -234,10 +241,10 @@ class DetailViewModel(
         val artistName = release.artists?.firstOrNull()?.name ?: return
         val title = release.title.orEmpty()
 
-        buildQuery(artistName, title)
+
 
         viewModelScope.launch {
-            //   openExternalPlayerLink(query, type)
+           uriHandler?.openUri(externalRepository.openExternalPlayerLink(buildQuery(artistName, title), type))
         }
     }
 

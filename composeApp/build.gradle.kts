@@ -74,6 +74,9 @@ kotlin {
 
             implementation(libs.bundles.ktor)
             implementation(libs.bundles.coil)
+            implementation("com.fleeksoft.ksoup:ksoup:0.1.6")
+            implementation("com.fleeksoft.ksoup:ksoup-network:0.1.6")
+
         }
 
         dependencies {
