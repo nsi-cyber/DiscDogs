@@ -1,0 +1,25 @@
+package com.discdogs.app.presentation.model
+
+import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
+
+
+fun GetDiscogsSearchResponse.toUiModel(): VinylResultUiModel {
+    return VinylResultUiModel(
+        id = id,
+        thumb = thumb.orEmpty(),
+        title = title.orEmpty(),
+        format = format?.map { it.orEmpty() },
+        year = year.orEmpty(),
+        genre = genre?.map { it.orEmpty() }
+    )
+}
+
+
+data class VinylResultUiModel(
+    val id: Int,
+    val thumb: String,
+    val title: String,
+    val format: List<String>? = null,
+    val year: String,
+    val genre: List<String>? = null,
+)

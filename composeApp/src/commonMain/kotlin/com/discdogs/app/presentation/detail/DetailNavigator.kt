@@ -1,0 +1,47 @@
+package com.discdogs.app.presentation.detail
+
+import androidx.compose.runtime.LaunchedEffect
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.toRoute
+import com.discdogs.app.app.Route
+import com.discdogs.app.core.navigation.base.IBaseNavigator
+import org.koin.compose.viewmodel.koinViewModel
+
+class DetailNavigator(
+    navController: NavHostController
+) : IBaseNavigator(navController) {
+
+
+
+    fun navigateToMastersVersions(masterId: Int) {
+    }
+
+    override fun build(navGraphBuilder: NavGraphBuilder) {
+        navGraphBuilder.composable<Route.ReleaseDetail> {
+
+
+            val viewModel: DetailViewModel = koinViewModel<DetailViewModel>()
+            LaunchedEffect(Unit) {
+                viewModel.setNavigator(this@DetailNavigator)
+            }
+                DetailScreen(viewModel)
+
+        }
+    }
+}
+
+enum class DetailSource {
+    SEARCH, SCAN, UNKNOWN
+}
+
+fun String.toDetailSource(): DetailSource {
+    return try {
+        DetailSource.valueOf(this)
+    } catch (e: Exception) {
+        DetailSource.UNKNOWN
+    }
+}
