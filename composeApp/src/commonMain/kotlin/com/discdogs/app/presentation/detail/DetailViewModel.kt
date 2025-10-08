@@ -43,7 +43,6 @@ class DetailViewModel(
         )
     }
 
-
     override fun process(event: DetailEvent) {
         when (event) {
             DetailEvent.OnBackClicked -> navigator?.navigateBack()
