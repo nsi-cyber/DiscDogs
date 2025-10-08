@@ -31,15 +31,13 @@ kotlin {
         }
     }
     
-    jvm("desktop")
 
     room {
         schemaDirectory("$projectDir/schemas")
     }
 
     sourceSets {
-        val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -47,6 +45,12 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
             implementation(libs.ktor.client.okhttp)
+            implementation("androidx.media3:media3-exoplayer:1.0.1")
+
+        }
+        
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -70,14 +74,6 @@ kotlin {
 
             implementation(libs.bundles.ktor)
             implementation(libs.bundles.coil)
-        }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.ktor.client.okhttp)
-        }
-        nativeMain.dependencies {
-            implementation(libs.ktor.client.darwin)
         }
 
         dependencies {
@@ -133,14 +129,4 @@ tasks.register("iosClean") {
     }
 }
 
-compose.desktop {
-    application {
-        mainClass = "com.discdogs.app.MainKt"
 
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.discdogs.app"
-            packageVersion = "1.0.0"
-        }
-    }
-}

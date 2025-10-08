@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.discdogs.app.app.Route
+import com.discdogs.app.core.audioPlayer.AudioRepository
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.presentation.BaseViewModel
 import com.discdogs.app.core.presentation.UiText
@@ -20,12 +21,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DetailViewModel(
+    private val audioRepository: AudioRepository,
     private val networkRepository: NetworkRepository,
     private val savedStateHandle: SavedStateHandle
-
 ) : BaseViewModel<DetailState, DetailEffect, DetailEvent, DetailNavigator>() {
-
-    private val bookId = savedStateHandle.toRoute<Route.ReleaseDetail>().releaseId
 
 
     private val _state =
@@ -37,6 +36,18 @@ class DetailViewModel(
 
 
     init {
+        viewModelScope.launch {
+            audioRepository.playerState.collect {
+                if (it.isFinished == true) {
+                    _state.update {
+                        it.copy(
+                            isPreviewLoading = false, playingItem = null,
+                        )
+                    }
+                }
+            }
+        }
+
         getReleaseDetails(
             savedStateHandle.toRoute<Route.ReleaseDetail>().releaseId,
             savedStateHandle.toRoute<Route.ReleaseDetail>().source.toDetailSource()
@@ -53,6 +64,7 @@ class DetailViewModel(
                         isPreviewLoading = false, playingItem = null,
                     )
                 }
+                audioRepository.stop()
             }
 
             is DetailEvent.OnLoadBackground -> _state.update {
@@ -161,7 +173,7 @@ class DetailViewModel(
                                 isPreviewLoading = false
                             )
                         }
-
+                        audioRepository.play(result.value)
                         return@launch
                     }
                     _state.update {

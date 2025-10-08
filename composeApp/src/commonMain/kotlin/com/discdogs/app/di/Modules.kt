@@ -1,6 +1,8 @@
 package com.discdogs.app.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import com.discdogs.app.core.audioPlayer.AudioRepository
+import com.discdogs.app.core.audioPlayer.AudioRepositoryImpl
 import com.discdogs.app.data.database.DatabaseFactory
 import com.discdogs.app.data.database.FavoriteBookDatabase
 import com.discdogs.app.data.network.KtorRemoteDataSource
@@ -28,6 +30,7 @@ val sharedModule = module {
     singleOf(::KtorRemoteDataSource).bind<RemoteDataSource>()
     singleOf(::DefaultBookRepository).bind<BookRepository>()
     singleOf(::NetworkRepositoryImpl).bind<NetworkRepository>()
+    singleOf(::AudioRepositoryImpl).bind<AudioRepository>()
 
     single {
         get<DatabaseFactory>().create()
