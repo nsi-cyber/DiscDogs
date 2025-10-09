@@ -64,7 +64,10 @@ class DetailViewModel(
 
     override fun process(event: DetailEvent) {
         when (event) {
-            DetailEvent.OnBackClicked -> navigator?.navigateBack()
+            DetailEvent.OnBackClicked -> {
+                audioRepository.cleanup()
+                navigator?.navigateBack()
+            }
             is DetailEvent.OnPreviewTrack -> getTrackPreview(event.data)
             DetailEvent.OnReleaseTrack -> {
                 _state.update {
@@ -130,11 +133,13 @@ class DetailViewModel(
             }
 
             is DetailEvent.OnExternalWebsite -> {
+                audioRepository.cleanup()
                 openExternalPlayerLink(event.type)
             }
 
 
             DetailEvent.OnOtherReleases -> {
+                audioRepository.cleanup()
                 state.value.releaseDetail?.masterId?.let { masterId ->
                     navigator?.navigateToMastersVersions(
                         masterId
@@ -147,7 +152,7 @@ class DetailViewModel(
                 toggleFavorite()
             }
 
-
+            DetailEvent.OnShare -> uriHandler?.openUri(_state.value.releaseDetail?.uri.toString())
         }
     }
 

@@ -355,6 +355,7 @@ fun DetailScreen(
                 sheetState = moreBottomSheetState,
                 onDismiss = { viewModel.process(DetailEvent.OnDismissMoreBottomSheet) },
                 onShare = {
+                    viewModel.process(DetailEvent.OnShare)
 
                 },
                 onExternal = { type -> viewModel.process(DetailEvent.OnExternalWebsite(type)) },

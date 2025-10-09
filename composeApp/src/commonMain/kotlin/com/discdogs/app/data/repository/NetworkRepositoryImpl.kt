@@ -32,7 +32,7 @@ class NetworkRepositoryImpl(
     ): Resource<List<GetMastersVersionsResponse>?> =
         remoteDataSource
             .getMastersVersions(masterId = masterId)
-            .toResource { it.results }
+            .toResource { it.versions }
 
     override suspend fun getReleaseDetail(releaseId: Int?): Resource<GetReleaseDetailResponse?> =
         remoteDataSource

@@ -36,6 +36,8 @@ sealed class DetailEvent {
     class OnPreviewTrack(val data: TrackListUiModel) : DetailEvent()
     class OnExternalWebsite(val type: ExternalWebsites) : DetailEvent()
     object OnReleaseTrack : DetailEvent()
+    object OnShare : DetailEvent()
+
     object OnShowMoreBottomSheet : DetailEvent()
     object OnDismissMoreBottomSheet : DetailEvent()
     object OnShowBarcodeBottomSheet : DetailEvent()

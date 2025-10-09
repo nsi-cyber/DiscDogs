@@ -4,10 +4,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import androidx.navigation.toRoute
 import com.discdogs.app.app.Route
 import com.discdogs.app.core.navigation.base.IBaseNavigator
 import org.koin.compose.viewmodel.koinViewModel
@@ -19,6 +16,11 @@ class DetailNavigator(
 
 
     fun navigateToMastersVersions(masterId: Int) {
+        navController.navigate(
+            Route.ReleaseVersions(
+                masterId
+            )
+        )
     }
 
     override fun build(navGraphBuilder: NavGraphBuilder) {
