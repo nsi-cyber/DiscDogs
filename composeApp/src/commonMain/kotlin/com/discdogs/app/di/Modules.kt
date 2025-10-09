@@ -20,13 +20,22 @@ import com.discdogs.app.presentation.book_list.BookListViewModel
 import com.discdogs.app.presentation.detail.DetailViewModel
 import com.discdogs.app.presentation.releases.ReleasesViewModel
 import com.discdogs.app.presentation.search.SearchViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 expect val platformModule: Module
+val DispatcherIO = named("IO")
+
+val commonModule = module {
+    single<CoroutineDispatcher>(DispatcherIO) { Dispatchers.IO }
+}
 
 val sharedModule = module {
     single { HttpClientFactory.create(get()) }
@@ -49,4 +58,10 @@ val sharedModule = module {
     viewModelOf(::SearchViewModel)
     viewModelOf(::DetailViewModel)
     viewModelOf(::ReleasesViewModel)
+}
+
+val domainModule = module {
+    // Koin 3.2+ için pratik kısayol
+    // factoryOf(::AddToFavoritesUseCase)
+    // factoryOf(::SearchProductsUseCase)
 }

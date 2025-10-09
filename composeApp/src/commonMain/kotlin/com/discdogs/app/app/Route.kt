@@ -1,9 +1,11 @@
 package com.discdogs.app.app
 
- import com.discdogs.app.presentation.detail.DetailSource
  import kotlinx.serialization.Serializable
 
 sealed interface Route {
+
+    @Serializable
+    data object MainScreen : Route
 
     @Serializable
     data object BookGraph : Route
