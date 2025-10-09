@@ -27,6 +27,7 @@ import com.discdogs.app.presentation.components.VEBottomNavigationBar
 import com.discdogs.app.presentation.components.VEBottomNavigationItem
 import com.discdogs.app.presentation.detail.DetailNavigator
 import com.discdogs.app.presentation.releases.ReleasesNavigator
+import com.discdogs.app.presentation.scan.ScanNavigator
 import com.discdogs.app.presentation.search.SearchNavigator
 import discdogs.composeapp.generated.resources.Res
 import discdogs.composeapp.generated.resources.ic_scan
@@ -51,8 +52,8 @@ fun App() {
                 Res.drawable.ic_search,
             ),
             VEBottomNavigationItem(
-                Route.BookList,
-                UiText.DynamicString("Book"),
+                Route.Scan,
+                UiText.DynamicString("Scan"),
                 Res.drawable.ic_scan,
             ),
 
@@ -83,6 +84,7 @@ fun App() {
                     SearchNavigator(navController).build(this)
                     DetailNavigator(navController).build(this)
                     ReleasesNavigator(navController).build(this)
+                    ScanNavigator(navController).build(this)
                     composable<Route.BookList>(
                         exitTransition = { slideOutHorizontally() },
                         popEnterTransition = { slideInHorizontally() }
