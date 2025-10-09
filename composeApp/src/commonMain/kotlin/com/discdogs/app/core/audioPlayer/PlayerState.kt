@@ -1,19 +1,18 @@
 package com.discdogs.app.core.audioPlayer
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 
-@Stable
-data class PlayerState(
-    val isPlaying: Boolean = false,
-    val isBuffering: Boolean = false,
-    val isFinished: Boolean = false,
-    val currentTime: Long = 0,
-    val duration: Long = 0
-)
 
+enum class PlaybackState {
+    IDLE,
+    BUFFERING,
+    READY,
+    ENDED
+}
 @Composable
-fun rememberPlayerState(): PlayerState {
+fun rememberPlayerState(): PlaybackState {
     return remember {
-        PlayerState()
+        PlaybackState.IDLE
     }
 }

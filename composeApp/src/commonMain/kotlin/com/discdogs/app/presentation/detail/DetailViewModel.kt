@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.discdogs.app.app.Route
 import com.discdogs.app.core.audioPlayer.AudioRepository
+import com.discdogs.app.core.audioPlayer.PlaybackState
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.presentation.BaseViewModel
 import com.discdogs.app.core.presentation.UiText
@@ -45,7 +46,7 @@ class DetailViewModel(
     init {
         viewModelScope.launch {
             audioRepository.playerState.collect {
-                if (it.isFinished == true) {
+                if (it == PlaybackState.ENDED) {
                     _state.update {
                         it.copy(
                             isPreviewLoading = false, playingItem = null,

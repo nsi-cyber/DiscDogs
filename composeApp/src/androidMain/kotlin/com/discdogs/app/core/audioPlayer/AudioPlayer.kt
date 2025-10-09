@@ -8,56 +8,31 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.discdogs.app.DiscDogsApplication
 import kotlinx.coroutines.flow.MutableStateFlow
 
-actual class AudioPlayer actual constructor(private val playerStateFlow: MutableStateFlow<PlayerState>) {
+actual class AudioPlayer actual constructor(private val playerStateFlow: MutableStateFlow<PlaybackState>) {
     
     private val handler = Handler(Looper.getMainLooper())
     private val mediaPlayer = ExoPlayer.Builder(DiscDogsApplication.appContext).build()
-    
-    private val updateRunnable = object : Runnable {
-        override fun run() {
-            val currentTime = mediaPlayer.currentPosition / 1000
-            playerStateFlow.value = playerStateFlow.value.copy(currentTime = currentTime)
-            handler.postDelayed(this, 1000)
-        }
-    }
+
     
     private val listener = object : Player.Listener {
         override fun onPlaybackStateChanged(playbackState: Int) {
             when (playbackState) {
                 Player.STATE_IDLE -> {
-                    playerStateFlow.value = playerStateFlow.value.copy(
-                        isPlaying = false,
-                        isBuffering = false
-                    )
+                    playerStateFlow.value = PlaybackState.IDLE
                 }
                 Player.STATE_BUFFERING -> {
-                    playerStateFlow.value = playerStateFlow.value.copy(isBuffering = true)
+                    playerStateFlow.value = PlaybackState.BUFFERING
                 }
                 Player.STATE_ENDED -> {
-                    playerStateFlow.value = playerStateFlow.value.copy(
-                        isPlaying = false,
-                        isFinished = true
-                    )
-                    stopUpdate()
+                    playerStateFlow.value = PlaybackState.ENDED
                 }
                 Player.STATE_READY -> {
-                    val duration = mediaPlayer.duration / 1000
-                    playerStateFlow.value = playerStateFlow.value.copy(
-                        isBuffering = false,
-                        duration = duration
-                    )
+                    playerStateFlow.value = PlaybackState.READY
                 }
             }
         }
-        
-        override fun onIsPlayingChanged(isPlaying: Boolean) {
-            playerStateFlow.value = playerStateFlow.value.copy(isPlaying = isPlaying)
-            if (isPlaying) {
-                scheduleUpdate()
-            } else {
-                stopUpdate()
-            }
-        }
+
+
     }
     
     init {
@@ -65,7 +40,6 @@ actual class AudioPlayer actual constructor(private val playerStateFlow: Mutable
     }
     
     actual fun play(url: String) {
-        playerStateFlow.value = playerStateFlow.value.copy(isFinished = false)
         val mediaItem = MediaItem.fromUri(url)
         mediaPlayer.setMediaItem(mediaItem)
         mediaPlayer.prepare()
@@ -74,24 +48,14 @@ actual class AudioPlayer actual constructor(private val playerStateFlow: Mutable
     
     actual fun stop() {
         mediaPlayer.stop()
-        stopUpdate()
-        playerStateFlow.value = playerStateFlow.value.copy(
-            currentTime = 0,
-            isPlaying = false
-        )
+        playerStateFlow.value = PlaybackState.ENDED
+
     }
     
     actual fun cleanUp() {
         mediaPlayer.release()
         mediaPlayer.removeListener(listener)
     }
-    
-    private fun stopUpdate() {
-        handler.removeCallbacks(updateRunnable)
-    }
-    
-    private fun scheduleUpdate() {
-        stopUpdate()
-        handler.postDelayed(updateRunnable, 100)
-    }
+
+
 }
