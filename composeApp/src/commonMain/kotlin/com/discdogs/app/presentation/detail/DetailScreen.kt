@@ -65,14 +65,24 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.discdogs.app.core.presentation.shimmerEffect
 import com.discdogs.app.core.presentation.theme.VETheme
+import com.discdogs.app.presentation.components.EAN13BarcodeWithLabel
 import com.discdogs.app.presentation.model.ExternalWebsites
 import com.discdogs.app.presentation.model.PageState
 import com.discdogs.app.presentation.model.TrackListUiModel
 import com.discdogs.app.presentation.model.VinylDetailUiModel
 import discdogs.composeapp.generated.resources.Res
+import discdogs.composeapp.generated.resources.ic_barcode
 import discdogs.composeapp.generated.resources.ic_chevron_left
 import discdogs.composeapp.generated.resources.ic_loading
-import discdogs.composeapp.generated.resources.*
+import discdogs.composeapp.generated.resources.ic_share
+import discdogs.composeapp.generated.resources.ic_star_empty
+import discdogs.composeapp.generated.resources.ic_star_filled
+import discdogs.composeapp.generated.resources.ic_stop
+import discdogs.composeapp.generated.resources.ic_three_dots
+import discdogs.composeapp.generated.resources.ic_vinyl_format
+import discdogs.composeapp.generated.resources.icon_apple_music
+import discdogs.composeapp.generated.resources.icon_spotify
+import discdogs.composeapp.generated.resources.icon_youtube_music
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -402,7 +412,10 @@ private fun BarcodeBottomSheet(
                 text = barcode.orEmpty(),
                 style = VETheme.typography.text16TextColor200W500,
             )
-
+            EAN13BarcodeWithLabel(
+                content = barcode.orEmpty(),
+                modifier = Modifier.size(320.dp, 140.dp)
+            )
         }
 
 
@@ -413,7 +426,7 @@ private fun BarcodeBottomSheet(
 private fun TrackItemView(data: TrackListUiModel, isPlaying: Boolean, onClick: () -> Unit) {
 
 
-    val tintColor = if (isPlaying) VETheme.colors.primaryColor500 else VETheme.colors.textColor100
+    if (isPlaying) VETheme.colors.primaryColor500 else VETheme.colors.textColor100
 
 
 
