@@ -52,8 +52,13 @@ fun ScanScreen(
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-        ScannerView { result ->
-            println(result)
+        ScannerView(isLoading = state.isLoading) { barcode ->
+            if (state.selectedScanType == ScanType.BARCODE && state.isLoading == false) {
+                viewModel.process(
+                    ScanEvent.OnBarcodeCaptured(barcode)
+                )
+            }
+
 
         }
 
@@ -66,7 +71,6 @@ fun ScanScreen(
                     ScanEvent.OnSelectedScanTypeChanged(it)
                 )
             },
-            showImageScanningOption = state.showImageScanningOption,
             isFlashOn = isFlashOn,
             onFlashToggle = { isFlashOn = !isFlashOn },
             onPhoto = {
@@ -82,7 +86,6 @@ fun CameraPreviewOverlay(
     selectedScanType: ScanType,
     onScanTypeChanged: (ScanType) -> Unit,
     onPhoto: () -> Unit,
-    showImageScanningOption: Boolean = true,
     isFlashOn: Boolean = false,
     onFlashToggle: () -> Unit = {}
 ) {
@@ -116,21 +119,21 @@ fun CameraPreviewOverlay(
                     )
                 }
 
-                if (showImageScanningOption) {
-                    Box(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .background(if (selectedScanType == ScanType.IMAGE) VETheme.colors.primaryColor600 else Color.Transparent)
-                            .clickable {
-                                onScanTypeChanged(ScanType.IMAGE)
-                            }
-                            .padding(horizontal = 16.dp, vertical = 8.dp)) {
-                        Text(
-                            text = "scan_cover_image",
-                            style = VETheme.typography.text14TextColor200W400
-                        )
-                    }
+
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(if (selectedScanType == ScanType.IMAGE) VETheme.colors.primaryColor600 else Color.Transparent)
+                        .clickable {
+                            onScanTypeChanged(ScanType.IMAGE)
+                        }
+                        .padding(horizontal = 16.dp, vertical = 8.dp)) {
+                    Text(
+                        text = "scan_cover_image",
+                        style = VETheme.typography.text14TextColor200W400
+                    )
                 }
+
 
             }
 

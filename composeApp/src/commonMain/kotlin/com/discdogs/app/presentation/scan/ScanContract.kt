@@ -12,7 +12,8 @@ sealed class ScanEvent {
     object OnBackClicked : ScanEvent()
     class OnSelectedScanTypeChanged(val scanType: ScanType) : ScanEvent()
     class OnPhotoCaptured(val imageBytes: ByteArray) : ScanEvent()
-//    class OnImageCaptured(val imageProxy: ImageProxy) : ScanEvent()
+    class OnBarcodeCaptured(val barcode: String) : ScanEvent()
+    class OnImageCaptured(val imageBytes: ByteArray) : ScanEvent()
 
 }
 

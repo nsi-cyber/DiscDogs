@@ -127,7 +127,6 @@ fun DetailScreen(
                     }
                 }
 
-       
 
                 else -> {
 
@@ -177,7 +176,7 @@ fun DetailScreen(
 
     Box {
         AsyncImage(
-            model =  state.backgroundImage,
+            model = state.backgroundImage,
             contentDescription = null,
             modifier = Modifier.fillMaxSize().blur(30.dp),
             contentScale = ContentScale.Crop
@@ -364,6 +363,7 @@ fun DetailScreen(
                     viewModel.process(DetailEvent.OnDismissMoreBottomSheet)
                     viewModel.process(DetailEvent.OnShowBarcodeBottomSheet)
                 },
+                hasMaster = state.releaseDetail?.masterId != -1,
                 onReleases = {
                     viewModel.process(DetailEvent.OnDismissMoreBottomSheet)
                     viewModel.process(DetailEvent.OnOtherReleases)
@@ -443,7 +443,6 @@ private fun TrackItemView(data: TrackListUiModel, isPlaying: Boolean, onClick: (
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
 
 
         Column(
@@ -925,6 +924,7 @@ private fun ReleaseInfoDetailView(data: VinylDetailUiModel?) {
 private fun ResultDetailMoreBottomSheet(
     sheetState: SheetState,
     onDismiss: () -> Unit,
+    hasMaster: Boolean = false,
     onReleases: () -> Unit,
     onShare: () -> Unit,
     onExternal: (type: ExternalWebsites) -> Unit,
@@ -998,30 +998,33 @@ private fun ResultDetailMoreBottomSheet(
                 )
 
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-                    .clickable {
-                        onReleases()
-                    }
-                    .padding(horizontal = 16.dp, vertical = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(18.dp)
-            ) {
-                Image(
-                    painter = painterResource(Res.drawable.ic_vinyl_format),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .size(24.dp),
-                    colorFilter = ColorFilter.tint(VETheme.colors.textColor100)
-                )
-                Text(
-                    text = "show_other_releases",
-                    style = VETheme.typography.text16TextColor200W500,
-                )
 
+            if (hasMaster) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable {
+                            onReleases()
+                        }
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(18.dp)
+                ) {
+                    Image(
+                        painter = painterResource(Res.drawable.ic_vinyl_format),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .size(24.dp),
+                        colorFilter = ColorFilter.tint(VETheme.colors.textColor100)
+                    )
+                    Text(
+                        text = "show_other_releases",
+                        style = VETheme.typography.text16TextColor200W500,
+                    )
+
+                }
             }
 
             Row(

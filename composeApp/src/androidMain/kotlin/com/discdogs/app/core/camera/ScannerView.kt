@@ -81,7 +81,6 @@ actual fun ScannerView(
 
 
 
-
     Box(modifier = modifier) {
         when {
             cameraProvider != null -> {
@@ -109,7 +108,6 @@ actual fun ScannerView(
                                 isLoading = isLoading,
                                 onSuccess = { scannedBarcode ->
                                     result(scannedBarcode)
-                                    cameraProvider?.unbind(imageAnalysis)
                                 },
                             ),
                         )

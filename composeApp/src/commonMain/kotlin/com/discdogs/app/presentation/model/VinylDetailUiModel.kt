@@ -53,7 +53,7 @@ fun GetReleaseDetailResponse?.toUiModel(): VinylDetailUiModel? {
                 name = it?.name,
                 resourceUrl = it?.resourceUrl
             ) },
-            masterId = response.masterId,
+            masterId = response.masterId ?: -1,
             notes = response.notes,
             released = response.released,
             releasedFormatted = response.releasedFormatted,

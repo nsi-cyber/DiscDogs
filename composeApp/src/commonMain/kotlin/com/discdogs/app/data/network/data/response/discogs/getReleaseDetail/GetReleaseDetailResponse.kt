@@ -43,7 +43,7 @@ data class GetReleaseDetailResponse(
     @SerialName("master_url")
     val masterUrl: String? = null,
     @SerialName("master_id")
-    val masterId: Int,
+    val masterId: Int? = null,
     @SerialName("notes")
     val notes: String? = null,
     @SerialName("num_for_sale")

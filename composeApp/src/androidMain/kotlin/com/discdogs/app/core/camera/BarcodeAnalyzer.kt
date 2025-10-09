@@ -43,22 +43,16 @@ class BarcodeAnalyzer(
     override fun analyze(imageProxy: ImageProxy) {
         if (isLoading) return
         val mediaImage =
-            imageProxy.image ?: run {
-                imageProxy.close()
-                return
-            }
+            imageProxy.image ?: return
+
 
         val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
 
         scanner.process(image)
             .addOnSuccessListener { barcodes ->
-                processFoundBarcode(barcodes.first())
-            }
-            .addOnFailureListener {
-                imageProxy.close()
-            }
-            .addOnCanceledListener {
-                imageProxy.close()
+                if (barcodes.isNullOrEmpty() == false) {
+                    processFoundBarcode(barcodes.first())
+                }
             }
             .addOnCompleteListener {
                 imageProxy.close()

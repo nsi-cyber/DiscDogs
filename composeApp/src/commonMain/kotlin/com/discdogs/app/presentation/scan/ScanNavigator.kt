@@ -14,9 +14,15 @@ class ScanNavigator(
 ) : IBaseNavigator(navController) {
 
 
-    fun navigateToReleaseDetail(id: Int, image: String) {
+    fun navigateToReleaseDetail(id: Int) {
         navController.navigate(
-            Route.ReleaseDetail(releaseId = id, image = image, source = "UNKNOWN")
+            Route.ReleaseDetail(releaseId = id, source = "SCAN")
+        )
+    }
+
+    fun navigateToReleaseVersions(masterId: Int) {
+        navController.navigate(
+            Route.ReleaseVersions(masterId = masterId)
         )
     }
 
