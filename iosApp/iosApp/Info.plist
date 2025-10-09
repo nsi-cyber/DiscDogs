@@ -56,5 +56,7 @@
 		<string>youtube</string>
 		<string>youtubemusic</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to scan barcodes and capture images for book identification.</string>
 </dict>
 </plist>

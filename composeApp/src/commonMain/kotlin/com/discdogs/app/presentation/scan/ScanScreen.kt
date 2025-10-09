@@ -10,13 +10,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -25,16 +21,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.discdogs.app.core.camera.ScannerView
 import com.discdogs.app.core.presentation.theme.VETheme
 import discdogs.composeapp.generated.resources.Res
 import discdogs.composeapp.generated.resources.ic_camera
@@ -46,21 +40,10 @@ import org.jetbrains.compose.resources.painterResource
 fun ScanScreen(
     viewModel: ScanViewModel
 ) {
-    rememberCoroutineScope()
     val state by viewModel.state.collectAsState()
-
 
     // Flash state
     var isFlashOn by remember { mutableStateOf(false) }
-
-    // Track permission request attempts
-    remember { mutableStateOf(0) }
-
-
-    val hasCamPermission = true
-
-
-    LocalLifecycleOwner.current
 
 
 
@@ -69,33 +52,26 @@ fun ScanScreen(
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (hasCamPermission) {
+        ScannerView { result ->
+            println(result)
 
-            //Camera Preview would be here
-
-            CameraPreviewOverlay(
-                modifier = Modifier.fillMaxSize(),
-                isLoading = state.isLoading,
-                selectedScanType = state.selectedScanType,
-                onScanTypeChanged = {
-                    viewModel.process(
-                        ScanEvent.OnSelectedScanTypeChanged(it)
-                    )
-                },
-                showImageScanningOption = state.showImageScanningOption,
-                isFlashOn = isFlashOn,
-                onFlashToggle = { isFlashOn = !isFlashOn },
-                onPhoto = {
-
-                })
-        } else {
-            // Show permission denied view
-            CameraPermissionDeniedView(
-                onGivePermission = {
-                    // Check if we should show rationale (permission not permanently denied)
-                }
-            )
         }
+
+        CameraPreviewOverlay(
+            modifier = Modifier.fillMaxSize(),
+            isLoading = state.isLoading,
+            selectedScanType = state.selectedScanType,
+            onScanTypeChanged = {
+                viewModel.process(
+                    ScanEvent.OnSelectedScanTypeChanged(it)
+                )
+            },
+            showImageScanningOption = state.showImageScanningOption,
+            isFlashOn = isFlashOn,
+            onFlashToggle = { isFlashOn = !isFlashOn },
+            onPhoto = {
+                // Handle photo capture
+            })
     }
 }
 
@@ -216,59 +192,3 @@ fun CameraPreviewOverlay(
     }
 }
 
-@Composable
-fun CameraPermissionDeniedView(
-    onGivePermission: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(VETheme.colors.blackColor)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        // Camera icon
-        Icon(
-            painter = painterResource(Res.drawable.ic_camera),
-            contentDescription = null,
-            modifier = Modifier
-                .size(80.dp)
-                .padding(bottom = 24.dp),
-            tint = VETheme.colors.textColor200
-        )
-
-        // Title
-        Text(
-            text = "camera_permission_required",
-            style = VETheme.typography.text16TextColor50W400,
-            modifier = Modifier.padding(bottom = 12.dp)
-        )
-
-        // Description
-        Text(
-            text = "camera_permission_description",
-            style = VETheme.typography.text16TextColor200W400,
-            modifier = Modifier
-                .padding(bottom = 32.dp)
-                .padding(horizontal = 16.dp),
-            textAlign = TextAlign.Center
-        )
-
-        // Give Permission Button
-        Button(
-            onClick = onGivePermission,
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = VETheme.colors.primaryColor600
-            ),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Text(
-                text = "give_permission",
-                style = VETheme.typography.text16TextColor50W400,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-        }
-    }
-}

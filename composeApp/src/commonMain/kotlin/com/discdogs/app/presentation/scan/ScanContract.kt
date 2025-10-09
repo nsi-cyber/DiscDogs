@@ -11,8 +11,8 @@ sealed interface ScanEffect
 sealed class ScanEvent {
     object OnBackClicked : ScanEvent()
     class OnSelectedScanTypeChanged(val scanType: ScanType) : ScanEvent()
-//    class OnPhotoCaptured(val bitmap: Bitmap) : ScanEvent()
-    //   class OnImageCaptured(val imageProxy: ImageProxy) : ScanEvent()
+    class OnPhotoCaptured(val imageBytes: ByteArray) : ScanEvent()
+//    class OnImageCaptured(val imageProxy: ImageProxy) : ScanEvent()
 
 }
 

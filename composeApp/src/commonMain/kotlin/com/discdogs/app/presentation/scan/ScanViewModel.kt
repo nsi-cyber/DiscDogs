@@ -1,12 +1,15 @@
 package com.discdogs.app.presentation.scan
 
+import androidx.lifecycle.viewModelScope
 import com.discdogs.app.core.presentation.BaseViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 
 class ScanViewModel(
@@ -25,8 +28,19 @@ class ScanViewModel(
         when (event) {
             ScanEvent.OnBackClicked -> navigator?.navigateBack()
             is ScanEvent.OnSelectedScanTypeChanged -> _state.update { it.copy(selectedScanType = event.scanType) }
+            is ScanEvent.OnPhotoCaptured -> handlePhotoCaptured(event.imageBytes)
             //  is ScanEvent.OnImageCaptured -> handleBarcodeRecognition(event.imageProxy)
-            //  is ScanEvent.OnPhotoCaptured -> processImage(event.bitmap)
+        }
+    }
+
+    private fun handlePhotoCaptured(imageBytes: ByteArray) {
+        // Handle the captured photo
+        // You can process the image here or save it
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            // Process image logic here
+            delay(1000) // Simulate processing
+            _state.update { it.copy(isLoading = false) }
         }
     }
     /*

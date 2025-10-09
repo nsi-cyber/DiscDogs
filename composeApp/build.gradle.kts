@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -39,6 +38,9 @@ kotlin {
     sourceSets {
 
         androidMain.dependencies {
+
+            implementation(libs.android.mlkitBarcodeScanning)
+            implementation(libs.bundles.camera)
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
@@ -46,6 +48,7 @@ kotlin {
             implementation(libs.koin.androidx.compose)
             implementation(libs.ktor.client.okhttp)
             implementation("androidx.media3:media3-exoplayer:1.0.1")
+
 
         }
         
@@ -59,6 +62,8 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.materialIconsExtended)
+
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
@@ -76,6 +81,7 @@ kotlin {
             implementation(libs.bundles.coil)
             implementation("com.fleeksoft.ksoup:ksoup:0.1.6")
             implementation("com.fleeksoft.ksoup:ksoup-network:0.1.6")
+
 
         }
 
