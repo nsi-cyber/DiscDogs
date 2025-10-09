@@ -19,6 +19,7 @@ import com.discdogs.app.presentation.book_detail.BookDetailViewModel
 import com.discdogs.app.presentation.book_list.BookListViewModel
 import com.discdogs.app.presentation.detail.DetailViewModel
 import com.discdogs.app.presentation.releases.ReleasesViewModel
+import com.discdogs.app.presentation.scan.ScanViewModel
 import com.discdogs.app.presentation.search.SearchViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +59,7 @@ val sharedModule = module {
     viewModelOf(::SearchViewModel)
     viewModelOf(::DetailViewModel)
     viewModelOf(::ReleasesViewModel)
+    viewModelOf(::ScanViewModel)
 }
 
 val domainModule = module {
