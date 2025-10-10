@@ -1,6 +1,6 @@
 package com.discdogs.app.presentation.model
 
-enum class PageState{
+enum class PageState {
     LOADING,
     SUCCESS,
     ERROR,

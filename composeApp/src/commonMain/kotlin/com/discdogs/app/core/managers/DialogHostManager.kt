@@ -16,7 +16,7 @@ sealed interface DialogEvents {
     ) : DialogEvents
 }
 
-object DialogHostManager  {
+object DialogHostManager {
 
     private val _events = Channel<DialogEvents>()
     val events = _events.receiveAsFlow()
@@ -34,7 +34,7 @@ object DialogHostManager  {
                 title = title,
                 desc = desc,
                 positiveText = positiveText,
-                negativeText =negativeText,
+                negativeText = negativeText,
                 onPositive = onPositive,
                 onNegative = onNegative
             )

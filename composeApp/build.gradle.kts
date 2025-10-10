@@ -18,7 +18,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -29,7 +29,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
 
     room {
         schemaDirectory("$projectDir/schemas")
@@ -51,7 +51,7 @@ kotlin {
 
 
         }
-        
+
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }

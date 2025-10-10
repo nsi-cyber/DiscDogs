@@ -1,7 +1,6 @@
 package com.discdogs.app.data.network.data.response.deezer.search
 
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

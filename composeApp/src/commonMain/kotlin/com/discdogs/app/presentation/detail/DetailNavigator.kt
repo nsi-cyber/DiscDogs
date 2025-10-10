@@ -14,7 +14,6 @@ class DetailNavigator(
 ) : IBaseNavigator(navController) {
 
 
-
     fun navigateToMastersVersions(masterId: Int) {
         navController.navigate(
             Route.ReleaseVersions(
@@ -26,13 +25,13 @@ class DetailNavigator(
     override fun build(navGraphBuilder: NavGraphBuilder) {
         navGraphBuilder.composable<Route.ReleaseDetail> {
 
-val uriHandler=LocalUriHandler.current
+            val uriHandler = LocalUriHandler.current
             val viewModel: DetailViewModel = koinViewModel<DetailViewModel>()
             LaunchedEffect(Unit) {
                 viewModel.setNavigator(this@DetailNavigator)
                 viewModel.setUriHandler(uriHandler)
             }
-                DetailScreen(viewModel)
+            DetailScreen(viewModel)
 
         }
     }

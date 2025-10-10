@@ -276,7 +276,6 @@ data class VETypography(
         )
 
 
-
     val text20TextColor200W500: TextStyle
         @Composable
         get() = TextStyle(
@@ -352,8 +351,6 @@ fun appTypography(): VETypography {
         materialTypography = Typography(bodyLarge = baseTextStyle)
     )
 }
-
-
 
 
 @Composable

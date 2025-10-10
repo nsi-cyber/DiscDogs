@@ -12,20 +12,20 @@ interface RemoteDataSource {
     suspend fun searchBarcode(
         barcode: String?,
         perPage: Int = 1,
-       page: Int = 1,
+        page: Int = 1,
     ): ResultWrapper<PaginationBaseResponse<GetDiscogsSearchResponse>>
 
     suspend fun getMastersVersions(
-       masterId: Int,
-       perPage: Int = 100,
+        masterId: Int,
+        perPage: Int = 100,
         page: Int = 1,
     ): ResultWrapper<PaginationBaseResponse<GetMastersVersionsResponse>>
 
     suspend fun searchVinyl(
-   query: String?,
-     type: String = "release",
-     perPage: Int = 100,
-    page: Int = 1,
+        query: String?,
+        type: String = "release",
+        perPage: Int = 100,
+        page: Int = 1,
     ): ResultWrapper<PaginationBaseResponse<GetDiscogsSearchResponse>>
 
     suspend fun getReleaseDetail(
@@ -33,8 +33,8 @@ interface RemoteDataSource {
     ): ResultWrapper<GetReleaseDetailResponse>
 
 
-     suspend fun searchSongPreview(
-         query: String?,
-      limit: Int = 1,
+    suspend fun searchSongPreview(
+        query: String?,
+        limit: Int = 1,
     ): ResultWrapper<GetSearchResponse>
 }

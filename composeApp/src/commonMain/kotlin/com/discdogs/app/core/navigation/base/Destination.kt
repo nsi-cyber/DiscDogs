@@ -1,9 +1,6 @@
 package com.discdogs.app.core.navigation.base
 
 
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
-
 open class Destination(
     val host: String, vararg val params: String
 ) {
@@ -29,7 +26,6 @@ open class Destination(
         this.customPath = builder.toString()
         return this
     }
-
 
 
 }

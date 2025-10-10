@@ -37,6 +37,7 @@ class DetailViewModel(
     fun setUriHandler(handler: UriHandler) {
         this.uriHandler = handler
     }
+
     private val _state =
         MutableStateFlow(DetailState(backgroundImage = savedStateHandle.toRoute<Route.ReleaseDetail>().image))
     override val state: StateFlow<DetailState> get() = _state.asStateFlow()
@@ -70,6 +71,7 @@ class DetailViewModel(
                 audioRepository.cleanup()
                 navigator?.navigateBack()
             }
+
             is DetailEvent.OnPreviewTrack -> getTrackPreview(event.data)
             DetailEvent.OnReleaseTrack -> {
                 _state.update {
@@ -79,11 +81,13 @@ class DetailViewModel(
                 }
                 audioRepository.stop()
             }
+
             is DetailEvent.OnLoadBackground -> _state.update {
                 it.copy(
                     backgroundImage = event.image
                 )
             }
+
             DetailEvent.OnDismissMoreBottomSheet -> {
                 viewModelScope.launch {
                     _effect.emit(DetailEffect.DismissMoreBottomSheet)
@@ -96,6 +100,7 @@ class DetailViewModel(
 
                 }
             }
+
             DetailEvent.OnShowMoreBottomSheet -> {
                 viewModelScope.launch {
                     _state.update {
@@ -107,6 +112,7 @@ class DetailViewModel(
 
                 }
             }
+
             DetailEvent.OnDismissBarcodeBottomSheet -> {
                 viewModelScope.launch {
                     _effect.emit(DetailEffect.DismissBarcodeBottomSheet)
@@ -120,6 +126,7 @@ class DetailViewModel(
 
                 }
             }
+
             DetailEvent.OnShowBarcodeBottomSheet -> {
                 viewModelScope.launch {
                     _state.update {
@@ -131,10 +138,12 @@ class DetailViewModel(
 
                 }
             }
+
             is DetailEvent.OnExternalWebsite -> {
                 audioRepository.cleanup()
                 openExternalPlayerLink(event.type)
             }
+
             DetailEvent.OnOtherReleases -> {
                 audioRepository.cleanup()
                 state.value.releaseDetail?.masterId?.let { masterId ->
@@ -144,9 +153,11 @@ class DetailViewModel(
                 }
 
             }
+
             DetailEvent.OnToggleFavorite -> {
                 toggleFavorite()
             }
+
             DetailEvent.OnShare -> uriHandler?.openUri(_state.value.releaseDetail?.uri.toString())
 
 
@@ -421,7 +432,14 @@ class DetailViewModel(
 
 
         viewModelScope.launch {
-           uriHandler?.openUri(externalRepository.openExternalPlayerLink(buildQuery(artistName, title), type))
+            uriHandler?.openUri(
+                externalRepository.openExternalPlayerLink(
+                    buildQuery(
+                        artistName,
+                        title
+                    ), type
+                )
+            )
         }
     }
 

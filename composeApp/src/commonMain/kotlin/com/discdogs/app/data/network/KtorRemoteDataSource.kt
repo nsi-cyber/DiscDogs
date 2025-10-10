@@ -12,7 +12,6 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
 
-
 object Network {
     object Discogs {
         const val BASE_URL = "https://api.discogs.com"

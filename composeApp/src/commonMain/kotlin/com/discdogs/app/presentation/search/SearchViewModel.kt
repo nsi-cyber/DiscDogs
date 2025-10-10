@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SearchViewModel (
+class SearchViewModel(
     private val networkRepository: NetworkRepository,
     private val libraryRepository: LibraryRepository
 ) : BaseViewModel<SearchState, SearchEffect, SearchEvent, SearchNavigator>() {
@@ -73,7 +73,7 @@ class SearchViewModel (
                 }
             }
 
-            SearchEvent.OnClearQuery ->  {
+            SearchEvent.OnClearQuery -> {
                 searchJob?.cancel()
                 _state.update {
                     it.copy(
@@ -87,11 +87,11 @@ class SearchViewModel (
             is SearchEvent.OnReleaseDetail -> {
                 navigator?.navigateToReleaseDetail(event.data.id, event.data.thumb)
             }
-            
+
             is SearchEvent.OnRecentSearchedReleaseClick -> {
                 navigator?.navigateToReleaseDetail(event.release.id, event.release.thumb)
             }
-            
+
             is SearchEvent.OnRecentScannedReleaseClick -> {
                 navigator?.navigateToReleaseDetail(event.release.id, event.release.thumb)
             }
@@ -110,7 +110,12 @@ class SearchViewModel (
         viewModelScope.launch {
             when (val result = networkRepository.searchVinyl(query)) {
                 is Resource.Success -> {
-                    _state.update { it.copy(resultList = result.value?.map { it.toUiModel() }, isLoading = false) }
+                    _state.update {
+                        it.copy(
+                            resultList = result.value?.map { it.toUiModel() },
+                            isLoading = false
+                        )
+                    }
                 }
 
                 is Resource.Error -> {

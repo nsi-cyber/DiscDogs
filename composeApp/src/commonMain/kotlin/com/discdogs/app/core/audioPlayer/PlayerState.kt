@@ -10,6 +10,7 @@ enum class PlaybackState {
     READY,
     ENDED
 }
+
 @Composable
 fun rememberPlayerState(): PlaybackState {
     return remember {

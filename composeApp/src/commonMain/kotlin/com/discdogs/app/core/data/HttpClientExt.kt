@@ -11,10 +11,6 @@ import kotlin.coroutines.coroutineContext
 private const val TAG = "ApiResponse"
 
 
-
-
-
-
 sealed interface Resource<T> {
     data class Success<T>(
         val value: T,
@@ -55,7 +51,7 @@ fun <T> ResultWrapper.NetworkError.toResourceError(): Resource.Error<T> {
     return Resource.Error(throwable = throwable)
 }
 
-sealed class ResultWrapper<out T>  {
+sealed class ResultWrapper<out T> {
     data class Success<out T>(val value: T, val message: String? = null) : ResultWrapper<T>()
     data class GenericError(
         val code: Int? = null,
@@ -66,9 +62,6 @@ sealed class ResultWrapper<out T>  {
 
     data class NetworkError(val throwable: IOException? = null) : ResultWrapper<Nothing>()
 }
-
-
-
 
 
 suspend inline fun <reified T> safeApiCall(
@@ -89,7 +82,7 @@ suspend inline fun <reified T> safeApiCall(
 suspend inline fun <reified T> responseToResult(
     response: HttpResponse
 ): ResultWrapper<T> {
-    return when(response.status.value) {
+    return when (response.status.value) {
         in 200..299 -> {
             try {
                 val value = response.body<T>()
@@ -106,8 +99,12 @@ suspend inline fun <reified T> responseToResult(
                 )
             }
         }
+
         else -> {
-            ResultWrapper.GenericError(code = response.status.value, message = response.status.description)
+            ResultWrapper.GenericError(
+                code = response.status.value,
+                message = response.status.description
+            )
         }
     }
 }

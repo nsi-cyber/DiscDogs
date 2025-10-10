@@ -1,58 +1,70 @@
 package com.discdogs.app.presentation.model
 
- import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
+import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.Identifier
- import kotlin.uuid.ExperimentalUuidApi
- import kotlin.uuid.Uuid
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 fun GetReleaseDetailResponse?.toUiModel(): VinylDetailUiModel? {
     return this?.let { response ->
         VinylDetailUiModel(
             id = response.id,
-            artists = response.artists?.map { ArtistUiModel(
-                name = it?.name.orEmpty(),
-                resourceUrl = it?.resourceUrl
-            ) },
+            artists = response.artists?.map {
+                ArtistUiModel(
+                    name = it?.name.orEmpty(),
+                    resourceUrl = it?.resourceUrl
+                )
+            },
             //community = response.community,
-            companies = response.companies?.map { CompanyUiModel(
-                catNo = it?.catNo,
-                entityType = it?.entityType,
-                entityTypeName = it?.entityTypeName,
-                id = it?.id,
-                name = it?.name,
-                resourceUrl = it?.resourceUrl
-            ) },
+            companies = response.companies?.map {
+                CompanyUiModel(
+                    catNo = it?.catNo,
+                    entityType = it?.entityType,
+                    entityTypeName = it?.entityTypeName,
+                    id = it?.id,
+                    name = it?.name,
+                    resourceUrl = it?.resourceUrl
+                )
+            },
             country = response.country,
             barcode = identifiers?.firstOrNull { it?.type == "Barcode" }?.value?.replace(
                 "\\s".toRegex(),
                 ""
             )?.replace("-".toRegex(), ""),
-            extraArtists = response.extraArtists?.map {  ArtistUiModel(
-                name = it?.name.orEmpty(),
-                resourceUrl = it?.resourceUrl
-            ) },
+            extraArtists = response.extraArtists?.map {
+                ArtistUiModel(
+                    name = it?.name.orEmpty(),
+                    resourceUrl = it?.resourceUrl
+                )
+            },
             formatQuantity = response.formatQuantity,
-            formats = response.formats?.map { FormatUiModel(
-                descriptions = it?.descriptions?.map { it.orEmpty() },
-                name = it?.name.orEmpty(),
-                qty = it?.qty
-            ) },
+            formats = response.formats?.map {
+                FormatUiModel(
+                    descriptions = it?.descriptions?.map { it.orEmpty() },
+                    name = it?.name.orEmpty(),
+                    qty = it?.qty
+                )
+            },
             genres = response.genres?.map { it.orEmpty() },
             identifiers = response.identifiers,
-            images = response.images?.map { ImageUiModel(
-                height = it?.height,
-                resourceUrl = it?.resourceUrl,
-                uri = it?.uri,
-                width = it?.width
-            ) },
-            labels = response.labels?.map { LabelUiModel(
-                catNo = it?.catNo,
-                entityType = it?.entityType,
-                id = it?.id ?: 0,
-                name = it?.name,
-                resourceUrl = it?.resourceUrl
-            ) },
+            images = response.images?.map {
+                ImageUiModel(
+                    height = it?.height,
+                    resourceUrl = it?.resourceUrl,
+                    uri = it?.uri,
+                    width = it?.width
+                )
+            },
+            labels = response.labels?.map {
+                LabelUiModel(
+                    catNo = it?.catNo,
+                    entityType = it?.entityType,
+                    id = it?.id ?: 0,
+                    name = it?.name,
+                    resourceUrl = it?.resourceUrl
+                )
+            },
             masterId = response.masterId ?: -1,
             notes = response.notes,
             released = response.released,
@@ -62,13 +74,15 @@ fun GetReleaseDetailResponse?.toUiModel(): VinylDetailUiModel? {
             styles = response.styles?.map { it.orEmpty() },
             thumb = response.thumb,
             title = response.title,
-            trackList = response.trackList?.filter { it?.type?.contains("track")==true }?.map { TrackListUiModel(
-                id = Uuid.random().toString(),
-                duration = it?.duration,
-                position = it?.position,
-                title = it?.title.orEmpty(),
-                type = it?.type.orEmpty()
-            ) },
+            trackList = response.trackList?.filter { it?.type?.contains("track") == true }?.map {
+                TrackListUiModel(
+                    id = Uuid.random().toString(),
+                    duration = it?.duration,
+                    position = it?.position,
+                    title = it?.title.orEmpty(),
+                    type = it?.type.orEmpty()
+                )
+            },
             uri = response.uri,
             year = response.year
         )

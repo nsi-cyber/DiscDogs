@@ -23,7 +23,7 @@ object SnackbarHostManager {
 
     suspend fun showError(message: String) {
         _events.send(
-SnackbarEvents.ErrorSnackbar(
+            SnackbarEvents.ErrorSnackbar(
                 errorMessage = message,
             )
         )

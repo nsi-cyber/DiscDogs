@@ -8,11 +8,11 @@ import com.discdogs.app.presentation.model.VinylDetailUiModel
 data class DetailState(
     val isLoading: Boolean = false,
     val isPreviewLoading: Boolean = false,
-    val releaseDetail: VinylDetailUiModel ?=null,
-    val playingItem: PlayingItem ?=null,
-    val backgroundImage: String ?=null,
-    val moreSheetVisible: Boolean =false,
-    val barcodeSheetVisible: Boolean =false,
+    val releaseDetail: VinylDetailUiModel? = null,
+    val playingItem: PlayingItem? = null,
+    val backgroundImage: String? = null,
+    val moreSheetVisible: Boolean = false,
+    val barcodeSheetVisible: Boolean = false,
     val isFavorite: Boolean = false,
 
 
@@ -26,8 +26,8 @@ data class PlayingItem(
     val id: String,
     val title: String,
     val image: String,
-    val preview: String?=null,
-    val progress: Float=0f,
+    val preview: String? = null,
+    val progress: Float = 0f,
 )
 
 sealed interface DetailEffect {

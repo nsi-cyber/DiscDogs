@@ -1,6 +1,6 @@
 package com.discdogs.app.app
 
- import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializable
 
 sealed interface Route {
 

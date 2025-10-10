@@ -17,9 +17,9 @@ class ExternalRepositoryImpl() : ExternalRepository {
 
         val resolvedUrl = try {
             val searchUrl = "$fallbackUrl&btnI=1"
-            val doc=Ksoup.parseGetRequest(searchUrl)
+            val doc = Ksoup.parseGetRequest(searchUrl)
 
-                val doc1 = doc.baseUri().replace("https://www.google.com/url?q=", "")
+            val doc1 = doc.baseUri().replace("https://www.google.com/url?q=", "")
             doc1
         } catch (e: Exception) {
             fallbackUrl

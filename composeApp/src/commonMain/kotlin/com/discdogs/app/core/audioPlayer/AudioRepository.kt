@@ -14,17 +14,17 @@ interface AudioRepository {
 class AudioRepositoryImpl : AudioRepository {
     private val _playerState = MutableStateFlow(PlaybackState.IDLE)
     override val playerState: StateFlow<PlaybackState> = _playerState.asStateFlow()
-    
+
     private val audioPlayer = AudioPlayer(_playerState)
-    
+
     override fun play(url: String) {
         audioPlayer.play(url)
     }
-    
+
     override fun stop() {
         audioPlayer.stop()
     }
-    
+
     override fun cleanup() {
         audioPlayer.cleanUp()
     }
