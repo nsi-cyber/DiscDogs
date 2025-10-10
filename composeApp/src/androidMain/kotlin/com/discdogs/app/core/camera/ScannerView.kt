@@ -1,10 +1,13 @@
 package com.discdogs.app.core.camera
 
+import android.graphics.Bitmap
 import android.util.Size
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraControl
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.core.TorchState
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -24,16 +27,16 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import java.io.ByteArrayOutputStream
 
 /**
  * Composable function that displays a camera preview for scanning barcodes.
  *
  * @param modifier The modifier to be applied to the scanner view.
- * @param codeTypes A list of barcode formats to be scanned.
- * @param colors The colors to be used for the scanner UI.
- * @param showUi A boolean indicating whether to show the scanner UI.
+ * @param isLoading A boolean indicating whether the scanner is currently loading.
  * @param scannerController An optional controller for managing scanner actions.
  * @param result A callback function that receives the barcode scanning result.
+ * @param onPhotoCaptured A callback function that receives the captured photo as ByteArray.
  */
 @Composable
 actual fun ScannerView(
@@ -41,6 +44,7 @@ actual fun ScannerView(
     isLoading: Boolean,
     scannerController: ScannerController?,
     result: (String) -> Unit,
+    onPhotoCaptured: ((ByteArray) -> Unit)?,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -64,6 +68,7 @@ actual fun ScannerView(
 
     var camera: Camera? by remember { mutableStateOf(null) }
     var cameraControl: CameraControl? by remember { mutableStateOf(null) }
+    var imageCapture: ImageCapture? by remember { mutableStateOf(null) }
 
     var torchEnabled by remember { mutableStateOf(false) }
 
@@ -75,8 +80,38 @@ actual fun ScannerView(
 
 
     scannerController?.onTorchChange = { enabled ->
-        cameraControl?.enableTorch(enabled)
-        scannerController.torchEnabled = enabled
+        if (!scannerController.externalFlashControl) {
+            cameraControl?.enableTorch(enabled)
+            scannerController.torchEnabled = enabled
+        }
+    }
+
+    scannerController?.onPhotoCapture = {
+        imageCapture?.let { capture ->
+            capture.takePicture(
+                ContextCompat.getMainExecutor(context),
+                object : ImageCapture.OnImageCapturedCallback() {
+                    override fun onCaptureSuccess(imageProxy: androidx.camera.core.ImageProxy) {
+                        try {
+                            val bitmap = imageProxy.toBitmap()
+                            val outputStream = ByteArrayOutputStream()
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+                            val byteArray = outputStream.toByteArray()
+                            onPhotoCaptured?.invoke(byteArray)
+                            outputStream.close()
+                        } catch (e: Exception) {
+                            // Handle error silently or log it
+                        } finally {
+                            imageProxy.close()
+                        }
+                    }
+
+                    override fun onError(exception: ImageCaptureException) {
+                        // Handle error silently or log it
+                    }
+                }
+            )
+        }
     }
 
 
@@ -102,6 +137,10 @@ actual fun ScannerView(
                                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                                 .build()
 
+                        imageCapture = ImageCapture.Builder()
+                            .setTargetResolution(Size(1280, 720))
+                            .build()
+
                         imageAnalysis.setAnalyzer(
                             ContextCompat.getMainExecutor(ctx),
                             BarcodeAnalyzer(
@@ -119,6 +158,7 @@ actual fun ScannerView(
                                 selector = selector,
                                 preview = preview,
                                 imageAnalysis = imageAnalysis,
+                                imageCapture = imageCapture,
                                 cameraControl = { cameraControl = it },
                             )
 
@@ -150,6 +190,7 @@ internal fun bindCamera(
     selector: CameraSelector,
     preview: Preview,
     imageAnalysis: ImageAnalysis,
+    imageCapture: ImageCapture?,
     cameraControl: (CameraControl?) -> Unit,
 ): Camera? {
     return runCatching {
@@ -159,6 +200,7 @@ internal fun bindCamera(
             selector,
             preview,
             imageAnalysis,
+            imageCapture,
         ).also {
             cameraControl(it?.cameraControl)
         }

@@ -29,10 +29,14 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.discdogs.app.core.camera.ScannerController
 import com.discdogs.app.core.camera.ScannerView
 import com.discdogs.app.core.presentation.theme.VETheme
 import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.*
+import discdogs.composeapp.generated.resources.ic_camera
+import discdogs.composeapp.generated.resources.ic_flash
+import discdogs.composeapp.generated.resources.scan_barcode
+import discdogs.composeapp.generated.resources.scan_cover_image
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -43,24 +47,32 @@ fun ScanScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
+    // Scanner controller for managing camera features
+    val scannerController = remember { ScannerController() }
+
     // Flash state
     var isFlashOn by remember { mutableStateOf(false) }
 
-
-
-
-
     Scaffold { padd ->
         Box(modifier = Modifier.fillMaxSize()) {
-            ScannerView(isLoading = state.isLoading) { barcode ->
-                if (state.selectedScanType == ScanType.BARCODE && state.isLoading == false) {
-                    viewModel.process(
-                        ScanEvent.OnBarcodeCaptured(barcode)
-                    )
+            ScannerView(
+                isLoading = state.isLoading,
+                scannerController = scannerController,
+                result = { barcode ->
+                    if (state.selectedScanType == ScanType.BARCODE && state.isLoading == false) {
+                        viewModel.process(
+                            ScanEvent.OnBarcodeCaptured(barcode)
+                        )
+                    }
+                },
+                onPhotoCaptured = { byteArray ->
+                    if (state.selectedScanType == ScanType.IMAGE && state.isLoading == false) {
+                        viewModel.process(
+                            ScanEvent.OnPhotoCaptured(byteArray)
+                        )
+                    }
                 }
-
-
-            }
+            )
 
             CameraPreviewOverlay(
                 modifier = Modifier.fillMaxSize().padding(padd),
@@ -72,9 +84,12 @@ fun ScanScreen(
                     )
                 },
                 isFlashOn = isFlashOn,
-                onFlashToggle = { isFlashOn = !isFlashOn },
+                onFlashToggle = {
+                    isFlashOn = !isFlashOn
+                    scannerController.setTorch(isFlashOn)
+                },
                 onPhoto = {
-                    // Handle photo capture
+                    scannerController.capturePhoto()
                 })
         }
     }

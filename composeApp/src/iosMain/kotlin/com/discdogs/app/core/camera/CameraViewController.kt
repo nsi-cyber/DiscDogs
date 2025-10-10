@@ -1,7 +1,8 @@
 package com.discdogs.app.core.camera
 
-
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.usePinned
 import platform.AVFoundation.AVCaptureConnection
 import platform.AVFoundation.AVCaptureDevice
 import platform.AVFoundation.AVCaptureDeviceInput
@@ -18,14 +19,24 @@ import platform.AVFoundation.AVCaptureVideoPreviewLayer
 import platform.AVFoundation.AVLayerVideoGravityResizeAspectFill
 import platform.AVFoundation.AVMetadataMachineReadableCodeObject
 import platform.AVFoundation.AVMetadataObjectTypeEAN13Code
+import platform.Foundation.NSData
 import platform.UIKit.UIApplication
 import platform.UIKit.UIColor
+import platform.UIKit.UIImage
+import platform.UIKit.UIImageJPEGRepresentation
+import platform.UIKit.UIImagePickerController
+import platform.UIKit.UIImagePickerControllerCameraCaptureMode
+import platform.UIKit.UIImagePickerControllerCameraDevice
+import platform.UIKit.UIImagePickerControllerDelegateProtocol
+import platform.UIKit.UIImagePickerControllerSourceType
 import platform.UIKit.UIInterfaceOrientation
 import platform.UIKit.UIInterfaceOrientationLandscapeLeft
 import platform.UIKit.UIInterfaceOrientationLandscapeRight
 import platform.UIKit.UIInterfaceOrientationPortraitUpsideDown
+import platform.UIKit.UINavigationControllerDelegateProtocol
 import platform.UIKit.UIViewController
 import platform.darwin.dispatch_get_main_queue
+import platform.posix.memcpy
 
 /**
  * A UIViewController that manages the camera preview and barcode scanning.
@@ -39,10 +50,12 @@ class CameraViewController(
     private val device: AVCaptureDevice,
     private val isLoading: Boolean = false,
     private val onBarcodeSuccess: (String) -> Unit,
-) : UIViewController(null, null), AVCaptureMetadataOutputObjectsDelegateProtocol {
+) : UIViewController(null, null), AVCaptureMetadataOutputObjectsDelegateProtocol,
+    UIImagePickerControllerDelegateProtocol, UINavigationControllerDelegateProtocol {
     private lateinit var captureSession: AVCaptureSession
     private lateinit var previewLayer: AVCaptureVideoPreviewLayer
     private lateinit var videoInput: AVCaptureDeviceInput
+    private var photoCaptureCallback: ((ByteArray) -> Unit)? = null
 
 
     override fun viewDidLoad() {
@@ -117,6 +130,50 @@ class CameraViewController(
         super.viewDidLayoutSubviews()
         previewLayer.frame = view.layer.bounds
         updatePreviewOrientation()
+    }
+
+    fun capturePhoto(callback: (ByteArray) -> Unit) {
+        photoCaptureCallback = callback
+
+        val imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = this
+        imagePickerController.sourceType =
+            UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypeCamera
+        imagePickerController.cameraDevice =
+            UIImagePickerControllerCameraDevice.UIImagePickerControllerCameraDeviceRear
+        imagePickerController.cameraCaptureMode =
+            UIImagePickerControllerCameraCaptureMode.UIImagePickerControllerCameraCaptureModePhoto
+
+        presentViewController(imagePickerController, animated = true, completion = null)
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    fun NSData.toByteArray(): ByteArray {
+        return ByteArray(length.toInt()).apply {
+            usePinned {
+                memcpy(it.addressOf(0), bytes, length)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    override fun imagePickerController(
+        picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo: Map<Any?, *>
+    ) {
+        picker.dismissViewControllerAnimated(true, completion = null)
+        val image =
+            didFinishPickingMediaWithInfo[platform.UIKit.UIImagePickerControllerOriginalImage] as? UIImage
+        if (image != null) {
+            val imageData: NSData? = UIImageJPEGRepresentation(image, 1.0)
+            imageData?.toByteArray()?.let {
+                photoCaptureCallback?.invoke(it)
+            }
+        }
+    }
+
+    override fun imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        picker.dismissViewControllerAnimated(true, completion = null)
     }
 
     override fun captureOutput(

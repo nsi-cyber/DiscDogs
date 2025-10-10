@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
  * @param modifier The modifier to be applied to the scanner view.
  * @param scannerController An optional controller for controlling the scanner.
  * @param result A callback function that is invoked when a barcode is scanned.
+ * @param onPhotoCaptured A callback function that is invoked when a photo is captured, providing the image as ByteArray.
  */
 @Composable
 expect fun ScannerView(
@@ -18,4 +19,5 @@ expect fun ScannerView(
     isLoading: Boolean = false,
     scannerController: ScannerController? = null,
     result: (String) -> Unit,
+    onPhotoCaptured: ((ByteArray) -> Unit)? = null,
 )

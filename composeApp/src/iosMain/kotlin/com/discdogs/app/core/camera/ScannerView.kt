@@ -29,6 +29,7 @@ actual fun ScannerView(
     isLoading: Boolean,
     scannerController: ScannerController?,
     result: (String) -> Unit,
+    onPhotoCaptured: ((ByteArray) -> Unit)?,
 ) {
     var torchEnabled by remember { mutableStateOf(false) }
 
@@ -47,15 +48,23 @@ actual fun ScannerView(
     }
 
     scannerController?.onTorchChange = { enabled ->
-        runCatching {
-            if (captureDevice.hasTorch) {
-                captureDevice.lockForConfiguration(null)
-                captureDevice.torchMode =
-                    if (enabled) AVCaptureTorchModeOn else AVCaptureTorchModeOff
-                captureDevice.unlockForConfiguration()
-                torchEnabled = enabled
-                scannerController.torchEnabled = enabled
+        if (!scannerController.externalFlashControl) {
+            runCatching {
+                if (captureDevice.hasTorch) {
+                    captureDevice.lockForConfiguration(null)
+                    captureDevice.torchMode =
+                        if (enabled) AVCaptureTorchModeOn else AVCaptureTorchModeOff
+                    captureDevice.unlockForConfiguration()
+                    torchEnabled = enabled
+                    scannerController.torchEnabled = enabled
+                }
             }
+        }
+    }
+
+    scannerController?.onPhotoCapture = {
+        cameraViewController?.capturePhoto { byteArray ->
+            onPhotoCaptured?.invoke(byteArray)
         }
     }
 
