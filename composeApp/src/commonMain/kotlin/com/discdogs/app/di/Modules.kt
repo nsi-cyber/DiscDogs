@@ -5,19 +5,14 @@ import com.discdogs.app.core.audioPlayer.AudioRepository
 import com.discdogs.app.core.audioPlayer.AudioRepositoryImpl
 import com.discdogs.app.core.data.HttpClientFactory
 import com.discdogs.app.data.database.DatabaseFactory
-import com.discdogs.app.data.database.FavoriteBookDatabase
+import com.discdogs.app.data.database.VinylDatabase
 import com.discdogs.app.data.network.KtorRemoteDataSource
 import com.discdogs.app.data.network.RemoteDataSource
-import com.discdogs.app.data.repository.DefaultBookRepository
 import com.discdogs.app.data.repository.ExternalRepositoryImpl
 import com.discdogs.app.data.repository.LibraryRepository
 import com.discdogs.app.data.repository.NetworkRepositoryImpl
-import com.discdogs.app.domain.BookRepository
 import com.discdogs.app.domain.ExternalRepository
 import com.discdogs.app.domain.NetworkRepository
-import com.discdogs.app.presentation.SelectedBookViewModel
-import com.discdogs.app.presentation.book_detail.BookDetailViewModel
-import com.discdogs.app.presentation.book_list.BookListViewModel
 import com.discdogs.app.presentation.detail.DetailViewModel
 import com.discdogs.app.presentation.library.LibraryViewModel
 import com.discdogs.app.presentation.listdetail.ListDetailViewModel
@@ -44,7 +39,6 @@ val commonModule = module {
 val sharedModule = module {
     single { HttpClientFactory.create(get()) }
     singleOf(::KtorRemoteDataSource).bind<RemoteDataSource>()
-    singleOf(::DefaultBookRepository).bind<BookRepository>()
     singleOf(::NetworkRepositoryImpl).bind<NetworkRepository>()
     singleOf(::ExternalRepositoryImpl).bind<ExternalRepository>()
     singleOf(::AudioRepositoryImpl).bind<AudioRepository>()
@@ -55,17 +49,13 @@ val sharedModule = module {
             .setDriver(BundledSQLiteDriver())
             .build()
     }
-    single { get<FavoriteBookDatabase>().favoriteBookDao }
-    single { get<FavoriteBookDatabase>().favoriteReleaseDao }
-    single { get<FavoriteBookDatabase>().recentReleaseDao }
-    single { get<FavoriteBookDatabase>().userPreferenceDao }
-    single { get<FavoriteBookDatabase>().releaseDao }
-    single { get<FavoriteBookDatabase>().releaseListDao }
-    single { get<FavoriteBookDatabase>().releaseListReleaseDao }
+    single { get<VinylDatabase>().favoriteReleaseDao }
+    single { get<VinylDatabase>().recentReleaseDao }
+    single { get<VinylDatabase>().userPreferenceDao }
+    single { get<VinylDatabase>().releaseDao }
+    single { get<VinylDatabase>().releaseListDao }
+    single { get<VinylDatabase>().releaseListReleaseDao }
 
-    viewModelOf(::BookListViewModel)
-    viewModelOf(::BookDetailViewModel)
-    viewModelOf(::SelectedBookViewModel)
     viewModelOf(::SearchViewModel)
     viewModelOf(::DetailViewModel)
     viewModelOf(::LibraryViewModel)

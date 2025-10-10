@@ -18,7 +18,7 @@ import com.discdogs.app.data.database.model.ReleaseListRelease
 import com.discdogs.app.data.database.model.UserPreference
 
 @Database(
-    entities = [BookEntity::class,
+    entities = [
         FavoriteRelease::class,
         RecentRelease::class,
         UserPreference::class,
@@ -30,9 +30,8 @@ import com.discdogs.app.data.database.model.UserPreference
 @TypeConverters(
     StringListTypeConverter::class
 )
-@ConstructedBy(BookDatabaseConstructor::class)
-abstract class FavoriteBookDatabase: RoomDatabase() {
-    abstract val favoriteBookDao: FavoriteBookDao
+@ConstructedBy(VinylDatabaseConstructor::class)
+abstract class VinylDatabase : RoomDatabase() {
     abstract val favoriteReleaseDao: FavoriteReleaseDao
     abstract val recentReleaseDao: RecentReleaseDao
     abstract val userPreferenceDao: UserPreferenceDao
