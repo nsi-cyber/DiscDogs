@@ -8,7 +8,7 @@ sealed interface Route {
     data object MainScreen : Route
 
     @Serializable
-    data object BookGraph : Route
+    data object MainGraph : Route
 
     @Serializable
     data object BookList : Route
@@ -24,6 +24,9 @@ sealed interface Route {
 
     @Serializable
     data object Favorites : Route
+
+    @Serializable
+    data class FavoriteList(val id: Long) : Route
 
     @Serializable
     data class ReleaseVersions(val masterId: Int) : Route

@@ -10,6 +10,7 @@ import com.discdogs.app.data.network.KtorRemoteDataSource
 import com.discdogs.app.data.network.RemoteDataSource
 import com.discdogs.app.data.repository.DefaultBookRepository
 import com.discdogs.app.data.repository.ExternalRepositoryImpl
+import com.discdogs.app.data.repository.LibraryRepository
 import com.discdogs.app.data.repository.NetworkRepositoryImpl
 import com.discdogs.app.domain.BookRepository
 import com.discdogs.app.domain.ExternalRepository
@@ -18,6 +19,8 @@ import com.discdogs.app.presentation.SelectedBookViewModel
 import com.discdogs.app.presentation.book_detail.BookDetailViewModel
 import com.discdogs.app.presentation.book_list.BookListViewModel
 import com.discdogs.app.presentation.detail.DetailViewModel
+import com.discdogs.app.presentation.library.LibraryViewModel
+import com.discdogs.app.presentation.listdetail.ListDetailViewModel
 import com.discdogs.app.presentation.releases.ReleasesViewModel
 import com.discdogs.app.presentation.scan.ScanViewModel
 import com.discdogs.app.presentation.search.SearchViewModel
@@ -45,6 +48,7 @@ val sharedModule = module {
     singleOf(::NetworkRepositoryImpl).bind<NetworkRepository>()
     singleOf(::ExternalRepositoryImpl).bind<ExternalRepository>()
     singleOf(::AudioRepositoryImpl).bind<AudioRepository>()
+    singleOf(::LibraryRepository)
 
     single {
         get<DatabaseFactory>().create()
@@ -52,12 +56,20 @@ val sharedModule = module {
             .build()
     }
     single { get<FavoriteBookDatabase>().favoriteBookDao }
+    single { get<FavoriteBookDatabase>().favoriteReleaseDao }
+    single { get<FavoriteBookDatabase>().recentReleaseDao }
+    single { get<FavoriteBookDatabase>().userPreferenceDao }
+    single { get<FavoriteBookDatabase>().releaseDao }
+    single { get<FavoriteBookDatabase>().releaseListDao }
+    single { get<FavoriteBookDatabase>().releaseListReleaseDao }
 
     viewModelOf(::BookListViewModel)
     viewModelOf(::BookDetailViewModel)
     viewModelOf(::SelectedBookViewModel)
     viewModelOf(::SearchViewModel)
     viewModelOf(::DetailViewModel)
+    viewModelOf(::LibraryViewModel)
+    viewModelOf(::ListDetailViewModel)
     viewModelOf(::ReleasesViewModel)
     viewModelOf(::ScanViewModel)
 }

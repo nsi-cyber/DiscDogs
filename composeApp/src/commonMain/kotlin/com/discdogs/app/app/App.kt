@@ -1,35 +1,32 @@
 package com.discdogs.app.app
 
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.discdogs.app.core.presentation.AppLevelSnackbar
 import com.discdogs.app.core.presentation.UiText
 import com.discdogs.app.core.presentation.theme.VETheme
-import com.discdogs.app.presentation.SelectedBookViewModel
-import com.discdogs.app.presentation.book_detail.BookDetailAction
-import com.discdogs.app.presentation.book_detail.BookDetailScreenRoot
-import com.discdogs.app.presentation.book_detail.BookDetailViewModel
-import com.discdogs.app.presentation.book_list.BookListScreenRoot
-import com.discdogs.app.presentation.book_list.BookListViewModel
 import com.discdogs.app.presentation.components.VEBottomNavigationBar
 import com.discdogs.app.presentation.components.VEBottomNavigationItem
 import com.discdogs.app.presentation.detail.DetailNavigator
+import com.discdogs.app.presentation.library.LibraryNavigator
+import com.discdogs.app.presentation.listdetail.ListDetailNavigator
 import com.discdogs.app.presentation.releases.ReleasesNavigator
 import com.discdogs.app.presentation.scan.ScanNavigator
 import com.discdogs.app.presentation.search.SearchNavigator
 import discdogs.composeapp.generated.resources.Res
+import discdogs.composeapp.generated.resources.ic_library
 import discdogs.composeapp.generated.resources.ic_scan
 import discdogs.composeapp.generated.resources.ic_search
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -40,9 +37,10 @@ import org.koin.compose.viewmodel.koinViewModel
 @Preview
 fun App() {
     VETheme {
-        val navController = rememberNavController()
+        val rootNavController = rememberNavController()
+        val innerNavController = rememberNavController()
 
-        val currentBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentBackStackEntry by innerNavController.currentBackStackEntryAsState()
         val currentDestination = currentBackStackEntry?.destination?.route.toString()
 
         val bottomBarList: List<VEBottomNavigationItem> = listOf(
@@ -56,90 +54,53 @@ fun App() {
                 UiText.DynamicString("Scan"),
                 Res.drawable.ic_scan,
             ),
+            VEBottomNavigationItem(
+                Route.Favorites,
+                UiText.DynamicString("Library"),
+                Res.drawable.ic_library,
+            ),
 
 
             )
+        Scaffold {
+            NavHost(
+                navController = rootNavController,
+                startDestination = Route.MainScreen
+            ) {
+                ListDetailNavigator(rootNavController).build(this)
+                ReleasesNavigator(rootNavController).build(this)
+                DetailNavigator(rootNavController).build(this)
+                composable<Route.MainScreen> {
 
+                    Scaffold(
+                        containerColor = VETheme.colors.backgroundColorPrimary, bottomBar = {
 
+                            VEBottomNavigationBar(
+                                items = bottomBarList,
+                                currentRoute = currentDestination,
+                                navigateTo = { selectedTab ->
+                                    innerNavController.navigate(selectedTab)
+                                },
+                                returnToStart = {
+                                    innerNavController.clearBackStack(it)
+                                })
 
-        Scaffold(
-            containerColor = VETheme.colors.backgroundColorPrimary, bottomBar = {
-
-                VEBottomNavigationBar(
-                    items = bottomBarList,
-                    currentRoute = currentDestination,
-                    navigateTo = { selectedTab ->
-                        navController.navigate(selectedTab)
-                    },
-                    returnToStart = {
-                        navController.clearBackStack(it)
-                    })
-
-            },
-            content = {
-                NavHost(
-                    navController = navController,
-                    startDestination = Route.Search
-                ) {
-                    SearchNavigator(navController).build(this)
-                    DetailNavigator(navController).build(this)
-                    ReleasesNavigator(navController).build(this)
-                    ScanNavigator(navController).build(this)
-                    composable<Route.BookList>(
-                        exitTransition = { slideOutHorizontally() },
-                        popEnterTransition = { slideInHorizontally() }
-                    ) {
-                        val viewModel = koinViewModel<BookListViewModel>()
-                        val selectedBookViewModel =
-                            it.sharedKoinViewModel<SelectedBookViewModel>(navController)
-
-                        LaunchedEffect(true) {
-                            selectedBookViewModel.onSelectBook(null)
-                        }
-
-                        BookListScreenRoot(
-                            viewModel = viewModel,
-                            onBookClick = { book ->
-                                selectedBookViewModel.onSelectBook(book)
-                                navController.navigate(
-                                    Route.BookDetail(book.id)
-                                )
-                            }
-                        )
-                    }
-                    composable<Route.BookDetail>(
-                        enterTransition = {
-                            slideInHorizontally { initialOffset ->
-                                initialOffset
-                            }
                         },
-                        exitTransition = {
-                            slideOutHorizontally { initialOffset ->
-                                initialOffset
+                        content = {
+                            NavHost(
+                                navController = innerNavController,
+                                startDestination = Route.Search
+                            ) {
+                                SearchNavigator(rootNavController).build(this)
+                                ScanNavigator(rootNavController).build(this)
+                                LibraryNavigator(rootNavController).build(this)
                             }
-                        }
-                    ) {
-                        val selectedBookViewModel =
-                            it.sharedKoinViewModel<SelectedBookViewModel>(navController)
-                        val viewModel = koinViewModel<BookDetailViewModel>()
-                        val selectedBook by selectedBookViewModel.selectedBook.collectAsStateWithLifecycle()
-
-                        LaunchedEffect(selectedBook) {
-                            selectedBook?.let {
-                                viewModel.onAction(BookDetailAction.OnSelectedBookChange(it))
-                            }
-                        }
-
-                        BookDetailScreenRoot(
-                            viewModel = viewModel,
-                            onBackClick = {
-                                navController.navigateUp()
-                            }
-                        )
-                    }
+                        })
                 }
-            })
+            }
+            AppLevelSnackbar(modifier = Modifier.padding(it.calculateTopPadding()))
 
+        }
 
     }
 }
@@ -155,4 +116,14 @@ private inline fun <reified T : ViewModel> NavBackStackEntry.sharedKoinViewModel
     return koinViewModel(
         viewModelStoreOwner = parentEntry
     )
+}
+
+fun NavController.navigateSingleTopTo(route: String) {
+    this.navigate(route) {
+        launchSingleTop = true
+        restoreState = true
+        popUpTo(graph.findStartDestination()) {
+            saveState = true
+        }
+    }
 }

@@ -9,12 +9,13 @@ import com.discdogs.app.core.audioPlayer.AudioRepository
 import com.discdogs.app.core.audioPlayer.PlaybackState
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.presentation.BaseViewModel
-import com.discdogs.app.core.presentation.UiText
+import com.discdogs.app.data.repository.LibraryRepository
 import com.discdogs.app.domain.ExternalRepository
 import com.discdogs.app.domain.NetworkRepository
 import com.discdogs.app.presentation.model.ExternalWebsites
 import com.discdogs.app.presentation.model.TrackListUiModel
 import com.discdogs.app.presentation.model.toUiModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -27,6 +28,7 @@ class DetailViewModel(
     private val audioRepository: AudioRepository,
     private val networkRepository: NetworkRepository,
     private val externalRepository: ExternalRepository,
+    private val libraryRepository: LibraryRepository,
     private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<DetailState, DetailEffect, DetailEvent, DetailNavigator>() {
 
@@ -58,7 +60,7 @@ class DetailViewModel(
 
         getReleaseDetails(
             savedStateHandle.toRoute<Route.ReleaseDetail>().releaseId,
-            savedStateHandle.toRoute<Route.ReleaseDetail>().source.toDetailSource()
+            savedStateHandle.toRoute<Route.ReleaseDetail>().source
         )
     }
 
@@ -77,25 +79,23 @@ class DetailViewModel(
                 }
                 audioRepository.stop()
             }
-
             is DetailEvent.OnLoadBackground -> _state.update {
                 it.copy(
                     backgroundImage = event.image
                 )
             }
-
             DetailEvent.OnDismissMoreBottomSheet -> {
                 viewModelScope.launch {
+                    _effect.emit(DetailEffect.DismissMoreBottomSheet)
+                    delay(100)
                     _state.update {
                         it.copy(
                             moreSheetVisible = false,
                         )
                     }
-                    _effect.emit(DetailEffect.DismissMoreBottomSheet)
 
                 }
             }
-
             DetailEvent.OnShowMoreBottomSheet -> {
                 viewModelScope.launch {
                     _state.update {
@@ -107,19 +107,19 @@ class DetailViewModel(
 
                 }
             }
-
             DetailEvent.OnDismissBarcodeBottomSheet -> {
                 viewModelScope.launch {
+                    _effect.emit(DetailEffect.DismissBarcodeBottomSheet)
+                    delay(100)
+
                     _state.update {
                         it.copy(
                             barcodeSheetVisible = false,
                         )
                     }
-                    _effect.emit(DetailEffect.DismissBarcodeBottomSheet)
 
                 }
             }
-
             DetailEvent.OnShowBarcodeBottomSheet -> {
                 viewModelScope.launch {
                     _state.update {
@@ -131,13 +131,10 @@ class DetailViewModel(
 
                 }
             }
-
             is DetailEvent.OnExternalWebsite -> {
                 audioRepository.cleanup()
                 openExternalPlayerLink(event.type)
             }
-
-
             DetailEvent.OnOtherReleases -> {
                 audioRepository.cleanup()
                 state.value.releaseDetail?.masterId?.let { masterId ->
@@ -147,12 +144,152 @@ class DetailViewModel(
                 }
 
             }
-
             DetailEvent.OnToggleFavorite -> {
                 toggleFavorite()
             }
-
             DetailEvent.OnShare -> uriHandler?.openUri(_state.value.releaseDetail?.uri.toString())
+
+
+            is DetailEvent.OnLoadReleaseDetails -> getReleaseDetails(event.releaseId, event.source)
+
+
+            DetailEvent.OnShowSaveToListBottomSheet -> {
+                viewModelScope.launch {
+                    loadLists()
+                    _state.update {
+                        it.copy(
+                            saveToListSheetVisible = true,
+                        )
+                    }
+                    _effect.emit(DetailEffect.ShowSaveToListBottomSheet)
+                }
+            }
+
+            DetailEvent.OnDismissSaveToListBottomSheet -> {
+                viewModelScope.launch {
+                    _effect.emit(DetailEffect.DismissSaveToListBottomSheet)
+                    delay(100)
+
+                    _state.update {
+                        it.copy(
+                            showCreateListDialog = false,
+                            saveToListSheetVisible = false
+                        )
+                    }
+                }
+            }
+
+            is DetailEvent.OnAddToList -> {
+                toggleList(event.listId)
+            }
+
+            DetailEvent.OnCreateNewList -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            showCreateListDialog = true,
+                        )
+                    }
+                }
+            }
+
+            is DetailEvent.OnCreateList -> {
+                createList(event.name)
+            }
+
+            DetailEvent.OnDismissCreateListDialog -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            showCreateListDialog = false,
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun loadLists() {
+        val releaseId = _state.value.releaseDetail?.id ?: return
+        viewModelScope.launch {
+            libraryRepository.getAllLists()
+                .collect { lists ->
+                    _state.update { it.copy(lists = lists) }
+                }
+        }
+
+        // Also load which lists contain this release
+        viewModelScope.launch {
+            libraryRepository.getListsContainingRelease(releaseId)
+                .collect { listsContainingRelease ->
+                    _state.update { it.copy(releaseInLists = listsContainingRelease) }
+                }
+        }
+    }
+
+    private fun toggleList(listId: Long) {
+        val releaseDetail = _state.value.releaseDetail ?: return
+        val releaseId = releaseDetail.id
+        val isInList = _state.value.releaseInLists.contains(listId)
+
+        viewModelScope.launch {
+            try {
+                if (isInList) {
+                    // Remove from list
+                    libraryRepository.removeReleaseFromList(listId, releaseId)
+                } else {
+                    // Add to list
+                    libraryRepository.addReleaseToList(listId, releaseDetail)
+                }
+                // Refresh the lists containing this release
+                loadLists()
+            } catch (e: Exception) {
+                errorSnack(message = e.toString())
+            }
+            _effect.emit(DetailEffect.DismissSaveToListBottomSheet)
+            delay(100)
+
+            _state.update {
+                it.copy(
+                    showCreateListDialog = false,
+                    saveToListSheetVisible = false
+                )
+            }
+
+        }
+    }
+
+    private fun createList(name: String) {
+        viewModelScope.launch {
+            try {
+                val listId = libraryRepository.createList(name)
+
+                // Automatically add the current release to the newly created list
+                val currentRelease = _state.value.releaseDetail
+                if (currentRelease != null) {
+                    try {
+                        libraryRepository.addReleaseToList(listId, currentRelease)
+                    } catch (e: Exception) {
+                        // If adding to list fails, still show success for list creation
+                        // but log the error
+                        errorSnack(message = e.toString())
+                    }
+                }
+
+                _effect.emit(DetailEffect.DismissSaveToListBottomSheet)
+                delay(100)
+
+                _state.update {
+                    it.copy(
+                        showCreateListDialog = false,
+                        saveToListSheetVisible = false
+                    )
+                }
+                loadLists() // Refresh lists
+            } catch (e: Exception) {
+                errorSnack(message = e.toString())
+            }
         }
     }
 
@@ -195,7 +332,7 @@ class DetailViewModel(
                             isPreviewLoading = false
                         )
                     }
-                    errorSnack(message = UiText.DynamicString("R.string.we_couldnt_find_a_preview_for_this_track"))
+                    errorSnack(message = ("R.string.we_couldnt_find_a_preview_for_this_track"))
                 }
 
                 is Resource.Error -> {
@@ -204,7 +341,7 @@ class DetailViewModel(
                             isPreviewLoading = false, playingItem = null,
                         )
                     }
-                    errorSnack(message = UiText.DynamicString("R.string.we_couldnt_find_a_preview_for_this_track"))
+                    errorSnack(message = ("R.string.we_couldnt_find_a_preview_for_this_track"))
 
 
                 }
@@ -212,7 +349,7 @@ class DetailViewModel(
         }
     }
 
-    private fun getReleaseDetails(releaseId: Int, source: DetailSource) {
+    private fun getReleaseDetails(releaseId: Int, source: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             when (val result = networkRepository.getReleaseDetail(releaseId)) {
@@ -224,10 +361,29 @@ class DetailViewModel(
                             isLoading = false
                         )
                     }
+                    // Check if release is favorite and observe changes
+                    result.value?.toUiModel()?.let { vinylDetail ->
+                        viewModelScope.launch {
+                            libraryRepository.isFavorite(vinylDetail.id).collect { isFavorite ->
+                                _state.update { currentState ->
+                                    currentState.copy(isFavorite = isFavorite)
+                                }
+                            }
+                        }
+
+                        // Add to recent items based on source
+                        if (source == "SEARCH" ||
+                            source == "SCAN"
+                        ) {
+                            viewModelScope.launch {
+                                libraryRepository.addRecentRelease(vinylDetail, source)
+                            }
+                        }
+                    }
                 }
 
                 is Resource.Error -> {
-                    errorSnack(UiText.DynamicString("R.string.release_detail_error_message"))
+                    errorSnack(("R.string.release_detail_error_message"))
                     _state.update { it.copy(isLoading = false) }
                     navigator?.navigateBack()
                 }
@@ -236,10 +392,25 @@ class DetailViewModel(
     }
 
     private fun toggleFavorite() {
-        _state.value.releaseDetail ?: return
-        _state.value.isFavorite
+        val releaseDetail = _state.value.releaseDetail ?: return
+        val isFavorite = _state.value.isFavorite
 
+        viewModelScope.launch {
+            if (isFavorite) {
+                libraryRepository.removeFromFavorites(releaseDetail.id)
+            } else {
+                libraryRepository.addToFavorites(releaseDetail)
+            }
+            _effect.emit(DetailEffect.DismissSaveToListBottomSheet)
+            delay(100)
 
+            _state.update {
+                it.copy(
+                    showCreateListDialog = false,
+                    saveToListSheetVisible = false
+                )
+            }
+        }
     }
 
     private fun openExternalPlayerLink(type: ExternalWebsites) {

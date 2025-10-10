@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,12 +32,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -65,6 +72,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.discdogs.app.core.presentation.shimmerEffect
 import com.discdogs.app.core.presentation.theme.VETheme
+import com.discdogs.app.data.database.model.ReleaseList
 import com.discdogs.app.presentation.components.EAN13BarcodeWithLabel
 import com.discdogs.app.presentation.model.ExternalWebsites
 import com.discdogs.app.presentation.model.PageState
@@ -73,7 +81,9 @@ import com.discdogs.app.presentation.model.VinylDetailUiModel
 import discdogs.composeapp.generated.resources.Res
 import discdogs.composeapp.generated.resources.ic_barcode
 import discdogs.composeapp.generated.resources.ic_chevron_left
+import discdogs.composeapp.generated.resources.ic_delete
 import discdogs.composeapp.generated.resources.ic_loading
+import discdogs.composeapp.generated.resources.ic_plus
 import discdogs.composeapp.generated.resources.ic_share
 import discdogs.composeapp.generated.resources.ic_star_empty
 import discdogs.composeapp.generated.resources.ic_star_filled
@@ -98,6 +108,7 @@ fun DetailScreen(
 
     val state by viewModel.state.collectAsState()
     val scope = rememberCoroutineScope()
+    var listName by remember { mutableStateOf("") }
 
 
     LaunchedEffect(Unit) {
@@ -127,6 +138,17 @@ fun DetailScreen(
                     }
                 }
 
+                DetailEffect.ShowSaveToListBottomSheet -> {
+                    scope.launch {
+                        moreBottomSheetState.show()
+                    }
+                }
+
+                DetailEffect.DismissSaveToListBottomSheet -> {
+                    scope.launch {
+                        moreBottomSheetState.hide()
+                    }
+                }
 
                 else -> {
 
@@ -174,7 +196,19 @@ fun DetailScreen(
 
     val alpha = animatedRatio
 
-    Box {
+    Scaffold(bottomBar = {
+        PlayPreviewView(
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 80.dp),
+            data = state.playingItem,
+            isLoading = state.isPreviewLoading,
+            color = 0xFF1A1A1A.toInt(),
+            onStop = {
+                viewModel.process(DetailEvent.OnReleaseTrack)
+            }
+        )
+    }) { padding ->
         AsyncImage(
             model = state.backgroundImage,
             contentDescription = null,
@@ -194,12 +228,12 @@ fun DetailScreen(
                     )
                 )
         )
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize().padding(padding)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .padding(top = 42.dp, bottom = 16.dp),
+                    .padding(bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
@@ -284,6 +318,8 @@ fun DetailScreen(
                                             .clip(CircleShape)
                                             .clickable {
 
+                                                viewModel.process(DetailEvent.OnShowSaveToListBottomSheet)
+
                                             }) {
                                         Icon(
                                             painter = if (state.isFavorite) painterResource(Res.drawable.ic_star_filled) else painterResource(
@@ -336,51 +372,69 @@ fun DetailScreen(
 
         }
 
-        PlayPreviewView(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(horizontal = 12.dp)
-                .padding(bottom = 80.dp),
-            data = state.playingItem,
-            isLoading = state.isPreviewLoading,
-            color = 0xFF1A1A1A.toInt(),
-            onStop = {
-                viewModel.process(DetailEvent.OnReleaseTrack)
+
+    }
+
+
+
+
+    if (state.moreSheetVisible) {
+        ResultDetailMoreBottomSheet(
+            sheetState = moreBottomSheetState,
+            onDismiss = { viewModel.process(DetailEvent.OnDismissMoreBottomSheet) },
+            onShare = {
+                viewModel.process(DetailEvent.OnShare)
+
+            },
+            onExternal = { type -> viewModel.process(DetailEvent.OnExternalWebsite(type)) },
+            hasBarcode = !state.releaseDetail?.barcode.isNullOrEmpty(),
+            onBarcode = {
+                viewModel.process(DetailEvent.OnDismissMoreBottomSheet)
+                viewModel.process(DetailEvent.OnShowBarcodeBottomSheet)
+            },
+            hasMaster = state.releaseDetail?.masterId != -1,
+            onReleases = {
+                viewModel.process(DetailEvent.OnDismissMoreBottomSheet)
+                viewModel.process(DetailEvent.OnOtherReleases)
+            },
+        )
+    }
+    if (state.barcodeSheetVisible) {
+        BarcodeBottomSheet(
+            sheetState = moreBottomSheetState,
+            onDismiss = {
+                viewModel.process(DetailEvent.OnDismissBarcodeBottomSheet)
+            },
+            barcode = state.releaseDetail?.barcode
+        )
+    }
+    if (state.saveToListSheetVisible) {
+        SaveToListBottomSheet(
+            sheetState = moreBottomSheetState,
+            onDismiss = { viewModel.process(DetailEvent.OnDismissSaveToListBottomSheet) },
+            lists = state.lists,
+            isFavorite = state.isFavorite,
+            releaseInLists = state.releaseInLists,
+            onToggleFavorite = { viewModel.process(DetailEvent.OnToggleFavorite) },
+            onAddToList = { listId -> viewModel.process(DetailEvent.OnAddToList(listId)) },
+            onCreateNewList = { viewModel.process(DetailEvent.OnCreateNewList) }
+        )
+    }
+    // Create List Dialog
+    if (state.showCreateListDialog) {
+        CreateListDialog(
+            listName = listName,
+            onListNameChange = { listName = it },
+            onConfirm = {
+                if (listName.isNotBlank()) {
+                    viewModel.process(DetailEvent.OnCreateList(listName))
+                }
+            },
+            onDismiss = {
+                viewModel.process(DetailEvent.OnDismissCreateListDialog)
+                listName = ""
             }
         )
-
-        if (state.moreSheetVisible) {
-            ResultDetailMoreBottomSheet(
-                sheetState = moreBottomSheetState,
-                onDismiss = { viewModel.process(DetailEvent.OnDismissMoreBottomSheet) },
-                onShare = {
-                    viewModel.process(DetailEvent.OnShare)
-
-                },
-                onExternal = { type -> viewModel.process(DetailEvent.OnExternalWebsite(type)) },
-                hasBarcode = !state.releaseDetail?.barcode.isNullOrEmpty(),
-                onBarcode = {
-                    viewModel.process(DetailEvent.OnDismissMoreBottomSheet)
-                    viewModel.process(DetailEvent.OnShowBarcodeBottomSheet)
-                },
-                hasMaster = state.releaseDetail?.masterId != -1,
-                onReleases = {
-                    viewModel.process(DetailEvent.OnDismissMoreBottomSheet)
-                    viewModel.process(DetailEvent.OnOtherReleases)
-                },
-            )
-        }
-        if (state.barcodeSheetVisible) {
-            BarcodeBottomSheet(
-                sheetState = moreBottomSheetState,
-                onDismiss = {
-                    viewModel.process(DetailEvent.OnDismissBarcodeBottomSheet)
-                },
-                barcode = state.releaseDetail?.barcode
-            )
-        }
-
-
     }
 
 
@@ -1104,5 +1158,164 @@ private fun ResultDetailMoreBottomSheet(
 
     }
 
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SaveToListBottomSheet(
+    sheetState: SheetState,
+    onDismiss: () -> Unit,
+    lists: List<ReleaseList>?,
+    isFavorite: Boolean,
+    releaseInLists: Set<Long>,
+    onToggleFavorite: () -> Unit,
+    onAddToList: (Long) -> Unit,
+    onCreateNewList: () -> Unit
+) {
+    ModalBottomSheet(
+        modifier = Modifier.fillMaxWidth(),
+        onDismissRequest = { onDismiss() },
+        sheetState = sheetState,
+        containerColor = VETheme.colors.backgroundColorPrimary
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "stringResource(R.string.save)",
+                style = VETheme.typography.text18TextColor200W400,
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .padding(horizontal = 8.dp)
+            )
+
+            // Favorites option
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable { onToggleFavorite() }
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = if (isFavorite) painterResource(Res.drawable.ic_delete) else painterResource(
+                        Res.drawable.ic_plus
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = if (!isFavorite) VETheme.colors.textColor100 else VETheme.colors.redColor
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = if (isFavorite) "stringResource(R.string.remove_from_favorites)" else "stringResource(R.string.add_to_favorites)",
+                    style = VETheme.typography.text16TextColor200W400
+                )
+            }
+
+
+            // Lists
+            lists?.forEach { list ->
+                val isInList = releaseInLists.contains(list.id)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable { onAddToList(list.id) }
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = if (isInList) painterResource(Res.drawable.ic_delete) else painterResource(
+                            Res.drawable.ic_plus
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = if (!isInList) VETheme.colors.textColor100 else VETheme.colors.redColor
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = if (isInList) "stringResource(R.string.remove_from, list.name)" else "stringResource(R.string.add_to, list.name)",
+                        style = VETheme.typography.text16TextColor200W400
+                    )
+                }
+            }
+
+
+            // Create new list
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable { onCreateNewList() }
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_plus),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = VETheme.colors.primaryColor500
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "stringResource(R.string.create_new_list)",
+                    style = VETheme.typography.text16TextColor200W400.copy(color = VETheme.colors.primaryColor500)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun CreateListDialog(
+    listName: String,
+    onListNameChange: (String) -> Unit,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("stringResource(R.string.create_list_title)") },
+        text = {
+            TextField(
+                value = listName,
+                onValueChange = onListNameChange,
+                placeholder = { Text("stringResource(R.string.create_list_placeholder)") },
+                singleLine = true,
+                colors = TextFieldDefaults.colors()
+                    .copy(focusedIndicatorColor = VETheme.colors.primaryColor100)
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = onConfirm,
+                enabled = listName.isNotBlank(),
+                colors = ButtonDefaults.buttonColors().copy(
+                    containerColor = VETheme.colors.primaryColor500
+                )
+            ) {
+                Text(
+                    "stringResource(R.string.create)",
+                    style = VETheme.typography.text14TextColor200W600
+                )
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = onDismiss, colors = ButtonDefaults.buttonColors().copy(
+                    containerColor = VETheme.colors.primaryColor950
+                )
+            ) {
+                Text(
+                    "stringResource(R.string.cancel)",
+                    style = VETheme.typography.text14TextColor200W600
+                )
+            }
+        }
+    )
 }
 

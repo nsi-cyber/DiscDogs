@@ -70,6 +70,7 @@ fun VEBottomNavigationBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
+                    .padding(bottom = 32.dp)
                     .clip(CircleShape)
                     .padding(4.dp)
                     .clickable {
@@ -80,6 +81,7 @@ fun VEBottomNavigationBar(
                         }
                     }
                     .padding(16.dp)
+
             ) {
 
                 Icon(

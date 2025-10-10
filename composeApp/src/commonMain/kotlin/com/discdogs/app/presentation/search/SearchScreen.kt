@@ -31,6 +31,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -53,7 +54,6 @@ import discdogs.composeapp.generated.resources.ic_empty_drawer
 import discdogs.composeapp.generated.resources.ic_loading
 import discdogs.composeapp.generated.resources.ic_search
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -62,115 +62,98 @@ fun SearchScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(VETheme.colors.backgroundColorPrimary)
-    ) {
-
-        Row(
+    Scaffold(
+        containerColor = VETheme.colors.backgroundColorPrimary,
+    ) { padd ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(top = 42.dp, bottom = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize().padding(padd)
         ) {
-            Box(
+
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .height(48.dp)
-                    .background(
-                        color = VETheme.colors.cardBackgroundColor,
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                    .animateContentSize(),
-                contentAlignment = Alignment.CenterStart
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp, bottom = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .weight(1f)
+                        .height(48.dp)
+                        .background(
+                            color = VETheme.colors.cardBackgroundColor,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .animateContentSize(),
+                    contentAlignment = Alignment.CenterStart
                 ) {
-                    Icon(
-                        modifier = Modifier.size(20.dp),
-                        painter=painterResource(Res.drawable.ic_search),
-                        contentDescription = "Search Icon",
-                        tint = VETheme.colors.whiteColor
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    BasicTextField(
-                        value = state.searchQuery,
-                        onValueChange = { viewModel.process(SearchEvent.OnSearchQuery(it)) },
-                        singleLine = true,
-                        textStyle = VETheme.typography.text14TextColor200W500,
-                        modifier = Modifier.fillMaxWidth(),
-                        decorationBox = { innerTextField ->
-                            if (state.searchQuery.isEmpty()) {
-                                Text(
-                                    text = "Search",
-                                    style = VETheme.typography.text14TextColor100W400
-                                )
-                            }
-                            innerTextField()
-                        }
-                    )
-                }
-            }
-
-            AnimatedVisibility(
-                visible = state.searchQuery.isNotEmpty(),
-                enter = fadeIn() + expandHorizontally(),
-                exit = fadeOut() + shrinkHorizontally()
-            ) {
-                Row {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(
-                        onClick = { viewModel.process(SearchEvent.OnClearQuery) }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Clear", style = VETheme.typography.text14TextColor100W400)
+                        Icon(
+                            modifier = Modifier.size(20.dp),
+                            painter = painterResource(Res.drawable.ic_search),
+                            contentDescription = "Search Icon",
+                            tint = VETheme.colors.whiteColor
+                        )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        BasicTextField(
+                            value = state.searchQuery,
+                            onValueChange = { viewModel.process(SearchEvent.OnSearchQuery(it)) },
+                            singleLine = true,
+                            textStyle = VETheme.typography.text14TextColor200W500,
+                            modifier = Modifier.fillMaxWidth(),
+                            decorationBox = { innerTextField ->
+                                if (state.searchQuery.isEmpty()) {
+                                    Text(
+                                        text = "Search",
+                                        style = VETheme.typography.text14TextColor100W400
+                                    )
+                                }
+                                innerTextField()
+                            }
+                        )
+                    }
+                }
+
+                AnimatedVisibility(
+                    visible = state.searchQuery.isNotEmpty(),
+                    enter = fadeIn() + expandHorizontally(),
+                    exit = fadeOut() + shrinkHorizontally()
+                ) {
+                    Row {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TextButton(
+                            onClick = { viewModel.process(SearchEvent.OnClearQuery) }
+                        ) {
+                            Text(text = "Clear", style = VETheme.typography.text14TextColor100W400)
+                        }
                     }
                 }
             }
-        }
 
-        AnimatedContent(
-            targetState = when {
-                state.isLoading -> PageState.LOADING
-                state.searchQuery.isNotEmpty() && state.resultList.isNullOrEmpty() -> PageState.EMPTY
-                state.searchQuery.isEmpty() -> PageState.IDLE
-                else -> PageState.SUCCESS
-            },
-            label = "ContentTransition",
-            modifier = Modifier.fillMaxSize()
-        ) { target ->
-            when (target) {
-                PageState.LOADING -> ShimmeredLoadingState()
+            AnimatedContent(
+                targetState = when {
+                    state.isLoading -> PageState.LOADING
+                    state.searchQuery.isNotEmpty() && state.resultList.isNullOrEmpty() -> PageState.EMPTY
+                    state.searchQuery.isEmpty() -> PageState.IDLE
+                    else -> PageState.SUCCESS
+                },
+                label = "ContentTransition",
+                modifier = Modifier.fillMaxSize()
+            ) { target ->
+                when (target) {
+                    PageState.LOADING -> ShimmeredLoadingState()
 
-                PageState.EMPTY -> NoResultView()
+                    PageState.EMPTY -> NoResultView()
 
-                PageState.SUCCESS -> LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(
-                        start = 8.dp,
-                        end = 8.dp,
-                        top = 8.dp,
-                        bottom = 62.dp
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(state.resultList.orEmpty(), key = { it.id }) { vinyl ->
-                        VinylItemView(data = vinyl, onClick = {
-                            viewModel.process(SearchEvent.OnReleaseDetail(vinyl))
-                        })
-                    }
-
-                }
-
-                else -> {
-                    LazyColumn(
+                    PageState.SUCCESS -> LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(
                             start = 8.dp,
@@ -180,66 +163,87 @@ fun SearchScreen(
                         ),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        if (state.recentSearchedReleases?.isNotEmpty() == true) {
-                            item {
-                                Text(
-                                    text = "recent_searches",
-                                    style = VETheme.typography.text16TextColor200W400,
-                                    modifier = Modifier.padding(horizontal =  16.dp)
-                                )
-                            }
-                            item {
-                                LazyRow(
-                                    modifier = Modifier.fillMaxWidth(),
-                                ) {
-                                    items(
-                                        state.recentSearchedReleases.orEmpty(),
-                                        key = { it.id }) { vinyl ->
-                                        VinylHistoryItemView(data = vinyl, onClick = {
-                                            viewModel.process(SearchEvent.OnReleaseDetail(vinyl))
-                                        })
-                                    }
-
-                                }
-                            }
-                        }
-
-                        if (state.recentScannedReleases?.isNotEmpty() == true) {
-                            item {
-                                Text(
-                                    text = "recent_scans",
-                                    style = VETheme.typography.text16TextColor200W400,
-                                    modifier = Modifier.padding(horizontal =  16.dp)
-                                )
-                            }
-                            item {
-
-                                LazyRow(
-                                    modifier = Modifier.fillMaxWidth(),
-
-                                    ) {
-                                    items(
-                                        state.recentScannedReleases.orEmpty(),
-                                        key = { it.id }) { vinyl ->
-                                        VinylHistoryItemView(data = vinyl, onClick = {
-                                            viewModel.process(SearchEvent.OnReleaseDetail(vinyl))
-                                        })
-                                    }
-
-                                }
-
-                            }
+                        items(state.resultList.orEmpty(), key = { it.id }) { vinyl ->
+                            VinylItemView(data = vinyl, onClick = {
+                                viewModel.process(SearchEvent.OnReleaseDetail(vinyl))
+                            })
                         }
 
                     }
 
+                    else -> {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(
+                                start = 8.dp,
+                                end = 8.dp,
+                                top = 8.dp,
+                                bottom = 62.dp
+                            ),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            if (state.recentSearchedReleases?.isNotEmpty() == true) {
+                                item {
+                                    Text(
+                                        text = "recent_searches",
+                                        style = VETheme.typography.text16TextColor200W400,
+                                        modifier = Modifier.padding(horizontal = 16.dp)
+                                    )
+                                }
+                                item {
+                                    LazyRow(
+                                        modifier = Modifier.fillMaxWidth(),
+                                    ) {
+                                        items(
+                                            state.recentSearchedReleases.orEmpty(),
+                                            key = { it.id }) { vinyl ->
+                                            VinylHistoryItemView(data = vinyl, onClick = {
+                                                viewModel.process(SearchEvent.OnReleaseDetail(vinyl))
+                                            })
+                                        }
 
+                                    }
+                                }
+                            }
+
+                            if (state.recentScannedReleases?.isNotEmpty() == true) {
+                                item {
+                                    Text(
+                                        text = "recent_scans",
+                                        style = VETheme.typography.text16TextColor200W400,
+                                        modifier = Modifier.padding(horizontal = 16.dp)
+                                    )
+                                }
+                                item {
+
+                                    LazyRow(
+                                        modifier = Modifier.fillMaxWidth(),
+
+                                        ) {
+                                        items(
+                                            state.recentScannedReleases.orEmpty(),
+                                            key = { it.id }) { vinyl ->
+                                            VinylHistoryItemView(data = vinyl, onClick = {
+                                                viewModel.process(SearchEvent.OnReleaseDetail(vinyl))
+                                            })
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                        }
+
+
+                    }
                 }
             }
+
+
         }
-
-
     }
+
 
 }
 

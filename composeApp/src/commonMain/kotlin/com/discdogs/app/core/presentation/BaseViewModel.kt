@@ -21,13 +21,8 @@ abstract class BaseViewModel<STATE, EFFECT, EVENT, NAVIGATOR> : ViewModel() {
         this.navigator = navigator
     }
 
-    fun successSnack(message: UiText) {
-        viewModelScope.launch {
-            SnackbarHostManager.showSuccess(message)
-        }
-    }
 
-    fun errorSnack(message: UiText) {
+    fun errorSnack(message: String) {
         viewModelScope.launch {
             SnackbarHostManager.showError(message)
         }

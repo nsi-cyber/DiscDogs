@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -49,34 +50,36 @@ fun ScanScreen(
 
 
 
+    Scaffold { padd ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            ScannerView(isLoading = state.isLoading) { barcode ->
+                if (state.selectedScanType == ScanType.BARCODE && state.isLoading == false) {
+                    viewModel.process(
+                        ScanEvent.OnBarcodeCaptured(barcode)
+                    )
+                }
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        ScannerView(isLoading = state.isLoading) { barcode ->
-            if (state.selectedScanType == ScanType.BARCODE && state.isLoading == false) {
-                viewModel.process(
-                    ScanEvent.OnBarcodeCaptured(barcode)
-                )
             }
 
-
+            CameraPreviewOverlay(
+                modifier = Modifier.fillMaxSize().padding(padd),
+                isLoading = state.isLoading,
+                selectedScanType = state.selectedScanType,
+                onScanTypeChanged = {
+                    viewModel.process(
+                        ScanEvent.OnSelectedScanTypeChanged(it)
+                    )
+                },
+                isFlashOn = isFlashOn,
+                onFlashToggle = { isFlashOn = !isFlashOn },
+                onPhoto = {
+                    // Handle photo capture
+                })
         }
-
-        CameraPreviewOverlay(
-            modifier = Modifier.fillMaxSize(),
-            isLoading = state.isLoading,
-            selectedScanType = state.selectedScanType,
-            onScanTypeChanged = {
-                viewModel.process(
-                    ScanEvent.OnSelectedScanTypeChanged(it)
-                )
-            },
-            isFlashOn = isFlashOn,
-            onFlashToggle = { isFlashOn = !isFlashOn },
-            onPhoto = {
-                // Handle photo capture
-            })
     }
+
+
 }
 
 @Composable
@@ -90,7 +93,7 @@ fun CameraPreviewOverlay(
     onFlashToggle: () -> Unit = {}
 ) {
 
-    Box(modifier = modifier.padding(top = 34.dp, bottom = 100.dp)) {
+    Box(modifier = modifier.padding(top = 16.dp, bottom = 100.dp)) {
         Column(
             modifier = Modifier
                 .fillMaxSize(),

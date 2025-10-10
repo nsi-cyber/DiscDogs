@@ -3,7 +3,6 @@ package com.discdogs.app.presentation.scan
 import androidx.lifecycle.viewModelScope
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.presentation.BaseViewModel
-import com.discdogs.app.core.presentation.UiText
 import com.discdogs.app.domain.NetworkRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -52,9 +51,7 @@ class ScanViewModel(
 
                 is Resource.Error -> {
                     errorSnack(
-                        UiText.DynamicString(
-                            result.message.orEmpty()
-                        )
+                        result.message.orEmpty()
                     )
                     _state.update { it.copy(isLoading = false) }
                 }
