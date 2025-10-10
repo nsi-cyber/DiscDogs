@@ -62,7 +62,9 @@ fun App() {
 
 
             )
+
         Scaffold {
+
             NavHost(
                 navController = rootNavController,
                 startDestination = Route.MainScreen
@@ -98,7 +100,8 @@ fun App() {
                         })
                 }
             }
-            AppLevelSnackbar(modifier = Modifier.padding(it.calculateTopPadding()))
+
+            AppLevelSnackbar(modifier = Modifier.padding(top = it.calculateTopPadding()))
 
         }
 

@@ -14,12 +14,11 @@ class LibraryNavigator(
 
 
     fun navigateToReleaseDetail(id: Int, image: String) {
-
-
+        navController.navigate(Route.ReleaseDetail(id, image, "UNKNOWN"))
     }
 
     fun navigateToListDetail(listId: Long) {
-
+        navController.navigate(Route.FavoriteList(listId))
     }
 
     override fun build(navGraphBuilder: NavGraphBuilder) {

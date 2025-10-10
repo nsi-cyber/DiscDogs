@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -48,71 +49,74 @@ fun ListDetailScreen(
     viewModel: ListDetailViewModel
 ) {
     val state by viewModel.state.collectAsState()
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(top = 42.dp, bottom = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
+    Scaffold(
+        containerColor = VETheme.colors.backgroundColorPrimary,
+    ) { padd ->
+        Column(modifier = Modifier.fillMaxSize().padding(padd)) {
+            Row(
                 modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable {
-                        viewModel.process(ListDetailEvent.OnBackClicked)
-                    }) {
-                Image(
-                    painter = painterResource(Res.drawable.ic_chevron_left),
-                    contentDescription = null,
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp, bottom = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
                     modifier = Modifier
-                        .padding(4.dp)
-                        .size(24.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            viewModel.process(ListDetailEvent.OnBackClicked)
+                        }) {
+                    Image(
+                        painter = painterResource(Res.drawable.ic_chevron_left),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .size(24.dp)
 
+                    )
+                }
+
+                Text(
+                    text = state.listName.orEmpty(),
+                    style = VETheme.typography.text14TextColor200W600,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(end = 32.dp),
+                    textAlign = TextAlign.Center
                 )
             }
 
-            Text(
-                text = state.listName.orEmpty(),
-                style = VETheme.typography.text14TextColor200W600,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(end = 32.dp),
-                textAlign = TextAlign.Center
-            )
-        }
 
+            when {
+                state.isLoading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = VETheme.colors.primaryColor500
+                        )
+                    }
+                }
 
-        // Content
-        when {
-            state.isLoading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        color = VETheme.colors.primaryColor500
+                state.releases.isNullOrEmpty() -> {
+                    EmptyListState()
+                }
+
+                else -> {
+                    ListReleasesContent(
+                        releases = state.releases!!,
+                        onReleaseClick = { release ->
+                            viewModel.process(ListDetailEvent.OnReleaseClick(release))
+                        },
+                        onRemoveRelease = { releaseId ->
+                            viewModel.process(ListDetailEvent.OnRemoveRelease(releaseId))
+                        }
                     )
                 }
             }
 
-            state.releases.isNullOrEmpty() -> {
-                EmptyListState()
-            }
-
-            else -> {
-                ListReleasesContent(
-                    releases = state.releases!!,
-                    onReleaseClick = { release ->
-                        viewModel.process(ListDetailEvent.OnReleaseClick(release))
-                    },
-                    onRemoveRelease = { releaseId ->
-                        viewModel.process(ListDetailEvent.OnRemoveRelease(releaseId))
-                    }
-                )
-            }
         }
     }
 }
