@@ -50,10 +50,9 @@ import com.discdogs.app.core.presentation.theme.VETheme
 import com.discdogs.app.presentation.model.PageState
 import com.discdogs.app.presentation.model.VinylResultUiModel
 import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.ic_empty_drawer
-import discdogs.composeapp.generated.resources.ic_loading
-import discdogs.composeapp.generated.resources.ic_search
+import discdogs.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -112,7 +111,7 @@ fun SearchScreen(
                             decorationBox = { innerTextField ->
                                 if (state.searchQuery.isEmpty()) {
                                     Text(
-                                        text = "Search",
+                                        text = stringResource(Res.string.search),
                                         style = VETheme.typography.text14TextColor100W400
                                     )
                                 }
@@ -132,7 +131,10 @@ fun SearchScreen(
                         TextButton(
                             onClick = { viewModel.process(SearchEvent.OnClearQuery) }
                         ) {
-                            Text(text = "Clear", style = VETheme.typography.text14TextColor100W400)
+                            Text(
+                                text = stringResource(Res.string.clear),
+                                style = VETheme.typography.text14TextColor100W400
+                            )
                         }
                     }
                 }
@@ -185,7 +187,7 @@ fun SearchScreen(
                             if (state.recentSearchedReleases?.isNotEmpty() == true) {
                                 item {
                                     Text(
-                                        text = "recent_searches",
+                                        text = stringResource(Res.string.recent_searches),
                                         style = VETheme.typography.text16TextColor200W400,
                                         modifier = Modifier.padding(horizontal = 16.dp)
                                     )
@@ -209,7 +211,7 @@ fun SearchScreen(
                             if (state.recentScannedReleases?.isNotEmpty() == true) {
                                 item {
                                     Text(
-                                        text = "recent_scans",
+                                        text = stringResource(Res.string.recent_scans),
                                         style = VETheme.typography.text16TextColor200W400,
                                         modifier = Modifier.padding(horizontal = 16.dp)
                                     )
@@ -541,11 +543,11 @@ private fun NoResultView() {
             colorFilter = ColorFilter.tint(VETheme.colors.primaryColor500)
         )
         Text(
-            text = "No Results Found",
+            text = stringResource(Res.string.no_results_found),
             style = VETheme.typography.text16TextColor200W400,
         )
         Text(
-            text = "keep_hunting_try_to_search_with_different_keywords",
+            text = stringResource(Res.string.keep_hunting_try_to_search_with_different_keywords),
             style = VETheme.typography.text14TextColor100W400,
             textAlign = TextAlign.Center
 

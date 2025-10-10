@@ -32,9 +32,9 @@ import androidx.compose.ui.unit.dp
 import com.discdogs.app.core.camera.ScannerView
 import com.discdogs.app.core.presentation.theme.VETheme
 import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.ic_camera
-import discdogs.composeapp.generated.resources.ic_flash
+import discdogs.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -117,7 +117,7 @@ fun CameraPreviewOverlay(
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = "scan_barcode",
+                        text = stringResource(Res.string.scan_barcode),
                         style = VETheme.typography.text14TextColor200W400
                     )
                 }
@@ -132,7 +132,7 @@ fun CameraPreviewOverlay(
                         }
                         .padding(horizontal = 16.dp, vertical = 8.dp)) {
                     Text(
-                        text = "scan_cover_image",
+                        text = stringResource(Res.string.scan_cover_image),
                         style = VETheme.typography.text14TextColor200W400
                     )
                 }

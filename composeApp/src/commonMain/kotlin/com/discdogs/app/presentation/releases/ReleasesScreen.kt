@@ -38,10 +38,9 @@ import com.discdogs.app.core.presentation.theme.VETheme
 import com.discdogs.app.presentation.model.MastersVersionsUiModel
 import com.discdogs.app.presentation.model.PageState
 import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.ic_chevron_left
-import discdogs.composeapp.generated.resources.ic_empty_drawer
-import discdogs.composeapp.generated.resources.ic_loading
+import discdogs.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -78,7 +77,7 @@ fun ReleasesScreen(
             }
 
             Text(
-                text = "other_releases",
+                text = stringResource(Res.string.other_releases),
                 style = VETheme.typography.text14TextColor200W600,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -341,11 +340,11 @@ private fun NoResultView() {
             colorFilter = ColorFilter.tint(VETheme.colors.primaryColor500)
         )
         Text(
-            text = "no_results_found",
+            text = stringResource(Res.string.no_results_found),
             style = VETheme.typography.text16TextColor200W400,
         )
         Text(
-            text = "keep_hunting_try_to_search_with_different_keywords",
+            text = stringResource(Res.string.keep_hunting_try_to_search_with_different_keywords),
             style = VETheme.typography.text14TextColor100W400,
             textAlign = TextAlign.Center
 

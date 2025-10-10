@@ -50,11 +50,9 @@ import com.discdogs.app.data.database.model.ReleaseList
 import com.discdogs.app.presentation.listdetail.EmptyListState
 import com.discdogs.app.presentation.model.VinylResultUiModel
 import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.ic_chevron_left
-import discdogs.composeapp.generated.resources.ic_delete
-import discdogs.composeapp.generated.resources.ic_loading
-import discdogs.composeapp.generated.resources.ic_plus
+import discdogs.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun LibraryScreen(
@@ -76,7 +74,7 @@ fun LibraryScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "stringResource(R.string.library)",
+                    text = stringResource(Res.string.library),
                     style = VETheme.typography.text14TextColor200W600,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
@@ -106,7 +104,7 @@ fun LibraryScreen(
                     onClick = { viewModel.process(LibraryEvent.OnFavoritesTabSelected) },
                     text = {
                         Text(
-                            "stringResource(R.string.favorites)",
+                            stringResource(Res.string.favorites),
                             color = if (state.selectedTab == LibraryTab.FAVORITES) {
                                 VETheme.colors.primaryColor500
                             } else {
@@ -120,7 +118,7 @@ fun LibraryScreen(
                     onClick = { viewModel.process(LibraryEvent.OnListsTabSelected) },
                     text = {
                         Text(
-                            "stringResource(R.string.lists)",
+                            stringResource(Res.string.lists),
                             color = if (state.selectedTab == LibraryTab.LISTS) {
                                 VETheme.colors.primaryColor500
                             } else {
@@ -266,7 +264,7 @@ private fun ListsTabContent(
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = "stringResource(R.string.create_new_list)",
+                        text = stringResource(Res.string.create_new_list),
                         style = VETheme.typography.text16TextColor200W400,
                         color = VETheme.colors.primaryColor500
                     )
@@ -437,12 +435,12 @@ fun CreateListDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("stringResource(R.string.create_list_title)") },
+        title = { Text(stringResource(Res.string.create_list_title)) },
         text = {
             TextField(
                 value = listName,
                 onValueChange = onListNameChange,
-                placeholder = { Text("stringResource(R.string.create_list_placeholder)") },
+                placeholder = { Text(stringResource(Res.string.create_list_placeholder)) },
                 singleLine = true,
                 colors = TextFieldDefaults.colors()
                     .copy(focusedIndicatorColor = VETheme.colors.primaryColor100)
@@ -457,7 +455,7 @@ fun CreateListDialog(
                 )
             ) {
                 Text(
-                    "stringResource(R.string.create)",
+                    stringResource(Res.string.create),
                     style = VETheme.typography.text14TextColor200W600
                 )
             }
@@ -469,7 +467,7 @@ fun CreateListDialog(
                 )
             ) {
                 Text(
-                    "stringResource(R.string.cancel)",
+                    stringResource(Res.string.cancel),
                     style = VETheme.typography.text14TextColor200W600
                 )
             }

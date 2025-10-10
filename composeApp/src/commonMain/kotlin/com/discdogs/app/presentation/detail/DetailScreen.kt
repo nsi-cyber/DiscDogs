@@ -79,23 +79,11 @@ import com.discdogs.app.presentation.model.PageState
 import com.discdogs.app.presentation.model.TrackListUiModel
 import com.discdogs.app.presentation.model.VinylDetailUiModel
 import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.ic_barcode
-import discdogs.composeapp.generated.resources.ic_chevron_left
-import discdogs.composeapp.generated.resources.ic_delete
-import discdogs.composeapp.generated.resources.ic_loading
-import discdogs.composeapp.generated.resources.ic_plus
-import discdogs.composeapp.generated.resources.ic_share
-import discdogs.composeapp.generated.resources.ic_star_empty
-import discdogs.composeapp.generated.resources.ic_star_filled
-import discdogs.composeapp.generated.resources.ic_stop
-import discdogs.composeapp.generated.resources.ic_three_dots
-import discdogs.composeapp.generated.resources.ic_vinyl_format
-import discdogs.composeapp.generated.resources.icon_apple_music
-import discdogs.composeapp.generated.resources.icon_spotify
-import discdogs.composeapp.generated.resources.icon_youtube_music
+import discdogs.composeapp.generated.resources.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
@@ -793,7 +781,7 @@ private fun ReleaseInfoDetailView(data: VinylDetailUiModel?) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "release_date",
+                    text = stringResource(Res.string.release_date),
                     style = VETheme.typography.text14TextColor100W400,
                 )
                 Text(
@@ -810,7 +798,7 @@ private fun ReleaseInfoDetailView(data: VinylDetailUiModel?) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "genres",
+                    text = stringResource(Res.string.genres),
                     style = VETheme.typography.text14TextColor100W400,
                 )
                 FlowRow(
@@ -842,7 +830,7 @@ private fun ReleaseInfoDetailView(data: VinylDetailUiModel?) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "styles",
+                    text = stringResource(Res.string.styles),
                     style = VETheme.typography.text14TextColor100W400,
                 )
                 FlowRow(
@@ -873,7 +861,7 @@ private fun ReleaseInfoDetailView(data: VinylDetailUiModel?) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "formats",
+                    text = stringResource(Res.string.formats),
                     style = VETheme.typography.text14TextColor100W400,
                 )
 
@@ -921,7 +909,7 @@ private fun ReleaseInfoDetailView(data: VinylDetailUiModel?) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "disc_count",
+                    text = stringResource(Res.string.disc_count),
                     style = VETheme.typography.text14TextColor100W400,
                 )
 
@@ -956,7 +944,9 @@ private fun ReleaseInfoDetailView(data: VinylDetailUiModel?) {
 
             if (isOverflowing || showMore) {
                 Text(
-                    text = if (showMore) "show_less" else "show_more",
+                    text = if (showMore) stringResource(Res.string.show_less) else stringResource(
+                        Res.string.show_more
+                    ),
                     style = VETheme.typography.text14TextColor200W400.copy(
                         color = VETheme.colors.primaryColor500
                     ),
@@ -1020,7 +1010,7 @@ private fun ResultDetailMoreBottomSheet(
                         colorFilter = ColorFilter.tint(VETheme.colors.textColor100)
                     )
                     Text(
-                        text = "show_barcode",
+                        text = stringResource(Res.string.show_barcode),
                         style = VETheme.typography.text16TextColor200W500,
                     )
 
@@ -1047,7 +1037,7 @@ private fun ResultDetailMoreBottomSheet(
                     colorFilter = ColorFilter.tint(VETheme.colors.textColor100)
                 )
                 Text(
-                    text = "share",
+                    text = stringResource(Res.string.share),
                     style = VETheme.typography.text16TextColor200W500,
                 )
 
@@ -1074,7 +1064,7 @@ private fun ResultDetailMoreBottomSheet(
                         colorFilter = ColorFilter.tint(VETheme.colors.textColor100)
                     )
                     Text(
-                        text = "show_other_releases",
+                        text = stringResource(Res.string.show_other_releases),
                         style = VETheme.typography.text16TextColor200W500,
                     )
 
@@ -1100,7 +1090,7 @@ private fun ResultDetailMoreBottomSheet(
                         .size(24.dp),
                 )
                 Text(
-                    text = "show_on_spotify",
+                    text = stringResource(Res.string.show_on_spotify),
                     style = VETheme.typography.text16TextColor200W500,
                 )
 
@@ -1125,7 +1115,7 @@ private fun ResultDetailMoreBottomSheet(
                         .size(24.dp),
                 )
                 Text(
-                    text = "show_on_apple_music",
+                    text = stringResource(Res.string.show_on_apple_music),
                     style = VETheme.typography.text16TextColor200W500,
                 )
 
@@ -1149,7 +1139,7 @@ private fun ResultDetailMoreBottomSheet(
                         .size(24.dp),
                 )
                 Text(
-                    text = "show_on_youtube_music",
+                    text = stringResource(Res.string.show_on_youtube_music),
                     style = VETheme.typography.text16TextColor200W500,
                 )
 
@@ -1185,7 +1175,7 @@ private fun SaveToListBottomSheet(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "stringResource(R.string.save)",
+                text = stringResource(Res.string.save),
                 style = VETheme.typography.text18TextColor200W400,
                 modifier = Modifier
                     .padding(bottom = 16.dp)
@@ -1211,7 +1201,9 @@ private fun SaveToListBottomSheet(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = if (isFavorite) "stringResource(R.string.remove_from_favorites)" else "stringResource(R.string.add_to_favorites)",
+                    text = if (isFavorite) stringResource(Res.string.remove_from_favorites) else stringResource(
+                        Res.string.add_to_favorites
+                    ),
                     style = VETheme.typography.text16TextColor200W400
                 )
             }
@@ -1238,7 +1230,10 @@ private fun SaveToListBottomSheet(
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = if (isInList) "stringResource(R.string.remove_from, list.name)" else "stringResource(R.string.add_to, list.name)",
+                        text = if (isInList) stringResource(
+                            Res.string.remove_from,
+                            list.name
+                        ) else stringResource(Res.string.add_to, list.name),
                         style = VETheme.typography.text16TextColor200W400
                     )
                 }
@@ -1262,7 +1257,7 @@ private fun SaveToListBottomSheet(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "stringResource(R.string.create_new_list)",
+                    text = stringResource(Res.string.create_new_list),
                     style = VETheme.typography.text16TextColor200W400.copy(color = VETheme.colors.primaryColor500)
                 )
             }
@@ -1279,12 +1274,12 @@ fun CreateListDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("stringResource(R.string.create_list_title)") },
+        title = { Text(stringResource(Res.string.create_list_title)) },
         text = {
             TextField(
                 value = listName,
                 onValueChange = onListNameChange,
-                placeholder = { Text("stringResource(R.string.create_list_placeholder)") },
+                placeholder = { Text(stringResource(Res.string.create_list_placeholder)) },
                 singleLine = true,
                 colors = TextFieldDefaults.colors()
                     .copy(focusedIndicatorColor = VETheme.colors.primaryColor100)
@@ -1299,7 +1294,7 @@ fun CreateListDialog(
                 )
             ) {
                 Text(
-                    "stringResource(R.string.create)",
+                    stringResource(Res.string.create),
                     style = VETheme.typography.text14TextColor200W600
                 )
             }
@@ -1311,7 +1306,7 @@ fun CreateListDialog(
                 )
             ) {
                 Text(
-                    "stringResource(R.string.cancel)",
+                    stringResource(Res.string.cancel),
                     style = VETheme.typography.text14TextColor200W600
                 )
             }

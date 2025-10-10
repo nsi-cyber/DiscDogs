@@ -38,11 +38,9 @@ import coil3.compose.AsyncImage
 import com.discdogs.app.core.presentation.theme.VETheme
 import com.discdogs.app.presentation.model.VinylResultUiModel
 import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.ic_chevron_left
-import discdogs.composeapp.generated.resources.ic_delete
-import discdogs.composeapp.generated.resources.ic_empty_drawer
-import discdogs.composeapp.generated.resources.ic_loading
+import discdogs.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ListDetailScreen(
@@ -265,11 +263,11 @@ fun EmptyListState() {
             colorFilter = ColorFilter.tint(VETheme.colors.primaryColor500)
         )
         Text(
-            text = "stringResource(R.string.there_are_no_records_here_yet)",
+            text = stringResource(Res.string.there_are_no_records_here_yet),
             style = VETheme.typography.text16TextColor200W400,
         )
         Text(
-            text = "stringResource(R.string.save_your_records_to_not_lose_them)",
+            text = stringResource(Res.string.save_your_records_to_not_lose_them),
             style = VETheme.typography.text14TextColor100W400,
             textAlign = TextAlign.Center
 
