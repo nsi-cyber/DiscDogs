@@ -33,7 +33,7 @@ actual fun ScannerView(
 ) {
     var torchEnabled by remember { mutableStateOf(false) }
 
-    var cameraViewController by remember { mutableStateOf<CameraViewController?>(null) }
+    var cameraViewController by remember { mutableStateOf<EnhancedCameraViewController?>(null) }
     val captureDevice: AVCaptureDevice? =
         remember {
             AVCaptureDevice.defaultDeviceWithDeviceType(
@@ -63,9 +63,7 @@ actual fun ScannerView(
     }
 
     scannerController?.onPhotoCapture = {
-        cameraViewController?.capturePhoto { byteArray ->
-            onPhotoCaptured?.invoke(byteArray)
-        }
+        cameraViewController?.capturePhoto()
     }
 
 
@@ -73,12 +71,15 @@ actual fun ScannerView(
 
     cameraViewController =
         remember {
-            CameraViewController(
+            EnhancedCameraViewController(
                 device = captureDevice,
                 isLoading = isLoading,
                 onBarcodeSuccess = { scannedBarcode ->
                     result(scannedBarcode)
                 },
+                onPhotoCaptured = { byteArray ->
+                    onPhotoCaptured?.invoke(byteArray)
+                }
             )
         }
 

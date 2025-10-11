@@ -57,7 +57,9 @@
 		<string>youtubemusic</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs camera access to scan barcodes and capture images for book identification.</string>
+	<string>This app needs camera access to scan barcodes and capture high-quality images for vinyl record identification using AI analysis.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app may need access to photo library to save captured images.</string>
 	<key>GEMINI_API_KEY</key>
 	<string>AIzaSyDakiMCeC63crGYco0TxR3lRpt9GxkT5-g</string>
 	<key>DISCOGS_API_KEY</key>
