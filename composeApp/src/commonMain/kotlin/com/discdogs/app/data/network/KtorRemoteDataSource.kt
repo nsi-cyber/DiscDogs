@@ -2,26 +2,43 @@ package com.discdogs.app.data.network
 
 import com.discdogs.app.core.data.ResultWrapper
 import com.discdogs.app.core.data.safeApiCall
+import com.discdogs.app.data.network.data.request.gemini.Content
+import com.discdogs.app.data.network.data.request.gemini.GeminiRequest
+import com.discdogs.app.data.network.data.request.gemini.InlineData
+import com.discdogs.app.data.network.data.request.gemini.Part
 import com.discdogs.app.data.network.data.response.base.PaginationBaseResponse
 import com.discdogs.app.data.network.data.response.deezer.search.GetSearchResponse
 import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.GetMastersVersionsResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
+import com.discdogs.app.data.network.data.response.gemini.GeminiBaseResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import kotlin.io.encoding.Base64
 
 
 object Network {
     object Discogs {
         const val BASE_URL = "https://api.discogs.com"
-        const val API_KEY = "YWyyVemvefOgexZXdCcDLlVzOgxBbHKPbzuzoywB"
+        val API_KEY: String get() = NetworkConfig.discogsApiKey
         const val SEARCH = "/database/search"
     }
 
     object Deezer {
         const val BASE_URL = "https://api.deezer.com"
         const val SEARCH = "/search"
+    }
+
+    object Gemini {
+        const val BASE_URL = "https://generativelanguage.googleapis.com"
+        val API_KEY: String get() = NetworkConfig.geminiApiKey
+        const val GENERATE_CONTENT = "/v1beta/models/gemini-2.5-flash:generateContent"
     }
 }
 
@@ -103,6 +120,40 @@ class KtorRemoteDataSource(
             ) {
                 parameter("q", query)
                 parameter("limit", limit)
+            }
+        }
+    }
+
+    override suspend fun generateImageCaption(
+        imageBytes: ByteArray,
+        prompt: String
+    ): ResultWrapper<GeminiBaseResponse> {
+        return safeApiCall {
+            val base64Image = Base64.encode(imageBytes)
+            val request = GeminiRequest(
+                contents = listOf(
+                    Content(
+                        parts = listOf(
+                            Part(
+                                inline_data = InlineData(
+                                    mime_type = "image/jpeg",
+                                    data = base64Image
+                                )
+                            ),
+                            Part(text = prompt)
+                        )
+                    )
+                )
+            )
+
+            httpClient.post(
+                urlString = "${Network.Gemini.BASE_URL}${Network.Gemini.GENERATE_CONTENT}"
+            ) {
+                headers {
+                    append("x-goog-api-key", Network.Gemini.API_KEY)
+                }
+                contentType(ContentType.Application.Json)
+                setBody(request)
             }
         }
     }

@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -81,6 +82,7 @@ kotlin {
             implementation(libs.bundles.coil)
             implementation("com.fleeksoft.ksoup:ksoup:0.1.6")
             implementation("com.fleeksoft.ksoup:ksoup-network:0.1.6")
+            //implementation(libs.kotlinx.io.encoding)
 
 
         }
@@ -89,6 +91,13 @@ kotlin {
             ksp(libs.androidx.room.compiler)
         }
     }
+}
+
+// Load local.properties for API keys
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
 }
 
 android {
@@ -101,6 +110,18 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+        // Add API keys to BuildConfig
+        buildConfigField(
+            "String",
+            "GEMINI_API_KEY",
+            "\"${localProperties.getProperty("GEMINI_API_KEY") ?: "YOUR_GEMINI_API_KEY_HERE"}\""
+        )
+        buildConfigField(
+            "String",
+            "DISCOGS_API_KEY",
+            "\"${localProperties.getProperty("DISCOGS_API_KEY") ?: "YOUR_DISCOGS_API_KEY_HERE"}\""
+        )
     }
     packaging {
         resources {
@@ -115,6 +136,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 

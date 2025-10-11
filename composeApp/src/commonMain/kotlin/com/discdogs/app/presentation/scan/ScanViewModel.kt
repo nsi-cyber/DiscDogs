@@ -61,12 +61,57 @@ class ScanViewModel(
 
 
     private fun handlePhotoCaptured(imageBytes: ByteArray) {
-        // Handle the captured photo
-        // You can process the image here or save it
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            delay(1000)
-            _state.update { it.copy(isLoading = false) }
+
+            when (val result = networkRepository.generateImageCaption(
+                imageBytes,
+                prompt = "If image has a vinyl record return {\"name\":\"<full record name>\",\"response\":200}, else return {\"name\":null,\"response\":404}"
+            )) {
+                is Resource.Success -> {
+
+                    if (result.value?.response == 200) {
+                        if (result.value.name != null) {
+                            val query = result.value.name
+                            when (val res = networkRepository.searchVinyl(query)) {
+                                is Resource.Success -> {
+                                    if (res.value?.firstOrNull()?.id != null) {
+                                        _state.update { it.copy(isLoading = false) }
+                                        navigator?.navigateToReleaseDetail(res.value.firstOrNull()?.id!!)
+                                    } else {
+                                        errorSnack("No vinyl record found with the name $query")
+                                        _state.update { it.copy(isLoading = false) }
+
+                                    }
+
+                                }
+
+                                is Resource.Error -> {
+                                    errorSnack("No vinyl record found with the name $query")
+                                    _state.update { it.copy(isLoading = false) }
+                                }
+                            }
+                        } else {
+                            _state.update { it.copy(isLoading = false) }
+
+                            errorSnack("No vinyl record found in the image")
+                        }
+                    } else {
+                        _state.update { it.copy(isLoading = false) }
+
+                        errorSnack("No vinyl record found in the image")
+                    }
+
+
+                }
+
+                is Resource.Error -> {
+                    errorSnack(
+                        result.message ?: "Failed to generate image caption"
+                    )
+                    _state.update { it.copy(isLoading = false) }
+                }
+            }
         }
     }
 

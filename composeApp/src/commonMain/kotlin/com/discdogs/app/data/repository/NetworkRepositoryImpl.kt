@@ -6,7 +6,9 @@ import com.discdogs.app.data.network.RemoteDataSource
 import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.GetMastersVersionsResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
+import com.discdogs.app.data.network.data.response.gemini.GeminiResponse
 import com.discdogs.app.domain.NetworkRepository
+import kotlinx.serialization.json.Json
 
 
 class NetworkRepositoryImpl(
@@ -46,5 +48,20 @@ class NetworkRepositoryImpl(
             .searchSongPreview(
                 query = query,
             ).toResource { it.searchResponseList.firstOrNull()?.preview }
+
+    override suspend fun generateImageCaption(
+        imageBytes: ByteArray,
+        prompt: String
+    ): Resource<GeminiResponse?> =
+        remoteDataSource
+            .generateImageCaption(imageBytes = imageBytes, prompt = prompt)
+            .toResource {
+                Json.decodeFromString<GeminiResponse>(
+                    it.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text?.replace(
+                        "```json",
+                        ""
+                    )?.replace("```", "").orEmpty()
+                )
+            }
 
 }

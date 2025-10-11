@@ -4,6 +4,7 @@ import com.discdogs.app.core.data.Resource
 import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.GetMastersVersionsResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
+import com.discdogs.app.data.network.data.response.gemini.GeminiResponse
 
 
 interface NetworkRepository {
@@ -25,5 +26,10 @@ interface NetworkRepository {
     suspend fun searchSongPreview(
         query: String?,
     ): Resource<String?>
+
+    suspend fun generateImageCaption(
+        imageBytes: ByteArray,
+        prompt: String = "Caption this image."
+    ): Resource<GeminiResponse?>
 
 }

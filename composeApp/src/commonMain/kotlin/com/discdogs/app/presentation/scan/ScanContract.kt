@@ -3,7 +3,7 @@ package com.discdogs.app.presentation.scan
 data class ScanState(
     val isLoading: Boolean = false,
     val selectedScanType: ScanType = ScanType.BARCODE,
-    val showImageScanningOption: Boolean = true
+    val showImageScanningOption: Boolean = true,
 )
 
 sealed interface ScanEffect

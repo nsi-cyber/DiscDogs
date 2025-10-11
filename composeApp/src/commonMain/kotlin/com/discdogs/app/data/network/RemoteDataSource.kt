@@ -6,6 +6,7 @@ import com.discdogs.app.data.network.data.response.deezer.search.GetSearchRespon
 import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.GetMastersVersionsResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
+import com.discdogs.app.data.network.data.response.gemini.GeminiBaseResponse
 
 interface RemoteDataSource {
 
@@ -37,4 +38,9 @@ interface RemoteDataSource {
         query: String?,
         limit: Int = 1,
     ): ResultWrapper<GetSearchResponse>
+
+    suspend fun generateImageCaption(
+        imageBytes: ByteArray,
+        prompt: String = "Caption this image."
+    ): ResultWrapper<GeminiBaseResponse>
 }
