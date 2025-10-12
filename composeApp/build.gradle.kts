@@ -102,15 +102,15 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.discdogs.app"
+    namespace = "com.nsicyber.vinylscan"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.discdogs.app"
+        applicationId = "com.nsicyber.vinylscan"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 35
+        versionName = "4.0"
 
         // Add API keys to BuildConfig
         buildConfigField(

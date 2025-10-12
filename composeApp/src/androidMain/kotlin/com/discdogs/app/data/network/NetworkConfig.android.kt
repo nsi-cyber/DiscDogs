@@ -1,6 +1,6 @@
 package com.discdogs.app.data.network
 
-import com.discdogs.app.BuildConfig
+import com.nsicyber.vinylscan.BuildConfig
 
 actual object NetworkConfig {
     actual val geminiApiKey: String

@@ -5,7 +5,7 @@ import android.os.Looper
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import com.discdogs.app.DiscDogApplication
+import com.nsicyber.vinylscan.DiscDogApplication
 import kotlinx.coroutines.flow.MutableStateFlow
 
 actual class AudioPlayer actual constructor(private val playerStateFlow: MutableStateFlow<PlaybackState>) {

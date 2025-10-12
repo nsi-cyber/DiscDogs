@@ -1,4 +1,4 @@
-package com.discdogs.app
+package com.nsicyber.vinylscan
 
 import android.app.Application
 import android.content.Context

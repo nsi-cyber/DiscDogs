@@ -25,7 +25,8 @@ import com.discdogs.app.data.database.model.UserPreference
         Release::class,
         ReleaseList::class,
         ReleaseListRelease::class],
-    version = 1
+    version = 4,
+    exportSchema = false
 )
 @TypeConverters(
     StringListTypeConverter::class
@@ -40,6 +41,6 @@ abstract class VinylDatabase : RoomDatabase() {
     abstract val releaseListReleaseDao: ReleaseListReleaseDao
 
     companion object {
-        const val DB_NAME = "discdogs.db"
+        const val DB_NAME = "vinyl_explorer_database"
     }
 }

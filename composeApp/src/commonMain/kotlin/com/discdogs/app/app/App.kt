@@ -22,9 +22,11 @@ import com.discdogs.app.presentation.components.VEBottomNavigationItem
 import com.discdogs.app.presentation.detail.DetailNavigator
 import com.discdogs.app.presentation.library.LibraryNavigator
 import com.discdogs.app.presentation.listdetail.ListDetailNavigator
+import com.discdogs.app.presentation.onboarding.OnboardingNavigator
 import com.discdogs.app.presentation.releases.ReleasesNavigator
 import com.discdogs.app.presentation.scan.ScanNavigator
 import com.discdogs.app.presentation.search.SearchNavigator
+import com.discdogs.app.presentation.splash.SplashNavigator
 import discdog.composeapp.generated.resources.Res
 import discdog.composeapp.generated.resources.ic_library
 import discdog.composeapp.generated.resources.ic_scan
@@ -67,8 +69,10 @@ fun App() {
 
             NavHost(
                 navController = rootNavController,
-                startDestination = Route.MainScreen
+                startDestination = Route.Splash
             ) {
+                SplashNavigator(rootNavController).build(this)
+                OnboardingNavigator(rootNavController).build(this)
                 ListDetailNavigator(rootNavController).build(this)
                 ReleasesNavigator(rootNavController).build(this)
                 DetailNavigator(rootNavController).build(this)

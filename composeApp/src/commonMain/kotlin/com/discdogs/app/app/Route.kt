@@ -5,16 +5,13 @@ import kotlinx.serialization.Serializable
 sealed interface Route {
 
     @Serializable
+    data object Splash : Route
+
+    @Serializable
+    data object Onboarding : Route
+
+    @Serializable
     data object MainScreen : Route
-
-    @Serializable
-    data object MainGraph : Route
-
-    @Serializable
-    data object BookList : Route
-
-    @Serializable
-    data class BookDetail(val id: String) : Route
 
     @Serializable
     data object Search : Route

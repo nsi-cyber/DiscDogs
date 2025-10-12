@@ -16,9 +16,11 @@ import com.discdogs.app.domain.NetworkRepository
 import com.discdogs.app.presentation.detail.DetailViewModel
 import com.discdogs.app.presentation.library.LibraryViewModel
 import com.discdogs.app.presentation.listdetail.ListDetailViewModel
+import com.discdogs.app.presentation.onboarding.OnboardingViewModel
 import com.discdogs.app.presentation.releases.ReleasesViewModel
 import com.discdogs.app.presentation.scan.ScanViewModel
 import com.discdogs.app.presentation.search.SearchViewModel
+import com.discdogs.app.presentation.splash.SplashViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -58,8 +60,10 @@ val sharedModule = module {
 
     viewModelOf(::SearchViewModel)
     viewModelOf(::DetailViewModel)
+    viewModelOf(::OnboardingViewModel)
     viewModelOf(::LibraryViewModel)
     viewModelOf(::ListDetailViewModel)
+    viewModelOf(::SplashViewModel)
     viewModelOf(::ReleasesViewModel)
     viewModelOf(::ScanViewModel)
 }
