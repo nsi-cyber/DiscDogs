@@ -49,8 +49,16 @@ import com.discdogs.app.core.presentation.shimmerEffect
 import com.discdogs.app.core.presentation.theme.VETheme
 import com.discdogs.app.presentation.model.PageState
 import com.discdogs.app.presentation.model.VinylResultUiModel
-import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.*
+import discdog.composeapp.generated.resources.Res
+import discdog.composeapp.generated.resources.clear
+import discdog.composeapp.generated.resources.ic_empty_drawer
+import discdog.composeapp.generated.resources.ic_loading
+import discdog.composeapp.generated.resources.ic_search
+import discdog.composeapp.generated.resources.keep_hunting_try_to_search_with_different_keywords
+import discdog.composeapp.generated.resources.no_results_found
+import discdog.composeapp.generated.resources.recent_scans
+import discdog.composeapp.generated.resources.recent_searches
+import discdog.composeapp.generated.resources.search
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

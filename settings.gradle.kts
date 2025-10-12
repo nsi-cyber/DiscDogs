@@ -1,4 +1,4 @@
-rootProject.name = "DiscDogs"
+rootProject.name = "DiscDog"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

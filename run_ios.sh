@@ -26,7 +26,7 @@ xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -destination 'platfor
 
 # Simülatörde çalıştır
 echo "▶️ Launching on simulator..."
-xcrun simctl install "iPhone 17" "/Users/enes/Library/Developer/Xcode/DerivedData/iosApp-eiwazqyafxqssqbctjmwbetokoau/Build/Products/Debug-iphonesimulator/DiscDogs.app"
-xcrun simctl launch "iPhone 17" com.discdogs.app.DiscDogs
+xcrun simctl install "iPhone 17" "/Users/enes/Library/Developer/Xcode/DerivedData/iosApp-eiwazqyafxqssqbctjmwbetokoau/Build/Products/Debug-iphonesimulator/DiscDog.app"
+xcrun simctl launch "iPhone 17" com.discdogs.app.DiscDog
 
 echo "✅ iOS app launched successfully!"

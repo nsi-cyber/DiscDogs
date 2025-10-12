@@ -49,8 +49,19 @@ import com.discdogs.app.core.presentation.theme.VETheme
 import com.discdogs.app.data.database.model.ReleaseList
 import com.discdogs.app.presentation.listdetail.EmptyListState
 import com.discdogs.app.presentation.model.VinylResultUiModel
-import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.*
+import discdog.composeapp.generated.resources.Res
+import discdog.composeapp.generated.resources.cancel
+import discdog.composeapp.generated.resources.create
+import discdog.composeapp.generated.resources.create_list_placeholder
+import discdog.composeapp.generated.resources.create_list_title
+import discdog.composeapp.generated.resources.create_new_list
+import discdog.composeapp.generated.resources.favorites
+import discdog.composeapp.generated.resources.ic_chevron_left
+import discdog.composeapp.generated.resources.ic_delete
+import discdog.composeapp.generated.resources.ic_loading
+import discdog.composeapp.generated.resources.ic_plus
+import discdog.composeapp.generated.resources.library
+import discdog.composeapp.generated.resources.lists
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

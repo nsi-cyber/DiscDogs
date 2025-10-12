@@ -5,7 +5,7 @@ import android.content.Context
 import com.discdogs.app.di.initKoin
 import org.koin.android.ext.koin.androidContext
 
-class DiscDogsApplication : Application() {
+class DiscDogApplication : Application() {
     companion object {
         lateinit var appContext: Context
     }
@@ -15,7 +15,7 @@ class DiscDogsApplication : Application() {
         appContext = applicationContext
 
         initKoin {
-            androidContext(this@DiscDogsApplication)
+            androidContext(this@DiscDogApplication)
         }
     }
 }

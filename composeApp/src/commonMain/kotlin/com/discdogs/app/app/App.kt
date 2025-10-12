@@ -25,10 +25,10 @@ import com.discdogs.app.presentation.listdetail.ListDetailNavigator
 import com.discdogs.app.presentation.releases.ReleasesNavigator
 import com.discdogs.app.presentation.scan.ScanNavigator
 import com.discdogs.app.presentation.search.SearchNavigator
-import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.ic_library
-import discdogs.composeapp.generated.resources.ic_scan
-import discdogs.composeapp.generated.resources.ic_search
+import discdog.composeapp.generated.resources.Res
+import discdog.composeapp.generated.resources.ic_library
+import discdog.composeapp.generated.resources.ic_scan
+import discdog.composeapp.generated.resources.ic_search
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 

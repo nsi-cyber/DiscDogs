@@ -36,11 +36,11 @@ import com.discdogs.app.core.camera.ScannerController
 import com.discdogs.app.core.camera.ScannerView
 import com.discdogs.app.core.presentation.theme.VETheme
 import dev.icerock.moko.permissions.PermissionState
-import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.ic_camera
-import discdogs.composeapp.generated.resources.ic_flash
-import discdogs.composeapp.generated.resources.scan_barcode
-import discdogs.composeapp.generated.resources.scan_cover_image
+import discdog.composeapp.generated.resources.Res
+import discdog.composeapp.generated.resources.ic_camera
+import discdog.composeapp.generated.resources.ic_flash
+import discdog.composeapp.generated.resources.scan_barcode
+import discdog.composeapp.generated.resources.scan_cover_image
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -152,7 +152,7 @@ fun PermissionRequestView(
 
             // Description
             Text(
-                text = "DiscDogs needs camera access to scan barcodes and capture images for vinyl record for help you to identify that Vinyl. You can use other features if you dont want to give any permission.",
+                text = "DiscDog needs camera access to scan barcodes and capture images for vinyl record for help you to identify that Vinyl. You can use other features if you dont want to give any permission.",
                 style = VETheme.typography.text16TextColor200W400,
                 color = VETheme.colors.textColor200,
                 textAlign = TextAlign.Center

@@ -37,8 +37,13 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.discdogs.app.core.presentation.theme.VETheme
 import com.discdogs.app.presentation.model.VinylResultUiModel
-import discdogs.composeapp.generated.resources.Res
-import discdogs.composeapp.generated.resources.*
+import discdog.composeapp.generated.resources.Res
+import discdog.composeapp.generated.resources.ic_chevron_left
+import discdog.composeapp.generated.resources.ic_delete
+import discdog.composeapp.generated.resources.ic_empty_drawer
+import discdog.composeapp.generated.resources.ic_loading
+import discdog.composeapp.generated.resources.save_your_records_to_not_lose_them
+import discdog.composeapp.generated.resources.there_are_no_records_here_yet
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
