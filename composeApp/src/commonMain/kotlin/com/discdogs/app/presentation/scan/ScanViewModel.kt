@@ -4,6 +4,13 @@ import androidx.lifecycle.viewModelScope
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.presentation.BaseViewModel
 import com.discdogs.app.domain.NetworkRepository
+import dev.icerock.moko.permissions.DeniedAlwaysException
+import dev.icerock.moko.permissions.DeniedException
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.PermissionState
+import dev.icerock.moko.permissions.PermissionsController
+import dev.icerock.moko.permissions.RequestCanceledException
+import dev.icerock.moko.permissions.camera.CAMERA
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +26,11 @@ class ScanViewModel(
     private val networkRepository: NetworkRepository
 ) : BaseViewModel<ScanState, ScanEffect, ScanEvent, ScanNavigator>() {
 
+
+    private var _permissionsController: PermissionsController? = null
+    val permissionsController: PermissionsController get() = _permissionsController!!
+
+
     private val _state = MutableStateFlow(ScanState())
     override val state: StateFlow<ScanState> get() = _state.asStateFlow()
 
@@ -33,6 +45,41 @@ class ScanViewModel(
             is ScanEvent.OnPhotoCaptured -> handlePhotoCaptured(event.imageBytes)
             is ScanEvent.OnImageCaptured -> handlePhotoCaptured(event.imageBytes)
             is ScanEvent.OnBarcodeCaptured -> handleBarcodeCaptured(event.barcode)
+            is ScanEvent.SetPermissionController -> {
+                _permissionsController = event.controller
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            permissionState = _permissionsController?.getPermissionState(Permission.CAMERA)
+                                ?: PermissionState.NotGranted
+                        )
+                    }
+                }
+
+            }
+
+            is ScanEvent.ProvidePermission -> requestCameraPermission(event.isFirstTime)
+        }
+    }
+
+    private fun requestCameraPermission(isFirstTime: Boolean) {
+        viewModelScope.launch {
+            try {
+                _permissionsController?.providePermission(Permission.CAMERA)
+                _state.update { it.copy(permissionState = PermissionState.Granted) }
+            } catch (e: DeniedAlwaysException) {
+                if (_state.value.permissionState == PermissionState.DeniedAlways && isFirstTime == false) {
+                    _permissionsController?.openAppSettings()
+                }
+                _state.update { it.copy(permissionState = PermissionState.DeniedAlways) }
+
+
+            } catch (e: DeniedException) {
+                _state.update { it.copy(permissionState = PermissionState.Denied) }
+
+            } catch (e: RequestCanceledException) {
+                e.printStackTrace()
+            }
         }
     }
 

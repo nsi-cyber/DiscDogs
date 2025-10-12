@@ -82,8 +82,9 @@ kotlin {
             implementation(libs.bundles.coil)
             implementation("com.fleeksoft.ksoup:ksoup:0.1.6")
             implementation("com.fleeksoft.ksoup:ksoup-network:0.1.6")
-            //implementation(libs.kotlinx.io.encoding)
 
+            api(libs.moko.permissions)
+            api(libs.moko.permissions.compose)
 
         }
 

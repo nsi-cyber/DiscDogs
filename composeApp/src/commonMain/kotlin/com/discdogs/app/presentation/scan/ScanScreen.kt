@@ -13,11 +13,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.discdogs.app.core.camera.ScannerController
 import com.discdogs.app.core.camera.ScannerView
 import com.discdogs.app.core.presentation.theme.VETheme
+import dev.icerock.moko.permissions.PermissionState
 import discdogs.composeapp.generated.resources.Res
 import discdogs.composeapp.generated.resources.ic_camera
 import discdogs.composeapp.generated.resources.ic_flash
@@ -53,7 +56,21 @@ fun ScanScreen(
     // Flash state
     var isFlashOn by remember { mutableStateOf(false) }
 
+    LaunchedEffect(Unit) {
+        viewModel.process(ScanEvent.ProvidePermission(true))
+    }
+
     Scaffold { padd ->
+        if (state.permissionState != PermissionState.Granted) {
+            Button(modifier = Modifier.padding(top = 100.dp), onClick = {
+                viewModel.process(ScanEvent.ProvidePermission(false))
+
+            }) {
+
+
+                Text(text = "Get Camera Permission")
+            }
+        } else
         Box(modifier = Modifier.fillMaxSize()) {
             ScannerView(
                 isLoading = state.isLoading,
