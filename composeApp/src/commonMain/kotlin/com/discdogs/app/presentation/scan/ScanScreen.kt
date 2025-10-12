@@ -1,6 +1,5 @@
 package com.discdogs.app.presentation.scan
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.discdogs.app.core.camera.ScannerController
 import com.discdogs.app.core.camera.ScannerView
@@ -42,7 +43,6 @@ import discdogs.composeapp.generated.resources.scan_barcode
 import discdogs.composeapp.generated.resources.scan_cover_image
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-
 
 @Composable
 fun ScanScreen(
@@ -60,58 +60,122 @@ fun ScanScreen(
         viewModel.process(ScanEvent.ProvidePermission(true))
     }
 
-    Scaffold { padd ->
-        if (state.permissionState != PermissionState.Granted) {
-            Button(modifier = Modifier.padding(top = 100.dp), onClick = {
-                viewModel.process(ScanEvent.ProvidePermission(false))
+    Scaffold(containerColor = VETheme.colors.backgroundColorPrimary) { padd ->
+        if (state.permissionState == PermissionState.Granted) {
+            // Camera permission granted - show camera preview
+            Box(modifier = Modifier.fillMaxSize()) {
+                ScannerView(
+                    isLoading = state.isLoading,
+                    scannerController = scannerController,
+                    result = { barcode ->
+                        if (state.selectedScanType == ScanType.BARCODE && state.isLoading == false) {
+                            viewModel.process(
+                                ScanEvent.OnBarcodeCaptured(barcode)
+                            )
+                        }
+                    },
+                    onPhotoCaptured = { byteArray ->
+                        if (state.selectedScanType == ScanType.IMAGE && state.isLoading == false) {
+                            viewModel.process(
+                                ScanEvent.OnPhotoCaptured(byteArray)
+                            )
+                        }
+                    }
+                )
 
-            }) {
-
-
-                Text(text = "Get Camera Permission")
+                CameraPreviewOverlay(
+                    modifier = Modifier.fillMaxSize().padding(padd),
+                    isLoading = state.isLoading,
+                    selectedScanType = state.selectedScanType,
+                    onScanTypeChanged = {
+                        viewModel.process(
+                            ScanEvent.OnSelectedScanTypeChanged(it)
+                        )
+                    },
+                    isFlashOn = isFlashOn,
+                    onFlashToggle = {
+                        isFlashOn = !isFlashOn
+                        scannerController.setTorch(isFlashOn)
+                    },
+                    onPhoto = {
+                        scannerController.capturePhoto()
+                    })
             }
-        } else
-        Box(modifier = Modifier.fillMaxSize()) {
-            ScannerView(
-                isLoading = state.isLoading,
-                scannerController = scannerController,
-                result = { barcode ->
-                    if (state.selectedScanType == ScanType.BARCODE && state.isLoading == false) {
-                        viewModel.process(
-                            ScanEvent.OnBarcodeCaptured(barcode)
-                        )
-                    }
-                },
-                onPhotoCaptured = { byteArray ->
-                    if (state.selectedScanType == ScanType.IMAGE && state.isLoading == false) {
-                        viewModel.process(
-                            ScanEvent.OnPhotoCaptured(byteArray)
-                        )
-                    }
+        } else {
+            // Camera permission not granted - show permission request UI
+            PermissionRequestView(
+                onRequestPermission = {
+                    viewModel.process(ScanEvent.ProvidePermission(false))
                 }
             )
-
-            CameraPreviewOverlay(
-                modifier = Modifier.fillMaxSize().padding(padd),
-                isLoading = state.isLoading,
-                selectedScanType = state.selectedScanType,
-                onScanTypeChanged = {
-                    viewModel.process(
-                        ScanEvent.OnSelectedScanTypeChanged(it)
-                    )
-                },
-                isFlashOn = isFlashOn,
-                onFlashToggle = {
-                    isFlashOn = !isFlashOn
-                    scannerController.setTorch(isFlashOn)
-                },
-                onPhoto = {
-                    scannerController.capturePhoto()
-                })
         }
     }
+}
 
+@Composable
+fun PermissionRequestView(
+    onRequestPermission: () -> Unit
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            modifier = Modifier.padding(32.dp)
+        ) {
+            // Camera icon with animation
+            Box(
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .background(VETheme.colors.primaryColor600.copy(alpha = 0.1f))
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_camera),
+                    contentDescription = null,
+                    modifier = Modifier.size(72.dp),
+                    tint = VETheme.colors.primaryColor600
+                )
+            }
 
+            // Title
+            Text(
+                text = "Camera Access Required for this Feature",
+                style = VETheme.typography.text24TextColor200W400,
+                color = VETheme.colors.textColor200,
+                textAlign = TextAlign.Center
+            )
+
+            // Description
+            Text(
+                text = "DiscDogs needs camera access to scan barcodes and capture images for vinyl record for help you to identify that Vinyl. You can use other features if you dont want to give any permission.",
+                style = VETheme.typography.text16TextColor200W400,
+                color = VETheme.colors.textColor200,
+                textAlign = TextAlign.Center
+            )
+
+            // Request permission button
+            Button(
+                onClick = onRequestPermission,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = VETheme.colors.primaryColor600
+                ),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = "Allow Camera Access",
+                    color = VETheme.colors.whiteColor,
+                    style = VETheme.typography.text16TextColorWhiteW500
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -124,7 +188,6 @@ fun CameraPreviewOverlay(
     isFlashOn: Boolean = false,
     onFlashToggle: () -> Unit = {}
 ) {
-
     Box(modifier = modifier.padding(top = 16.dp, bottom = 100.dp)) {
         Column(
             modifier = Modifier
@@ -154,7 +217,6 @@ fun CameraPreviewOverlay(
                     )
                 }
 
-
                 Box(
                     modifier = Modifier
                         .clip(CircleShape)
@@ -168,8 +230,6 @@ fun CameraPreviewOverlay(
                         style = VETheme.typography.text14TextColor200W400
                     )
                 }
-
-
             }
 
             Spacer(modifier = Modifier.weight(1f))
@@ -199,11 +259,8 @@ fun CameraPreviewOverlay(
                             modifier = Modifier
                                 .fillMaxSize()
                         )
-
                 }
             }
-
-
         }
 
         Box(
@@ -224,9 +281,6 @@ fun CameraPreviewOverlay(
                 modifier = Modifier.align(Alignment.Center),
                 tint = VETheme.colors.primaryColor600
             )
-
         }
-
     }
 }
-
