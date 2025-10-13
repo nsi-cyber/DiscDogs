@@ -13,9 +13,9 @@ class ReleasesNavigator(
 ) : IBaseNavigator(navController) {
 
 
-    fun navigateToReleaseDetail(id: Int, image: String) {
+    fun navigateToReleaseDetail(id: Int, image: String, sourceType: String) {
         navController.navigate(
-            Route.ReleaseDetail(releaseId = id, image = image, source = "UNKNOWN")
+            Route.ReleaseDetail(releaseId = id, image = image, source = sourceType)
         )
     }
 

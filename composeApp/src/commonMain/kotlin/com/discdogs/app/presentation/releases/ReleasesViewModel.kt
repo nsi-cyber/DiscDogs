@@ -37,7 +37,11 @@ class ReleasesViewModel(
             ReleasesEvent.OnBackClicked -> navigator?.navigateBack()
 
             is ReleasesEvent.OnReleaseDetail -> {
-                navigator?.navigateToReleaseDetail(event.data.id, event.data.thumb)
+                navigator?.navigateToReleaseDetail(
+                    event.data.id,
+                    event.data.thumb,
+                    savedStateHandle.toRoute<Route.ReleaseVersions>().source
+                )
             }
         }
     }
