@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.presentation.BaseViewModel
 import com.discdogs.app.domain.NetworkRepository
+import com.discdogs.app.domain.SearchType
 import dev.icerock.moko.permissions.DeniedAlwaysException
 import dev.icerock.moko.permissions.DeniedException
 import dev.icerock.moko.permissions.Permission
@@ -119,7 +120,8 @@ class ScanViewModel(
                     if (result.value?.response == 200) {
                         if (result.value.name != null) {
                             val query = result.value.name
-                            when (val res = networkRepository.searchVinyl(query)) {
+                            when (val res =
+                                networkRepository.searchVinyl(query, type = SearchType.MASTER)) {
                                 is Resource.Success -> {
                                     if (res.value?.firstOrNull()?.id != null) {
                                         _state.update { it.copy(isLoading = false) }

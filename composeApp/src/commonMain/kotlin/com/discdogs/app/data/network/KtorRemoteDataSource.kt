@@ -13,6 +13,7 @@ import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.Ge
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
 import com.discdogs.app.data.network.data.response.gemini.GeminiBaseResponse
+import com.discdogs.app.domain.SearchType
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
@@ -83,7 +84,7 @@ class KtorRemoteDataSource(
 
     override suspend fun searchVinyl(
         query: String?,
-        type: String,
+        type: SearchType,
         perPage: Int,
         page: Int
     ): ResultWrapper<PaginationBaseResponse<GetDiscogsSearchResponse>> {
@@ -92,7 +93,7 @@ class KtorRemoteDataSource(
                 urlString = "${Network.Discogs.BASE_URL}${Network.Discogs.SEARCH}"
             ) {
                 parameter("query", query)
-                parameter("type", type)
+                parameter("type", type.type)
                 parameter("per_page", perPage)
                 parameter("page", page)
                 parameter("token", Network.Discogs.API_KEY)

@@ -71,4 +71,6 @@
     <string name="removed_from_list">Removed from list</string>
     <string name="added_to_list">Added to list</string>
     <string name="error_default">An error occurred</string>
+    <string name="master">Master</string>
+    <string name="release">Release</string>
 </resources>

@@ -5,6 +5,7 @@ import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.presentation.BaseViewModel
 import com.discdogs.app.data.repository.LibraryRepository
 import com.discdogs.app.domain.NetworkRepository
+import com.discdogs.app.domain.SearchType
 import com.discdogs.app.presentation.model.toUiModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -84,8 +85,19 @@ class SearchViewModel(
 
             }
 
-            is SearchEvent.OnMasterDetail -> {
-                navigator?.navigateToMasterDetail(event.data.id, event.data.thumb)
+            is SearchEvent.OnItemClicked -> {
+                when (_state.value.searchType) {
+                    SearchType.MASTER -> navigator?.navigateToMasterDetail(
+                        event.data.id,
+                        event.data.thumb
+                    )
+
+                    SearchType.RELEASE -> navigator?.navigateToReleaseDetail(
+                        event.data.id,
+                        event.data.thumb
+                    )
+
+                }
             }
 
             is SearchEvent.OnRecentSearchedReleaseClick -> {
@@ -94,6 +106,14 @@ class SearchViewModel(
 
             is SearchEvent.OnRecentScannedReleaseClick -> {
                 navigator?.navigateToReleaseDetail(event.release.id, event.release.thumb)
+            }
+
+            is SearchEvent.OnSearchTypeChanged -> {
+                _state.update { it.copy(searchType = event.type) }
+                if (_state.value.searchQuery.isNotEmpty()) {
+                    _state.update { it.copy(isLoading = true) }
+                    searchWithDebounce(_state.value.searchQuery)
+                }
             }
         }
     }
@@ -108,11 +128,12 @@ class SearchViewModel(
 
     private fun getSearch(query: String) {
         viewModelScope.launch {
-            when (val result = networkRepository.searchVinyl(query)) {
+            when (val result =
+                networkRepository.searchVinyl(query, type = _state.value.searchType)) {
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
-                            resultList = result.value?.map { it.toUiModel() },
+                            resultList = result.value?.map { it.toUiModel(isMaster = _state.value.searchType == SearchType.MASTER) },
                             isLoading = false
                         )
                     }

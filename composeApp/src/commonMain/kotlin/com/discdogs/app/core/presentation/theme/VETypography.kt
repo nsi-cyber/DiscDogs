@@ -230,6 +230,13 @@ data class VETypography(
             fontWeight = FontWeight.Medium,
             color = VETheme.colors.textColor200,
         )
+    val text16TextColor100W500: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            color = VETheme.colors.textColor100,
+        )
     val clickText16TextColor200W400: TextStyle
         @Composable
         get() = TextStyle(

@@ -8,6 +8,7 @@ import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.Ge
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
 import com.discdogs.app.data.network.data.response.gemini.GeminiBaseResponse
+import com.discdogs.app.domain.SearchType
 
 interface RemoteDataSource {
 
@@ -25,7 +26,7 @@ interface RemoteDataSource {
 
     suspend fun searchVinyl(
         query: String?,
-        type: String = "master",
+        type: SearchType = SearchType.MASTER,
         perPage: Int = 100,
         page: Int = 1,
     ): ResultWrapper<PaginationBaseResponse<GetDiscogsSearchResponse>>

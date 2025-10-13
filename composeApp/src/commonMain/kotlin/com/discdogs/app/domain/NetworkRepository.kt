@@ -15,7 +15,8 @@ interface NetworkRepository {
     ): Resource<Int?>
 
     suspend fun searchVinyl(
-        query: String?
+        query: String?,
+        type: SearchType
     ): Resource<List<GetDiscogsSearchResponse>?>
 
     suspend fun getMastersVersions(

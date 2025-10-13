@@ -3,10 +3,11 @@ package com.discdogs.app.presentation.model
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
 
 
-fun GetDiscogsSearchResponse.toUiModel(): VinylResultUiModel {
+fun GetDiscogsSearchResponse.toUiModel(isMaster: Boolean): VinylResultUiModel {
     return VinylResultUiModel(
         id = id,
         thumb = thumb.orEmpty(),
+        format = if (isMaster) null else format?.map { it.orEmpty() },
         title = title.orEmpty(),
         year = year.orEmpty(),
         genre = genre?.map { it.orEmpty() }

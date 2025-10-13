@@ -30,6 +30,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,6 +39,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,11 +51,13 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.discdogs.app.core.presentation.shimmerEffect
 import com.discdogs.app.core.presentation.theme.VETheme
+import com.discdogs.app.domain.SearchType
 import com.discdogs.app.presentation.model.PageState
 import com.discdogs.app.presentation.model.VinylResultUiModel
 import discdog.composeapp.generated.resources.Res
 import discdog.composeapp.generated.resources.clear
 import discdog.composeapp.generated.resources.ic_empty_drawer
+import discdog.composeapp.generated.resources.ic_filter
 import discdog.composeapp.generated.resources.ic_loading
 import discdog.composeapp.generated.resources.ic_search
 import discdog.composeapp.generated.resources.keep_hunting_try_to_search_with_different_keywords
@@ -68,13 +74,16 @@ fun SearchScreen(
     viewModel: SearchViewModel
 ) {
     val state by viewModel.state.collectAsState()
-
+    val isDropDownExpanded = remember {
+        mutableStateOf(false)
+    }
     Scaffold(
         containerColor = VETheme.colors.backgroundColorPrimary,
     ) { padd ->
         Column(
             modifier = Modifier
-                .fillMaxSize().padding(padd)
+                .fillMaxSize().padding(padd),
+            horizontalAlignment = Alignment.End
         ) {
 
             Row(
@@ -126,6 +135,7 @@ fun SearchScreen(
                                 innerTextField()
                             }
                         )
+
                     }
                 }
 
@@ -148,6 +158,55 @@ fun SearchScreen(
                 }
             }
 
+            Box {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 16.dp).clickable {
+                        isDropDownExpanded.value = true
+                    }.padding(4.dp)
+                ) {
+
+                    Text(
+                        text = stringResource(state.searchType.title),
+                        style = VETheme.typography.text16TextColor100W500,
+                    )
+
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_filter),
+                        contentDescription = "Filter Icon",
+                        tint = VETheme.colors.whiteColor,
+                        modifier = Modifier
+                            .size(24.dp)
+                    )
+
+                }
+                DropdownMenu(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    containerColor = VETheme.colors.cardBackgroundColor,
+                    expanded = isDropDownExpanded.value,
+                    onDismissRequest = {
+                        isDropDownExpanded.value = false
+                    }) {
+                    SearchType.entries.forEach { type ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(type.title),
+                                    style = VETheme.typography.text16TextColor200W400,
+                                )
+                            },
+                            onClick = {
+                                isDropDownExpanded.value = false
+
+                                viewModel.process(SearchEvent.OnSearchTypeChanged(type))
+
+                            })
+                    }
+
+
+                }
+            }
             AnimatedContent(
                 targetState = when {
                     state.isLoading -> PageState.LOADING
@@ -175,7 +234,7 @@ fun SearchScreen(
                     ) {
                         items(state.resultList.orEmpty(), key = { it.id }) { vinyl ->
                             VinylItemView(data = vinyl, onClick = {
-                                viewModel.process(SearchEvent.OnMasterDetail(vinyl))
+                                viewModel.process(SearchEvent.OnItemClicked(vinyl))
                             })
                         }
 
@@ -208,7 +267,7 @@ fun SearchScreen(
                                             state.recentSearchedReleases.orEmpty(),
                                             key = { it.id }) { vinyl ->
                                             VinylHistoryItemView(data = vinyl, onClick = {
-                                                viewModel.process(SearchEvent.OnMasterDetail(vinyl))
+                                                viewModel.process(SearchEvent.OnItemClicked(vinyl))
                                             })
                                         }
 
@@ -234,7 +293,7 @@ fun SearchScreen(
                                             state.recentScannedReleases.orEmpty(),
                                             key = { it.id }) { vinyl ->
                                             VinylHistoryItemView(data = vinyl, onClick = {
-                                                viewModel.process(SearchEvent.OnMasterDetail(vinyl))
+                                                viewModel.process(SearchEvent.OnItemClicked(vinyl))
                                             })
                                         }
 

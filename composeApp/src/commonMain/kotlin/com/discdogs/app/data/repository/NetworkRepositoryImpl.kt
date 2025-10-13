@@ -9,6 +9,7 @@ import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetR
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
 import com.discdogs.app.data.network.data.response.gemini.GeminiResponse
 import com.discdogs.app.domain.NetworkRepository
+import com.discdogs.app.domain.SearchType
 import kotlinx.serialization.json.Json
 
 
@@ -24,10 +25,14 @@ class NetworkRepositoryImpl(
             .toResource { it.results?.firstOrNull()?.id }
 
     override suspend fun searchVinyl(
-        query: String?
+        query: String?,
+        type: SearchType
     ): Resource<List<GetDiscogsSearchResponse>?> =
         remoteDataSource
-            .searchVinyl(query = query)
+            .searchVinyl(
+                query = query,
+                type = type
+            )
             .toResource { it.results }
 
     override suspend fun getMastersVersions(
