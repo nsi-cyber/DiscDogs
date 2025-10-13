@@ -1,4 +1,4 @@
-package com.discdogs.app.presentation.detail
+package com.discdogs.app.presentation.releaseDetail
 
 import androidx.compose.ui.platform.UriHandler
 import androidx.lifecycle.SavedStateHandle
@@ -24,13 +24,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class DetailViewModel(
+class ReleaseDetailViewModel(
     private val audioRepository: AudioRepository,
     private val networkRepository: NetworkRepository,
     private val externalRepository: ExternalRepository,
     private val libraryRepository: LibraryRepository,
     private val savedStateHandle: SavedStateHandle
-) : BaseViewModel<DetailState, DetailEffect, DetailEvent, DetailNavigator>() {
+) : BaseViewModel<ReleaseDetailState, ReleaseDetailEffect, ReleaseDetailEvent, ReleaseDetailNavigator>() {
 
     private var uriHandler: UriHandler? = null
 
@@ -39,11 +39,11 @@ class DetailViewModel(
     }
 
     private val _state =
-        MutableStateFlow(DetailState(backgroundImage = savedStateHandle.toRoute<Route.ReleaseDetail>().image))
-    override val state: StateFlow<DetailState> get() = _state.asStateFlow()
+        MutableStateFlow(ReleaseDetailState(backgroundImage = savedStateHandle.toRoute<Route.ReleaseDetail>().image))
+    override val state: StateFlow<ReleaseDetailState> get() = _state.asStateFlow()
 
-    private val _effect = MutableSharedFlow<DetailEffect>()
-    override val effect: SharedFlow<DetailEffect> get() = _effect
+    private val _effect = MutableSharedFlow<ReleaseDetailEffect>()
+    override val effect: SharedFlow<ReleaseDetailEffect> get() = _effect
 
 
     init {
@@ -65,15 +65,15 @@ class DetailViewModel(
         )
     }
 
-    override fun process(event: DetailEvent) {
+    override fun process(event: ReleaseDetailEvent) {
         when (event) {
-            DetailEvent.OnBackClicked -> {
+            ReleaseDetailEvent.OnBackClicked -> {
                 audioRepository.cleanup()
                 navigator?.navigateBack()
             }
 
-            is DetailEvent.OnPreviewTrack -> getTrackPreview(event.data)
-            DetailEvent.OnReleaseTrack -> {
+            is ReleaseDetailEvent.OnPreviewTrack -> getTrackPreview(event.data)
+            ReleaseDetailEvent.OnReleaseTrack -> {
                 _state.update {
                     it.copy(
                         isPreviewLoading = false, playingItem = null,
@@ -82,15 +82,15 @@ class DetailViewModel(
                 audioRepository.stop()
             }
 
-            is DetailEvent.OnLoadBackground -> _state.update {
+            is ReleaseDetailEvent.OnLoadBackground -> _state.update {
                 it.copy(
                     backgroundImage = event.image
                 )
             }
 
-            DetailEvent.OnDismissMoreBottomSheet -> {
+            ReleaseDetailEvent.OnDismissMoreBottomSheet -> {
                 viewModelScope.launch {
-                    _effect.emit(DetailEffect.DismissMoreBottomSheet)
+                    _effect.emit(ReleaseDetailEffect.DismissMoreBottomSheet)
                     delay(100)
                     _state.update {
                         it.copy(
@@ -101,21 +101,21 @@ class DetailViewModel(
                 }
             }
 
-            DetailEvent.OnShowMoreBottomSheet -> {
+            ReleaseDetailEvent.OnShowMoreBottomSheet -> {
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
                             moreSheetVisible = true,
                         )
                     }
-                    _effect.emit(DetailEffect.ShowMoreBottomSheet)
+                    _effect.emit(ReleaseDetailEffect.ShowMoreBottomSheet)
 
                 }
             }
 
-            DetailEvent.OnDismissBarcodeBottomSheet -> {
+            ReleaseDetailEvent.OnDismissBarcodeBottomSheet -> {
                 viewModelScope.launch {
-                    _effect.emit(DetailEffect.DismissBarcodeBottomSheet)
+                    _effect.emit(ReleaseDetailEffect.DismissBarcodeBottomSheet)
                     delay(100)
 
                     _state.update {
@@ -127,24 +127,24 @@ class DetailViewModel(
                 }
             }
 
-            DetailEvent.OnShowBarcodeBottomSheet -> {
+            ReleaseDetailEvent.OnShowBarcodeBottomSheet -> {
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
                             barcodeSheetVisible = true,
                         )
                     }
-                    _effect.emit(DetailEffect.ShowBarcodeBottomSheet)
+                    _effect.emit(ReleaseDetailEffect.ShowBarcodeBottomSheet)
 
                 }
             }
 
-            is DetailEvent.OnExternalWebsite -> {
+            is ReleaseDetailEvent.OnExternalWebsite -> {
                 audioRepository.cleanup()
                 openExternalPlayerLink(event.type)
             }
 
-            DetailEvent.OnOtherReleases -> {
+            ReleaseDetailEvent.OnOtherReleases -> {
                 audioRepository.cleanup()
                 state.value.releaseDetail?.masterId?.let { masterId ->
                     navigator?.navigateToMastersVersions(
@@ -154,17 +154,20 @@ class DetailViewModel(
 
             }
 
-            DetailEvent.OnToggleFavorite -> {
+            ReleaseDetailEvent.OnToggleFavorite -> {
                 toggleFavorite()
             }
 
-            DetailEvent.OnShare -> uriHandler?.openUri(_state.value.releaseDetail?.uri.toString())
+            ReleaseDetailEvent.OnShare -> uriHandler?.openUri(_state.value.releaseDetail?.uri.toString())
 
 
-            is DetailEvent.OnLoadReleaseDetails -> getReleaseDetails(event.releaseId, event.source)
+            is ReleaseDetailEvent.OnLoadReleaseDetails -> getReleaseDetails(
+                event.releaseId,
+                event.source
+            )
 
 
-            DetailEvent.OnShowSaveToListBottomSheet -> {
+            ReleaseDetailEvent.OnShowSaveToListBottomSheet -> {
                 viewModelScope.launch {
                     loadLists()
                     _state.update {
@@ -172,13 +175,13 @@ class DetailViewModel(
                             saveToListSheetVisible = true,
                         )
                     }
-                    _effect.emit(DetailEffect.ShowSaveToListBottomSheet)
+                    _effect.emit(ReleaseDetailEffect.ShowSaveToListBottomSheet)
                 }
             }
 
-            DetailEvent.OnDismissSaveToListBottomSheet -> {
+            ReleaseDetailEvent.OnDismissSaveToListBottomSheet -> {
                 viewModelScope.launch {
-                    _effect.emit(DetailEffect.DismissSaveToListBottomSheet)
+                    _effect.emit(ReleaseDetailEffect.DismissSaveToListBottomSheet)
                     delay(100)
 
                     _state.update {
@@ -190,11 +193,11 @@ class DetailViewModel(
                 }
             }
 
-            is DetailEvent.OnAddToList -> {
+            is ReleaseDetailEvent.OnAddToList -> {
                 toggleList(event.listId)
             }
 
-            DetailEvent.OnCreateNewList -> {
+            ReleaseDetailEvent.OnCreateNewList -> {
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
@@ -204,11 +207,11 @@ class DetailViewModel(
                 }
             }
 
-            is DetailEvent.OnCreateList -> {
+            is ReleaseDetailEvent.OnCreateList -> {
                 createList(event.name)
             }
 
-            DetailEvent.OnDismissCreateListDialog -> {
+            ReleaseDetailEvent.OnDismissCreateListDialog -> {
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
@@ -258,7 +261,7 @@ class DetailViewModel(
             } catch (e: Exception) {
                 errorSnack(message = e.toString())
             }
-            _effect.emit(DetailEffect.DismissSaveToListBottomSheet)
+            _effect.emit(ReleaseDetailEffect.DismissSaveToListBottomSheet)
             delay(100)
 
             _state.update {
@@ -288,7 +291,7 @@ class DetailViewModel(
                     }
                 }
 
-                _effect.emit(DetailEffect.DismissSaveToListBottomSheet)
+                _effect.emit(ReleaseDetailEffect.DismissSaveToListBottomSheet)
                 delay(100)
 
                 _state.update {
@@ -412,7 +415,7 @@ class DetailViewModel(
             } else {
                 libraryRepository.addToFavorites(releaseDetail)
             }
-            _effect.emit(DetailEffect.DismissSaveToListBottomSheet)
+            _effect.emit(ReleaseDetailEffect.DismissSaveToListBottomSheet)
             delay(100)
 
             _state.update {

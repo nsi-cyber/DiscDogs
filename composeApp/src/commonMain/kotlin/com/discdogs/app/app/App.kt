@@ -19,10 +19,10 @@ import com.discdogs.app.core.presentation.UiText
 import com.discdogs.app.core.presentation.theme.VETheme
 import com.discdogs.app.presentation.components.VEBottomNavigationBar
 import com.discdogs.app.presentation.components.VEBottomNavigationItem
-import com.discdogs.app.presentation.detail.DetailNavigator
 import com.discdogs.app.presentation.library.LibraryNavigator
 import com.discdogs.app.presentation.listdetail.ListDetailNavigator
 import com.discdogs.app.presentation.onboarding.OnboardingNavigator
+import com.discdogs.app.presentation.releaseDetail.ReleaseDetailNavigator
 import com.discdogs.app.presentation.releases.ReleasesNavigator
 import com.discdogs.app.presentation.scan.ScanNavigator
 import com.discdogs.app.presentation.search.SearchNavigator
@@ -75,7 +75,7 @@ fun App() {
                 OnboardingNavigator(rootNavController).build(this)
                 ListDetailNavigator(rootNavController).build(this)
                 ReleasesNavigator(rootNavController).build(this)
-                DetailNavigator(rootNavController).build(this)
+                ReleaseDetailNavigator(rootNavController).build(this)
                 composable<Route.MainScreen> {
 
                     Scaffold(

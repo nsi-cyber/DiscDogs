@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import com.discdogs.app.app.Route
 import com.discdogs.app.app.Route.ReleaseDetail
 import com.discdogs.app.core.navigation.base.IBaseNavigator
-import com.discdogs.app.presentation.detail.DetailSource
+import com.discdogs.app.presentation.releaseDetail.DetailSource
 import org.koin.compose.viewmodel.koinViewModel
 
 class SearchNavigator(

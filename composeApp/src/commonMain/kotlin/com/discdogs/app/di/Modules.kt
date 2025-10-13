@@ -13,10 +13,10 @@ import com.discdogs.app.data.repository.LibraryRepository
 import com.discdogs.app.data.repository.NetworkRepositoryImpl
 import com.discdogs.app.domain.ExternalRepository
 import com.discdogs.app.domain.NetworkRepository
-import com.discdogs.app.presentation.detail.DetailViewModel
 import com.discdogs.app.presentation.library.LibraryViewModel
 import com.discdogs.app.presentation.listdetail.ListDetailViewModel
 import com.discdogs.app.presentation.onboarding.OnboardingViewModel
+import com.discdogs.app.presentation.releaseDetail.ReleaseDetailViewModel
 import com.discdogs.app.presentation.releases.ReleasesViewModel
 import com.discdogs.app.presentation.scan.ScanViewModel
 import com.discdogs.app.presentation.search.SearchViewModel
@@ -59,7 +59,7 @@ val sharedModule = module {
     single { get<VinylDatabase>().releaseListReleaseDao }
 
     viewModelOf(::SearchViewModel)
-    viewModelOf(::DetailViewModel)
+    viewModelOf(::ReleaseDetailViewModel)
     viewModelOf(::OnboardingViewModel)
     viewModelOf(::LibraryViewModel)
     viewModelOf(::ListDetailViewModel)

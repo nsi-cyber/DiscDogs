@@ -1,4 +1,4 @@
-package com.discdogs.app.presentation.detail
+package com.discdogs.app.presentation.releaseDetail
 
 
 import androidx.compose.animation.AnimatedContent
@@ -124,8 +124,8 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(
-    viewModel: DetailViewModel
+fun ReleaseDetailScreen(
+    viewModel: ReleaseDetailViewModel
 ) {
     val moreBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val barcodeBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -138,37 +138,37 @@ fun DetailScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest {
             when (it) {
-                DetailEffect.DismissMoreBottomSheet -> {
+                ReleaseDetailEffect.DismissMoreBottomSheet -> {
                     scope.launch {
                         moreBottomSheetState.hide()
                     }
                 }
 
-                DetailEffect.ShowMoreBottomSheet -> {
+                ReleaseDetailEffect.ShowMoreBottomSheet -> {
                     scope.launch {
                         moreBottomSheetState.show()
                     }
                 }
 
-                DetailEffect.DismissBarcodeBottomSheet -> {
+                ReleaseDetailEffect.DismissBarcodeBottomSheet -> {
                     scope.launch {
                         barcodeBottomSheetState.hide()
                     }
                 }
 
-                DetailEffect.ShowBarcodeBottomSheet -> {
+                ReleaseDetailEffect.ShowBarcodeBottomSheet -> {
                     scope.launch {
                         barcodeBottomSheetState.show()
                     }
                 }
 
-                DetailEffect.ShowSaveToListBottomSheet -> {
+                ReleaseDetailEffect.ShowSaveToListBottomSheet -> {
                     scope.launch {
                         moreBottomSheetState.show()
                     }
                 }
 
-                DetailEffect.DismissSaveToListBottomSheet -> {
+                ReleaseDetailEffect.DismissSaveToListBottomSheet -> {
                     scope.launch {
                         moreBottomSheetState.hide()
                     }
@@ -229,7 +229,7 @@ fun DetailScreen(
             isLoading = state.isPreviewLoading,
             color = 0xFF1A1A1A.toInt(),
             onStop = {
-                viewModel.process(DetailEvent.OnReleaseTrack)
+                viewModel.process(ReleaseDetailEvent.OnReleaseTrack)
             }
         )
     }) { padding ->
@@ -264,7 +264,7 @@ fun DetailScreen(
                     modifier = Modifier
                         .clip(CircleShape)
                         .clickable {
-                            viewModel.process(DetailEvent.OnBackClicked)
+                            viewModel.process(ReleaseDetailEvent.OnBackClicked)
                         }) {
                     Image(
                         painter = painterResource(Res.drawable.ic_chevron_left),
@@ -342,7 +342,7 @@ fun DetailScreen(
                                             .clip(CircleShape)
                                             .clickable {
 
-                                                viewModel.process(DetailEvent.OnShowSaveToListBottomSheet)
+                                                viewModel.process(ReleaseDetailEvent.OnShowSaveToListBottomSheet)
 
                                             }) {
                                         Icon(
@@ -361,7 +361,7 @@ fun DetailScreen(
                                         modifier = Modifier
                                             .clip(CircleShape)
                                             .clickable {
-                                                viewModel.process(DetailEvent.OnShowMoreBottomSheet)
+                                                viewModel.process(ReleaseDetailEvent.OnShowMoreBottomSheet)
                                             }) {
                                         Icon(
                                             painter = painterResource(Res.drawable.ic_three_dots),
@@ -383,7 +383,7 @@ fun DetailScreen(
                                 data = data,
                                 isPlaying = data.id == state.playingItem?.id,
                                 onClick = {
-                                    viewModel.process(DetailEvent.OnPreviewTrack(data))
+                                    viewModel.process(ReleaseDetailEvent.OnPreviewTrack(data))
                                 })
                         }
                     }
@@ -405,21 +405,21 @@ fun DetailScreen(
     if (state.moreSheetVisible) {
         ResultDetailMoreBottomSheet(
             sheetState = moreBottomSheetState,
-            onDismiss = { viewModel.process(DetailEvent.OnDismissMoreBottomSheet) },
+            onDismiss = { viewModel.process(ReleaseDetailEvent.OnDismissMoreBottomSheet) },
             onShare = {
-                viewModel.process(DetailEvent.OnShare)
+                viewModel.process(ReleaseDetailEvent.OnShare)
 
             },
-            onExternal = { type -> viewModel.process(DetailEvent.OnExternalWebsite(type)) },
+            onExternal = { type -> viewModel.process(ReleaseDetailEvent.OnExternalWebsite(type)) },
             hasBarcode = !state.releaseDetail?.barcode.isNullOrEmpty(),
             onBarcode = {
-                viewModel.process(DetailEvent.OnDismissMoreBottomSheet)
-                viewModel.process(DetailEvent.OnShowBarcodeBottomSheet)
+                viewModel.process(ReleaseDetailEvent.OnDismissMoreBottomSheet)
+                viewModel.process(ReleaseDetailEvent.OnShowBarcodeBottomSheet)
             },
             hasMaster = state.releaseDetail?.masterId != -1,
             onReleases = {
-                viewModel.process(DetailEvent.OnDismissMoreBottomSheet)
-                viewModel.process(DetailEvent.OnOtherReleases)
+                viewModel.process(ReleaseDetailEvent.OnDismissMoreBottomSheet)
+                viewModel.process(ReleaseDetailEvent.OnOtherReleases)
             },
         )
     }
@@ -427,7 +427,7 @@ fun DetailScreen(
         BarcodeBottomSheet(
             sheetState = moreBottomSheetState,
             onDismiss = {
-                viewModel.process(DetailEvent.OnDismissBarcodeBottomSheet)
+                viewModel.process(ReleaseDetailEvent.OnDismissBarcodeBottomSheet)
             },
             barcode = state.releaseDetail?.barcode
         )
@@ -435,13 +435,13 @@ fun DetailScreen(
     if (state.saveToListSheetVisible) {
         SaveToListBottomSheet(
             sheetState = moreBottomSheetState,
-            onDismiss = { viewModel.process(DetailEvent.OnDismissSaveToListBottomSheet) },
+            onDismiss = { viewModel.process(ReleaseDetailEvent.OnDismissSaveToListBottomSheet) },
             lists = state.lists,
             isFavorite = state.isFavorite,
             releaseInLists = state.releaseInLists,
-            onToggleFavorite = { viewModel.process(DetailEvent.OnToggleFavorite) },
-            onAddToList = { listId -> viewModel.process(DetailEvent.OnAddToList(listId)) },
-            onCreateNewList = { viewModel.process(DetailEvent.OnCreateNewList) }
+            onToggleFavorite = { viewModel.process(ReleaseDetailEvent.OnToggleFavorite) },
+            onAddToList = { listId -> viewModel.process(ReleaseDetailEvent.OnAddToList(listId)) },
+            onCreateNewList = { viewModel.process(ReleaseDetailEvent.OnCreateNewList) }
         )
     }
     // Create List Dialog
@@ -451,11 +451,11 @@ fun DetailScreen(
             onListNameChange = { listName = it },
             onConfirm = {
                 if (listName.isNotBlank()) {
-                    viewModel.process(DetailEvent.OnCreateList(listName))
+                    viewModel.process(ReleaseDetailEvent.OnCreateList(listName))
                 }
             },
             onDismiss = {
-                viewModel.process(DetailEvent.OnDismissCreateListDialog)
+                viewModel.process(ReleaseDetailEvent.OnDismissCreateListDialog)
                 listName = ""
             }
         )

@@ -1,4 +1,4 @@
-package com.discdogs.app.presentation.detail
+package com.discdogs.app.presentation.releaseDetail
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalUriHandler
@@ -9,7 +9,7 @@ import com.discdogs.app.app.Route
 import com.discdogs.app.core.navigation.base.IBaseNavigator
 import org.koin.compose.viewmodel.koinViewModel
 
-class DetailNavigator(
+class ReleaseDetailNavigator(
     navController: NavHostController
 ) : IBaseNavigator(navController) {
 
@@ -26,12 +26,12 @@ class DetailNavigator(
         navGraphBuilder.composable<Route.ReleaseDetail> {
 
             val uriHandler = LocalUriHandler.current
-            val viewModel: DetailViewModel = koinViewModel<DetailViewModel>()
+            val viewModel: ReleaseDetailViewModel = koinViewModel<ReleaseDetailViewModel>()
             LaunchedEffect(Unit) {
-                viewModel.setNavigator(this@DetailNavigator)
+                viewModel.setNavigator(this@ReleaseDetailNavigator)
                 viewModel.setUriHandler(uriHandler)
             }
-            DetailScreen(viewModel)
+            ReleaseDetailScreen(viewModel)
 
         }
     }
