@@ -190,7 +190,8 @@ fun MasterDetailScreen(
 
     val alpha = animatedRatio
 
-    Scaffold(bottomBar = {
+    Scaffold(
+        bottomBar = {
         PlayPreviewView(
             modifier = Modifier
                 .padding(horizontal = 12.dp)

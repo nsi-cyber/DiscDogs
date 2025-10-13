@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -54,86 +55,89 @@ fun ReleasesScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(VETheme.colors.backgroundColorPrimary)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(top = 42.dp, bottom = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable {
-                        viewModel.process(ReleasesEvent.OnBackClicked)
-                    }) {
-                Image(
-                    painter = painterResource(Res.drawable.ic_chevron_left),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .size(24.dp)
-                )
-            }
 
-            Text(
-                text = stringResource(Res.string.other_releases),
-                style = VETheme.typography.text14TextColor200W600,
+    Scaffold(containerColor = VETheme.colors.backgroundColorPrimary) { padd ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize().padding(padd)
+        ) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
-                    .padding(end = 32.dp),
-                textAlign = TextAlign.Center
-            )
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 42.dp, bottom = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable {
+                            viewModel.process(ReleasesEvent.OnBackClicked)
+                        }) {
+                    Image(
+                        painter = painterResource(Res.drawable.ic_chevron_left),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .size(24.dp)
+                    )
+                }
+
+                Text(
+                    text = stringResource(Res.string.other_releases),
+                    style = VETheme.typography.text14TextColor200W600,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(end = 32.dp),
+                    textAlign = TextAlign.Center
+                )
 
 
-        }
+            }
 
-        AnimatedContent(
-            targetState = when {
-                state.isLoading -> PageState.LOADING
-                state.resultList.isNullOrEmpty() -> PageState.EMPTY
-                else -> PageState.SUCCESS
-            },
-            label = "ContentTransition",
-            modifier = Modifier.fillMaxSize()
-        ) { target ->
-            when (target) {
-                PageState.LOADING -> ShimmeredLoadingState()
+            AnimatedContent(
+                targetState = when {
+                    state.isLoading -> PageState.LOADING
+                    state.resultList.isNullOrEmpty() -> PageState.EMPTY
+                    else -> PageState.SUCCESS
+                },
+                label = "ContentTransition",
+                modifier = Modifier.fillMaxSize()
+            ) { target ->
+                when (target) {
+                    PageState.LOADING -> ShimmeredLoadingState()
 
-                PageState.EMPTY -> NoResultView()
+                    PageState.EMPTY -> NoResultView()
 
-                PageState.SUCCESS -> LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(
-                        start = 8.dp,
-                        end = 8.dp,
-                        top = 8.dp,
-                        bottom = 62.dp
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(state.resultList.orEmpty(), key = { it.id }) { vinyl ->
-                        VinylItemView(data = vinyl, onClick = {
-                            viewModel.process(ReleasesEvent.OnReleaseDetail(vinyl))
-                        })
+                    PageState.SUCCESS -> LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(
+                            start = 8.dp,
+                            end = 8.dp,
+                            top = 8.dp,
+                            bottom = 62.dp
+                        ),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.resultList.orEmpty(), key = { it.id }) { vinyl ->
+                            VinylItemView(data = vinyl, onClick = {
+                                viewModel.process(ReleasesEvent.OnReleaseDetail(vinyl))
+                            })
+                        }
+
                     }
 
-                }
-
-                else -> {
-                    //TODO Idle screen
+                    else -> {
+                        //TODO Idle screen
+                    }
                 }
             }
+
+
         }
-
-
     }
+
 
 }
 
