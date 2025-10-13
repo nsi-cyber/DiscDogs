@@ -2,6 +2,7 @@ package com.discdogs.app.presentation.releaseDetail
 
 import com.discdogs.app.data.database.model.ReleaseList
 import com.discdogs.app.presentation.model.ExternalWebsites
+import com.discdogs.app.presentation.model.PlayingItem
 import com.discdogs.app.presentation.model.TrackListUiModel
 import com.discdogs.app.presentation.model.VinylDetailUiModel
 
@@ -22,13 +23,6 @@ data class ReleaseDetailState(
     val releaseInLists: Set<Long> = emptySet()
 )
 
-data class PlayingItem(
-    val id: String,
-    val title: String,
-    val image: String,
-    val preview: String? = null,
-    val progress: Float = 0f,
-)
 
 sealed interface ReleaseDetailEffect {
     data object ShowMoreBottomSheet : ReleaseDetailEffect

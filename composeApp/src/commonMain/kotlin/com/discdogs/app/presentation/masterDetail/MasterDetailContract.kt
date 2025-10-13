@@ -1,6 +1,7 @@
 package com.discdogs.app.presentation.masterDetail
 
 import com.discdogs.app.presentation.model.ExternalWebsites
+import com.discdogs.app.presentation.model.PlayingItem
 import com.discdogs.app.presentation.model.TrackListUiModel
 import com.discdogs.app.presentation.model.VinylDetailUiModel
 
@@ -13,13 +14,6 @@ data class MasterDetailState(
     val moreSheetVisible: Boolean = false,
 )
 
-data class PlayingItem(
-    val id: String,
-    val title: String,
-    val image: String,
-    val preview: String? = null,
-    val progress: Float = 0f,
-)
 
 sealed interface MasterDetailEffect {
     data object ShowMoreBottomSheet : MasterDetailEffect
