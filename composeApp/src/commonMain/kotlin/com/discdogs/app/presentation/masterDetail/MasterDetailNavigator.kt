@@ -1,4 +1,4 @@
-package com.discdogs.app.presentation.releaseDetail
+package com.discdogs.app.presentation.masterDetail
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalUriHandler
@@ -9,7 +9,7 @@ import com.discdogs.app.app.Route
 import com.discdogs.app.core.navigation.base.IBaseNavigator
 import org.koin.compose.viewmodel.koinViewModel
 
-class ReleaseDetailNavigator(
+class MasterDetailNavigator(
     navController: NavHostController
 ) : IBaseNavigator(navController) {
 
@@ -23,28 +23,19 @@ class ReleaseDetailNavigator(
     }
 
     override fun build(navGraphBuilder: NavGraphBuilder) {
-        navGraphBuilder.composable<Route.ReleaseDetail> {
+        navGraphBuilder.composable<Route.MasterDetail> {
 
             val uriHandler = LocalUriHandler.current
-            val viewModel: ReleaseDetailViewModel = koinViewModel<ReleaseDetailViewModel>()
+            val viewModel: MasterDetailViewModel = koinViewModel<MasterDetailViewModel>()
             LaunchedEffect(Unit) {
-                viewModel.setNavigator(this@ReleaseDetailNavigator)
+                viewModel.setNavigator(this@MasterDetailNavigator)
                 viewModel.setUriHandler(uriHandler)
             }
-            ReleaseDetailScreen(viewModel)
+            MasterDetailScreen(viewModel)
 
         }
     }
 }
 
-enum class DetailSource {
-    SEARCH, SCAN, UNKNOWN
-}
 
-fun String.toDetailSource(): DetailSource {
-    return try {
-        DetailSource.valueOf(this)
-    } catch (e: Exception) {
-        DetailSource.UNKNOWN
-    }
-}
+

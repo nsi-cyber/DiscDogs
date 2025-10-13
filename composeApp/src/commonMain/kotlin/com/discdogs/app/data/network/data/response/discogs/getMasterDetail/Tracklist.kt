@@ -5,13 +5,15 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MasterTracklist(
+data class Tracklist(
     @SerialName("duration")
-    val duration: String?,
+    val duration: String? = null,
+    @SerialName("extraartists")
+    val extraartists: List<Extraartist?>? = null,
     @SerialName("position")
-    val position: String?,
+    val position: String? = null,
     @SerialName("title")
-    val title: String?,
+    val title: String? = null,
     @SerialName("type_")
-    val type_: String?
+    val type: String? = null
 )

@@ -148,7 +148,7 @@ class ReleaseDetailViewModel(
                 audioRepository.cleanup()
                 state.value.releaseDetail?.masterId?.let { masterId ->
                     navigator?.navigateToMastersVersions(
-                        masterId
+                        masterId, savedStateHandle.toRoute<Route.ReleaseDetail>().source
                     )
                 }
 

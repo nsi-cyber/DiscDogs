@@ -19,7 +19,7 @@ sealed class SearchEvent {
     object OnBackClicked : SearchEvent()
     object OnClearQuery : SearchEvent()
     class OnSearchQuery(val query: String) : SearchEvent()
-    class OnReleaseDetail(val data: VinylResultUiModel) : SearchEvent()
+    class OnMasterDetail(val data: VinylResultUiModel) : SearchEvent()
     class OnRecentSearchedReleaseClick(val release: VinylResultUiModel) : SearchEvent()
     class OnRecentScannedReleaseClick(val release: VinylResultUiModel) : SearchEvent()
 }

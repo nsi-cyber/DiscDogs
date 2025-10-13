@@ -3,6 +3,7 @@ package com.discdogs.app.data.repository
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.data.toResource
 import com.discdogs.app.data.network.RemoteDataSource
+import com.discdogs.app.data.network.data.response.discogs.getMasterDetail.GetMasterDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.GetMastersVersionsResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
@@ -41,6 +42,11 @@ class NetworkRepositoryImpl(
             .getReleaseDetail(releaseId = releaseId)
             .toResource { it }
 
+    override suspend fun getMasterDetail(masterId: Int?): Resource<GetMasterDetailResponse?> =
+        remoteDataSource
+            .getMasterDetail(masterId = masterId)
+            .toResource { it }
+
     override suspend fun searchSongPreview(
         query: String?,
     ): Resource<String?> =
@@ -51,10 +57,12 @@ class NetworkRepositoryImpl(
 
     override suspend fun generateImageCaption(
         imageBytes: ByteArray,
-        prompt: String
     ): Resource<GeminiResponse?> =
         remoteDataSource
-            .generateImageCaption(imageBytes = imageBytes, prompt = prompt)
+            .generateImageCaption(
+                imageBytes = imageBytes,
+                prompt = "If image has a vinyl record return {\"name\":\"<full record name>\",\"response\":200}, else return {\"name\":null,\"response\":404}"
+            )
             .toResource {
                 Json.decodeFromString<GeminiResponse>(
                     it.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text?.replace(

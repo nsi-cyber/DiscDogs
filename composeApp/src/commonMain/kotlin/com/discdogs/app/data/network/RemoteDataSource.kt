@@ -3,6 +3,7 @@ package com.discdogs.app.data.network
 import com.discdogs.app.core.data.ResultWrapper
 import com.discdogs.app.data.network.data.response.base.PaginationBaseResponse
 import com.discdogs.app.data.network.data.response.deezer.search.GetSearchResponse
+import com.discdogs.app.data.network.data.response.discogs.getMasterDetail.GetMasterDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.GetMastersVersionsResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
@@ -24,7 +25,7 @@ interface RemoteDataSource {
 
     suspend fun searchVinyl(
         query: String?,
-        type: String = "release",
+        type: String = "master",
         perPage: Int = 100,
         page: Int = 1,
     ): ResultWrapper<PaginationBaseResponse<GetDiscogsSearchResponse>>
@@ -32,6 +33,8 @@ interface RemoteDataSource {
     suspend fun getReleaseDetail(
         releaseId: Int?,
     ): ResultWrapper<GetReleaseDetailResponse>
+
+    suspend fun getMasterDetail(masterId: Int?): ResultWrapper<GetMasterDetailResponse>
 
 
     suspend fun searchSongPreview(
@@ -41,6 +44,6 @@ interface RemoteDataSource {
 
     suspend fun generateImageCaption(
         imageBytes: ByteArray,
-        prompt: String = "Caption this image."
+        prompt: String
     ): ResultWrapper<GeminiBaseResponse>
 }

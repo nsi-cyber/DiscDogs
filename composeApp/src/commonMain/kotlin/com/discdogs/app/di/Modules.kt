@@ -15,6 +15,7 @@ import com.discdogs.app.domain.ExternalRepository
 import com.discdogs.app.domain.NetworkRepository
 import com.discdogs.app.presentation.library.LibraryViewModel
 import com.discdogs.app.presentation.listdetail.ListDetailViewModel
+import com.discdogs.app.presentation.masterDetail.MasterDetailViewModel
 import com.discdogs.app.presentation.onboarding.OnboardingViewModel
 import com.discdogs.app.presentation.releaseDetail.ReleaseDetailViewModel
 import com.discdogs.app.presentation.releases.ReleasesViewModel
@@ -61,6 +62,7 @@ val sharedModule = module {
     viewModelOf(::SearchViewModel)
     viewModelOf(::ReleaseDetailViewModel)
     viewModelOf(::OnboardingViewModel)
+    viewModelOf(::MasterDetailViewModel)
     viewModelOf(::LibraryViewModel)
     viewModelOf(::ListDetailViewModel)
     viewModelOf(::SplashViewModel)

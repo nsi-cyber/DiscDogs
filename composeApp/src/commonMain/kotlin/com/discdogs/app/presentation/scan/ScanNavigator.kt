@@ -23,9 +23,9 @@ class ScanNavigator(
         )
     }
 
-    fun navigateToReleaseVersions(masterId: Int) {
+    fun navigateToMasterDetail(masterId: Int, image: String?) {
         navController.navigate(
-            Route.ReleaseVersions(masterId = masterId)
+            Route.MasterDetail(masterId = masterId, image = image, source = "SCAN")
         )
     }
 

@@ -8,7 +8,6 @@ fun GetDiscogsSearchResponse.toUiModel(): VinylResultUiModel {
         id = id,
         thumb = thumb.orEmpty(),
         title = title.orEmpty(),
-        format = format?.map { it.orEmpty() },
         year = year.orEmpty(),
         genre = genre?.map { it.orEmpty() }
     )

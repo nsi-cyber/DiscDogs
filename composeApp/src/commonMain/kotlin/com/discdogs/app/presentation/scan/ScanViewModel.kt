@@ -113,7 +113,6 @@ class ScanViewModel(
 
             when (val result = networkRepository.generateImageCaption(
                 imageBytes,
-                prompt = "If image has a vinyl record return {\"name\":\"<full record name>\",\"response\":200}, else return {\"name\":null,\"response\":404}"
             )) {
                 is Resource.Success -> {
 
@@ -124,7 +123,10 @@ class ScanViewModel(
                                 is Resource.Success -> {
                                     if (res.value?.firstOrNull()?.id != null) {
                                         _state.update { it.copy(isLoading = false) }
-                                        navigator?.navigateToReleaseDetail(res.value.firstOrNull()?.id!!)
+                                        navigator?.navigateToMasterDetail(
+                                            res.value.firstOrNull()?.id!!,
+                                            image = res.value.firstOrNull()?.thumb
+                                        )
                                     } else {
                                         errorSnack("No vinyl record found with the name $query")
                                         _state.update { it.copy(isLoading = false) }

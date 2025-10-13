@@ -1,6 +1,7 @@
 package com.discdogs.app.domain
 
 import com.discdogs.app.core.data.Resource
+import com.discdogs.app.data.network.data.response.discogs.getMasterDetail.GetMasterDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.GetMastersVersionsResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
@@ -22,6 +23,7 @@ interface NetworkRepository {
     ): Resource<List<GetMastersVersionsResponse>?>
 
     suspend fun getReleaseDetail(releaseId: Int?): Resource<GetReleaseDetailResponse?>
+    suspend fun getMasterDetail(releaseId: Int?): Resource<GetMasterDetailResponse?>
 
     suspend fun searchSongPreview(
         query: String?,
@@ -29,7 +31,6 @@ interface NetworkRepository {
 
     suspend fun generateImageCaption(
         imageBytes: ByteArray,
-        prompt: String = "Caption this image."
     ): Resource<GeminiResponse?>
 
 }

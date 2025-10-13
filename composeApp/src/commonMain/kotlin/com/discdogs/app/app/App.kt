@@ -21,6 +21,7 @@ import com.discdogs.app.presentation.components.VEBottomNavigationBar
 import com.discdogs.app.presentation.components.VEBottomNavigationItem
 import com.discdogs.app.presentation.library.LibraryNavigator
 import com.discdogs.app.presentation.listdetail.ListDetailNavigator
+import com.discdogs.app.presentation.masterDetail.MasterDetailNavigator
 import com.discdogs.app.presentation.onboarding.OnboardingNavigator
 import com.discdogs.app.presentation.releaseDetail.ReleaseDetailNavigator
 import com.discdogs.app.presentation.releases.ReleasesNavigator
@@ -73,6 +74,7 @@ fun App() {
             ) {
                 SplashNavigator(rootNavController).build(this)
                 OnboardingNavigator(rootNavController).build(this)
+                MasterDetailNavigator(rootNavController).build(this)
                 ListDetailNavigator(rootNavController).build(this)
                 ReleasesNavigator(rootNavController).build(this)
                 ReleaseDetailNavigator(rootNavController).build(this)

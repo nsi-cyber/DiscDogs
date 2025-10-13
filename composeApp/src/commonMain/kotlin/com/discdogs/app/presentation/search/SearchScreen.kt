@@ -175,7 +175,7 @@ fun SearchScreen(
                     ) {
                         items(state.resultList.orEmpty(), key = { it.id }) { vinyl ->
                             VinylItemView(data = vinyl, onClick = {
-                                viewModel.process(SearchEvent.OnReleaseDetail(vinyl))
+                                viewModel.process(SearchEvent.OnMasterDetail(vinyl))
                             })
                         }
 
@@ -208,7 +208,7 @@ fun SearchScreen(
                                             state.recentSearchedReleases.orEmpty(),
                                             key = { it.id }) { vinyl ->
                                             VinylHistoryItemView(data = vinyl, onClick = {
-                                                viewModel.process(SearchEvent.OnReleaseDetail(vinyl))
+                                                viewModel.process(SearchEvent.OnMasterDetail(vinyl))
                                             })
                                         }
 
@@ -234,7 +234,7 @@ fun SearchScreen(
                                             state.recentScannedReleases.orEmpty(),
                                             key = { it.id }) { vinyl ->
                                             VinylHistoryItemView(data = vinyl, onClick = {
-                                                viewModel.process(SearchEvent.OnReleaseDetail(vinyl))
+                                                viewModel.process(SearchEvent.OnMasterDetail(vinyl))
                                             })
                                         }
 

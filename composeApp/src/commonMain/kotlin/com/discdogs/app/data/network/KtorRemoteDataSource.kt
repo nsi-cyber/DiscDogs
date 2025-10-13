@@ -8,6 +8,7 @@ import com.discdogs.app.data.network.data.request.gemini.InlineData
 import com.discdogs.app.data.network.data.request.gemini.Part
 import com.discdogs.app.data.network.data.response.base.PaginationBaseResponse
 import com.discdogs.app.data.network.data.response.deezer.search.GetSearchResponse
+import com.discdogs.app.data.network.data.response.discogs.getMasterDetail.GetMasterDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.GetMastersVersionsResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getSearch.GetDiscogsSearchResponse
@@ -104,7 +105,15 @@ class KtorRemoteDataSource(
             httpClient.get(
                 urlString = "${Network.Discogs.BASE_URL}/releases/${releaseId}"
             ) {
-                parameter("releaseId", releaseId)
+                parameter("token", Network.Discogs.API_KEY)
+            }
+        }
+    }
+    override suspend fun getMasterDetail(masterId: Int?): ResultWrapper<GetMasterDetailResponse> {
+        return safeApiCall {
+            httpClient.get(
+                urlString = "${Network.Discogs.BASE_URL}/masters/${masterId}"
+            ) {
                 parameter("token", Network.Discogs.API_KEY)
             }
         }

@@ -1,5 +1,6 @@
 package com.discdogs.app.presentation.model
 
+import com.discdogs.app.data.network.data.response.discogs.getMasterDetail.GetMasterDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.Identifier
 import kotlin.uuid.ExperimentalUuidApi
@@ -89,6 +90,44 @@ fun GetReleaseDetailResponse?.toUiModel(): VinylDetailUiModel? {
     }
 }
 
+@OptIn(ExperimentalUuidApi::class)
+fun GetMasterDetailResponse?.toUiModel(): VinylDetailUiModel? {
+    return this?.let { response ->
+        VinylDetailUiModel(
+            id = response.id,
+            artists = response.artists?.map {
+                ArtistUiModel(
+                    name = it?.name.orEmpty(),
+                    resourceUrl = it?.resourceUrl
+                )
+            },
+            genres = response.genres?.map { it.orEmpty() },
+            images = response.images?.map {
+                ImageUiModel(
+                    height = it?.height,
+                    resourceUrl = it?.resourceUrl,
+                    uri = it?.uri,
+                    width = it?.width
+                )
+            },
+            masterId = response.id,
+            resourceUrl = response.resourceUrl,
+            styles = response.styles?.map { it.orEmpty() },
+            title = response.title.orEmpty(),
+            trackList = response.tracklist?.filter { it?.type?.contains("track") == true }?.map {
+                TrackListUiModel(
+                    id = Uuid.random().toString(),
+                    duration = it?.duration,
+                    position = it?.position,
+                    title = it?.title.orEmpty(),
+                    type = it?.type.orEmpty()
+                )
+            },
+            uri = response.uri,
+            year = response.year
+        )
+    }
+}
 
 data class VinylDetailUiModel(
     val id: Int,

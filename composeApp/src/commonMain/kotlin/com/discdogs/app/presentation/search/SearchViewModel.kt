@@ -84,12 +84,12 @@ class SearchViewModel(
 
             }
 
-            is SearchEvent.OnReleaseDetail -> {
-                navigator?.navigateToReleaseDetail(event.data.id, event.data.thumb)
+            is SearchEvent.OnMasterDetail -> {
+                navigator?.navigateToMasterDetail(event.data.id, event.data.thumb)
             }
 
             is SearchEvent.OnRecentSearchedReleaseClick -> {
-                navigator?.navigateToReleaseDetail(event.release.id, event.release.thumb)
+                navigator?.navigateToMasterDetail(event.release.id, event.release.thumb)
             }
 
             is SearchEvent.OnRecentScannedReleaseClick -> {

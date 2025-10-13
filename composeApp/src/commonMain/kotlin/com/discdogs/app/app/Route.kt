@@ -26,11 +26,20 @@ sealed interface Route {
     data class FavoriteList(val id: Long) : Route
 
     @Serializable
-    data class ReleaseVersions(val masterId: Int) : Route
+    data class ReleaseVersions(
+        val masterId: Int, val source: String
+    ) : Route
 
     @Serializable
     data class ReleaseDetail(
         val releaseId: Int,
+        val image: String? = null,
+        val source: String
+    ) : Route
+
+    @Serializable
+    data class MasterDetail(
+        val masterId: Int,
         val image: String? = null,
         val source: String
     ) : Route
