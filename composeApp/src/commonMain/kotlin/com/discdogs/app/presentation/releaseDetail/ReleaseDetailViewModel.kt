@@ -9,12 +9,16 @@ import com.discdogs.app.core.audioPlayer.AudioRepository
 import com.discdogs.app.core.audioPlayer.PlaybackState
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.presentation.BaseViewModel
+import com.discdogs.app.core.presentation.UiText
 import com.discdogs.app.data.repository.LibraryRepository
 import com.discdogs.app.domain.ExternalRepository
 import com.discdogs.app.domain.NetworkRepository
 import com.discdogs.app.presentation.model.ExternalWebsites
 import com.discdogs.app.presentation.model.TrackListUiModel
 import com.discdogs.app.presentation.model.toUiModel
+import discdog.composeapp.generated.resources.Res
+import discdog.composeapp.generated.resources.release_detail_error_message
+import discdog.composeapp.generated.resources.we_couldnt_find_a_preview_for_this_track
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -259,7 +263,7 @@ class ReleaseDetailViewModel(
                 // Refresh the lists containing this release
                 loadLists()
             } catch (e: Exception) {
-                errorSnack(message = e.toString())
+                errorSnack(message = UiText.DynamicString(e.toString()))
             }
             _effect.emit(ReleaseDetailEffect.DismissSaveToListBottomSheet)
             delay(100)
@@ -287,7 +291,7 @@ class ReleaseDetailViewModel(
                     } catch (e: Exception) {
                         // If adding to list fails, still show success for list creation
                         // but log the error
-                        errorSnack(message = e.toString())
+                        errorSnack(message = UiText.DynamicString(e.toString()))
                     }
                 }
 
@@ -302,7 +306,7 @@ class ReleaseDetailViewModel(
                 }
                 loadLists() // Refresh lists
             } catch (e: Exception) {
-                errorSnack(message = e.toString())
+                errorSnack(message = UiText.DynamicString(e.toString()))
             }
         }
     }
@@ -346,7 +350,8 @@ class ReleaseDetailViewModel(
                             isPreviewLoading = false
                         )
                     }
-                    errorSnack(message = ("R.string.we_couldnt_find_a_preview_for_this_track"))
+                    errorSnack(message = UiText.StringResourceId(Res.string.we_couldnt_find_a_preview_for_this_track))
+
                 }
 
                 is Resource.Error -> {
@@ -355,7 +360,7 @@ class ReleaseDetailViewModel(
                             isPreviewLoading = false, playingItem = null,
                         )
                     }
-                    errorSnack(message = ("R.string.we_couldnt_find_a_preview_for_this_track"))
+                    errorSnack(message = UiText.StringResourceId(Res.string.we_couldnt_find_a_preview_for_this_track))
 
 
                 }
@@ -397,7 +402,8 @@ class ReleaseDetailViewModel(
                 }
 
                 is Resource.Error -> {
-                    errorSnack(("R.string.release_detail_error_message"))
+                    errorSnack(message = UiText.StringResourceId(Res.string.release_detail_error_message))
+
                     _state.update { it.copy(isLoading = false) }
                     navigator?.navigateBack()
                 }

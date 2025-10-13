@@ -9,11 +9,15 @@ import com.discdogs.app.core.audioPlayer.AudioRepository
 import com.discdogs.app.core.audioPlayer.PlaybackState
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.presentation.BaseViewModel
+import com.discdogs.app.core.presentation.UiText
 import com.discdogs.app.domain.ExternalRepository
 import com.discdogs.app.domain.NetworkRepository
 import com.discdogs.app.presentation.model.ExternalWebsites
 import com.discdogs.app.presentation.model.TrackListUiModel
 import com.discdogs.app.presentation.model.toUiModel
+import discdog.composeapp.generated.resources.Res
+import discdog.composeapp.generated.resources.release_detail_error_message
+import discdog.composeapp.generated.resources.we_couldnt_find_a_preview_for_this_track
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -178,7 +182,7 @@ class MasterDetailViewModel(
                             isPreviewLoading = false
                         )
                     }
-                    errorSnack(message = ("R.string.we_couldnt_find_a_preview_for_this_track"))
+                    errorSnack(message = UiText.StringResourceId(Res.string.we_couldnt_find_a_preview_for_this_track))
                 }
 
                 is Resource.Error -> {
@@ -187,7 +191,7 @@ class MasterDetailViewModel(
                             isPreviewLoading = false, playingItem = null,
                         )
                     }
-                    errorSnack(message = ("R.string.we_couldnt_find_a_preview_for_this_track"))
+                    errorSnack(message = UiText.StringResourceId(Res.string.we_couldnt_find_a_preview_for_this_track))
 
 
                 }
@@ -211,7 +215,7 @@ class MasterDetailViewModel(
                 }
 
                 is Resource.Error -> {
-                    errorSnack(("R.string.Master_detail_error_message"))
+                    errorSnack(message = UiText.StringResourceId(Res.string.release_detail_error_message))
                     _state.update { it.copy(isLoading = false) }
                     navigator?.navigateBack()
                 }

@@ -31,7 +31,6 @@ fun AppLevelSnackbar(modifier: Modifier) {
         SnackbarHostState()
     }
 
-
     ObserveAsEvents(
         flow = SnackbarHostManager.events, errorSnackbarHostState, successSnackbarHostState
     ) { event ->
@@ -40,9 +39,10 @@ fun AppLevelSnackbar(modifier: Modifier) {
 
             is SnackbarEvents.ErrorSnackbar -> scope.launch {
                 errorSnackbarHostState.currentSnackbarData?.dismiss()
+                val message = event.errorMessage?.toStringSuspend().orEmpty()
                 errorSnackbarHostState.showSnackbar(
                     withDismissAction = true,
-                    message = event.errorMessage.orEmpty(),
+                    message = message,
                     duration = SnackbarDuration.Short,
                 )
 
@@ -52,9 +52,11 @@ fun AppLevelSnackbar(modifier: Modifier) {
             is SnackbarEvents.SuccessSnackbar -> {
                 scope.launch {
                     successSnackbarHostState.currentSnackbarData?.dismiss()
+                    val message = event.successMessage?.toStringSuspend().orEmpty()
+
                     successSnackbarHostState.showSnackbar(
                         withDismissAction = true,
-                        message = event.successMessage.orEmpty(),
+                        message = message,
                         duration = SnackbarDuration.Short,
                     )
 

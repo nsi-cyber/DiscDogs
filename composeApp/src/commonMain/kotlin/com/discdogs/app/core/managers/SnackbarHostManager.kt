@@ -1,5 +1,6 @@
 package com.discdogs.app.core.managers
 
+import com.discdogs.app.core.presentation.UiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -7,11 +8,11 @@ import kotlinx.coroutines.flow.receiveAsFlow
 sealed interface SnackbarEvents {
 
     data class ErrorSnackbar(
-        val errorMessage: String? = null,
+        val errorMessage: UiText? = null,
     ) : SnackbarEvents
 
     data class SuccessSnackbar(
-        val successMessage: String? = null,
+        val successMessage: UiText? = null,
     ) : SnackbarEvents
 
 
@@ -21,7 +22,7 @@ object SnackbarHostManager {
     private val _events = Channel<SnackbarEvents>()
     val events = _events.receiveAsFlow()
 
-    suspend fun showError(message: String) {
+    suspend fun showError(message: UiText) {
         _events.send(
             SnackbarEvents.ErrorSnackbar(
                 errorMessage = message,
@@ -29,7 +30,7 @@ object SnackbarHostManager {
         )
     }
 
-    suspend fun showSuccess(message: String) {
+    suspend fun showSuccess(message: UiText) {
         _events.send(
             SnackbarEvents.SuccessSnackbar(
                 successMessage = message

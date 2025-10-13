@@ -22,7 +22,7 @@ abstract class BaseViewModel<STATE, EFFECT, EVENT, NAVIGATOR> : ViewModel() {
     }
 
 
-    fun errorSnack(message: String) {
+    fun errorSnack(message: UiText) {
         viewModelScope.launch {
             SnackbarHostManager.showError(message)
         }

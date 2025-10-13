@@ -3,6 +3,7 @@ package com.discdogs.app.presentation.scan
 import androidx.lifecycle.viewModelScope
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.presentation.BaseViewModel
+import com.discdogs.app.core.presentation.UiText
 import com.discdogs.app.domain.NetworkRepository
 import com.discdogs.app.domain.SearchType
 import dev.icerock.moko.permissions.DeniedAlwaysException
@@ -12,6 +13,9 @@ import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.RequestCanceledException
 import dev.icerock.moko.permissions.camera.CAMERA
+import discdog.composeapp.generated.resources.Res
+import discdog.composeapp.generated.resources.no_vinyl_record_found_in_the_image_please_try_again_with_a_clearer_image_or_different_angle
+import discdog.composeapp.generated.resources.sorry_we_couldn_t_find_it
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -99,7 +103,7 @@ class ScanViewModel(
 
                 is Resource.Error -> {
                     errorSnack(
-                        result.message.orEmpty()
+                        UiText.DynamicString(result.message.orEmpty())
                     )
                     _state.update { it.copy(isLoading = false) }
                 }
@@ -130,7 +134,7 @@ class ScanViewModel(
                                             image = res.value.firstOrNull()?.thumb
                                         )
                                     } else {
-                                        errorSnack("No vinyl record found with the name $query")
+                                        errorSnack(UiText.StringResourceId(Res.string.sorry_we_couldn_t_find_it))
                                         _state.update { it.copy(isLoading = false) }
 
                                     }
@@ -138,19 +142,19 @@ class ScanViewModel(
                                 }
 
                                 is Resource.Error -> {
-                                    errorSnack("No vinyl record found with the name $query")
+                                    errorSnack(UiText.StringResourceId(Res.string.sorry_we_couldn_t_find_it))
+
                                     _state.update { it.copy(isLoading = false) }
                                 }
                             }
                         } else {
                             _state.update { it.copy(isLoading = false) }
 
-                            errorSnack("No vinyl record found in the image")
+                            errorSnack(UiText.StringResourceId(Res.string.no_vinyl_record_found_in_the_image_please_try_again_with_a_clearer_image_or_different_angle))
                         }
                     } else {
                         _state.update { it.copy(isLoading = false) }
-
-                        errorSnack("No vinyl record found in the image")
+                        errorSnack(UiText.StringResourceId(Res.string.no_vinyl_record_found_in_the_image_please_try_again_with_a_clearer_image_or_different_angle))
                     }
 
 
@@ -158,7 +162,7 @@ class ScanViewModel(
 
                 is Resource.Error -> {
                     errorSnack(
-                        result.message ?: "Failed to generate image caption"
+                        UiText.DynamicString(result.message ?: "Failed to generate image caption")
                     )
                     _state.update { it.copy(isLoading = false) }
                 }

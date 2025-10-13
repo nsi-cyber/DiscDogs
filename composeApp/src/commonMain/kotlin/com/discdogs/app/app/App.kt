@@ -32,6 +32,9 @@ import discdog.composeapp.generated.resources.Res
 import discdog.composeapp.generated.resources.ic_library
 import discdog.composeapp.generated.resources.ic_scan
 import discdog.composeapp.generated.resources.ic_search
+import discdog.composeapp.generated.resources.library
+import discdog.composeapp.generated.resources.scan
+import discdog.composeapp.generated.resources.search
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -49,17 +52,17 @@ fun App() {
         val bottomBarList: List<VEBottomNavigationItem> = listOf(
             VEBottomNavigationItem(
                 Route.Search,
-                UiText.DynamicString("Search"),
+                UiText.StringResourceId(Res.string.search),
                 Res.drawable.ic_search,
             ),
             VEBottomNavigationItem(
                 Route.Scan,
-                UiText.DynamicString("Scan"),
+                UiText.StringResourceId(Res.string.scan),
                 Res.drawable.ic_scan,
             ),
             VEBottomNavigationItem(
                 Route.Favorites,
-                UiText.DynamicString("Library"),
+                UiText.StringResourceId(Res.string.library),
                 Res.drawable.ic_library,
             ),
 
