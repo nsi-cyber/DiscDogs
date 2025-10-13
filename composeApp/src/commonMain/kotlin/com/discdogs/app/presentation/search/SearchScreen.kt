@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -37,10 +38,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -77,6 +80,28 @@ fun SearchScreen(
     val isDropDownExpanded = remember {
         mutableStateOf(false)
     }
+    val listState = rememberLazyListState()
+
+    // Scroll-based pagination
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo }
+            .collect { visibleItems ->
+                if (visibleItems.isNotEmpty()) {
+                    val lastVisibleItem = visibleItems.last()
+                    val totalItems = state.resultList?.size ?: 0
+
+                    // Load more when user is within 3 items of the end
+                    if (lastVisibleItem.index >= totalItems - 3 &&
+                        state.hasMore &&
+                        !state.isLoadingMore &&
+                        state.searchQuery.isNotEmpty()
+                    ) {
+                        viewModel.process(SearchEvent.LoadMore)
+                    }
+                }
+            }
+    }
+    
     Scaffold(
         containerColor = VETheme.colors.backgroundColorPrimary,
     ) { padd ->
@@ -223,6 +248,7 @@ fun SearchScreen(
                     PageState.EMPTY -> NoResultView()
 
                     PageState.SUCCESS -> LazyColumn(
+                        state = listState,
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(
                             start = 8.dp,
@@ -238,6 +264,33 @@ fun SearchScreen(
                             })
                         }
 
+                        // Loading indicator at the bottom when loading more
+                        if (state.isLoadingMore) {
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(Res.drawable.ic_loading),
+                                            contentDescription = "Loading",
+                                            tint = VETheme.colors.whiteColor,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                        Text(
+                                            text = "Loading more...",
+                                            style = VETheme.typography.text14TextColor100W400
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     else -> {

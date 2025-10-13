@@ -3,6 +3,7 @@ package com.discdogs.app.data.repository
 import com.discdogs.app.core.data.Resource
 import com.discdogs.app.core.data.toResource
 import com.discdogs.app.data.network.RemoteDataSource
+import com.discdogs.app.data.network.data.response.base.PaginationBaseResponse
 import com.discdogs.app.data.network.data.response.discogs.getMasterDetail.GetMasterDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.GetMastersVersionsResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
@@ -26,21 +27,31 @@ class NetworkRepositoryImpl(
 
     override suspend fun searchVinyl(
         query: String?,
-        type: SearchType
-    ): Resource<List<GetDiscogsSearchResponse>?> =
+        type: SearchType,
+        perPage: Int,
+        page: Int
+    ): Resource<PaginationBaseResponse<GetDiscogsSearchResponse>?> =
         remoteDataSource
             .searchVinyl(
                 query = query,
-                type = type
+                type = type,
+                perPage = perPage,
+                page = page
             )
-            .toResource { it.results }
+            .toResource { it }
 
     override suspend fun getMastersVersions(
         masterId: Int,
-    ): Resource<List<GetMastersVersionsResponse>?> =
+        perPage: Int,
+        page: Int
+    ): Resource<PaginationBaseResponse<GetMastersVersionsResponse>?> =
         remoteDataSource
-            .getMastersVersions(masterId = masterId)
-            .toResource { it.versions }
+            .getMastersVersions(
+                masterId = masterId,
+                perPage = perPage,
+                page = page
+            )
+            .toResource { it }
 
     override suspend fun getReleaseDetail(releaseId: Int?): Resource<GetReleaseDetailResponse?> =
         remoteDataSource

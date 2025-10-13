@@ -68,6 +68,9 @@ class SearchViewModel(
                             isLoading = false,
                             resultList = null,
                             searchQuery = "",
+                            currentPage = 1,
+                            hasMore = true,
+                            totalPages = null
                         )
                     }
 
@@ -80,9 +83,18 @@ class SearchViewModel(
                     it.copy(
                         resultList = null,
                         searchQuery = "",
+                        currentPage = 1,
+                        hasMore = true,
+                        totalPages = null
                     )
                 }
 
+            }
+
+            SearchEvent.LoadMore -> {
+                if (_state.value.hasMore && !_state.value.isLoadingMore && _state.value.searchQuery.isNotEmpty()) {
+                    loadMoreResults()
+                }
             }
 
             is SearchEvent.OnItemClicked -> {
@@ -111,7 +123,14 @@ class SearchViewModel(
             is SearchEvent.OnSearchTypeChanged -> {
                 _state.update { it.copy(searchType = event.type) }
                 if (_state.value.searchQuery.isNotEmpty()) {
-                    _state.update { it.copy(isLoading = true) }
+                    _state.update {
+                        it.copy(
+                            isLoading = true,
+                            currentPage = 1,
+                            hasMore = true,
+                            totalPages = null
+                        )
+                    }
                     searchWithDebounce(_state.value.searchQuery)
                 }
             }
@@ -129,18 +148,68 @@ class SearchViewModel(
     private fun getSearch(query: String) {
         viewModelScope.launch {
             when (val result =
-                networkRepository.searchVinyl(query, type = _state.value.searchType)) {
+                networkRepository.searchVinyl(
+                    query,
+                    type = _state.value.searchType,
+                    perPage = 20,
+                    page = 1
+                )) {
                 is Resource.Success -> {
+                    val newResults =
+                        result.value?.results?.map { it.toUiModel(isMaster = _state.value.searchType == SearchType.MASTER) }
+                            ?: emptyList()
+                    val pagination = result.value?.pagination
                     _state.update {
                         it.copy(
-                            resultList = result.value?.map { it.toUiModel(isMaster = _state.value.searchType == SearchType.MASTER) },
-                            isLoading = false
+                            resultList = newResults,
+                            isLoading = false,
+                            currentPage = pagination?.page ?: 1,
+                            hasMore = (pagination?.page ?: 1) < (pagination?.pages ?: 1),
+                            totalPages = pagination?.pages
                         )
                     }
                 }
 
                 is Resource.Error -> {
                     _state.update { it.copy(isLoading = false) }
+                }
+            }
+        }
+    }
+
+    private fun loadMoreResults() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoadingMore = true) }
+            val nextPage = _state.value.currentPage + 1
+            when (val result = networkRepository.searchVinyl(
+                query = _state.value.searchQuery,
+                type = _state.value.searchType,
+                perPage = 20,
+                page = nextPage
+            )) {
+                is Resource.Success -> {
+                    val newResults =
+                        result.value?.results?.map { it.toUiModel(isMaster = _state.value.searchType == SearchType.MASTER) }
+                            ?: emptyList()
+                    val pagination = result.value?.pagination
+                    val currentResults = _state.value.resultList ?: emptyList()
+
+                    // Combine and remove duplicates by id
+                    val combinedResults = (currentResults + newResults).distinctBy { it.id }
+
+                    _state.update {
+                        it.copy(
+                            resultList = combinedResults,
+                            isLoadingMore = false,
+                            currentPage = pagination?.page ?: nextPage,
+                            hasMore = (pagination?.page ?: nextPage) < (pagination?.pages ?: 1),
+                            totalPages = pagination?.pages
+                        )
+                    }
+                }
+
+                is Resource.Error -> {
+                    _state.update { it.copy(isLoadingMore = false) }
                 }
             }
         }

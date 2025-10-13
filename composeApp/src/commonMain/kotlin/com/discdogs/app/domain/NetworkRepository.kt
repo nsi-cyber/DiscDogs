@@ -1,6 +1,7 @@
 package com.discdogs.app.domain
 
 import com.discdogs.app.core.data.Resource
+import com.discdogs.app.data.network.data.response.base.PaginationBaseResponse
 import com.discdogs.app.data.network.data.response.discogs.getMasterDetail.GetMasterDetailResponse
 import com.discdogs.app.data.network.data.response.discogs.getMastersVersions.GetMastersVersionsResponse
 import com.discdogs.app.data.network.data.response.discogs.getReleaseDetail.GetReleaseDetailResponse
@@ -16,12 +17,16 @@ interface NetworkRepository {
 
     suspend fun searchVinyl(
         query: String?,
-        type: SearchType
-    ): Resource<List<GetDiscogsSearchResponse>?>
+        type: SearchType,
+        perPage: Int = 20,
+        page: Int = 1
+    ): Resource<PaginationBaseResponse<GetDiscogsSearchResponse>?>
 
     suspend fun getMastersVersions(
         masterId: Int,
-    ): Resource<List<GetMastersVersionsResponse>?>
+        perPage: Int = 20,
+        page: Int = 1
+    ): Resource<PaginationBaseResponse<GetMastersVersionsResponse>?>
 
     suspend fun getReleaseDetail(releaseId: Int?): Resource<GetReleaseDetailResponse?>
     suspend fun getMasterDetail(releaseId: Int?): Resource<GetMasterDetailResponse?>

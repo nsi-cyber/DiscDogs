@@ -125,13 +125,18 @@ class ScanViewModel(
                         if (result.value.name != null) {
                             val query = result.value.name
                             when (val res =
-                                networkRepository.searchVinyl(query, type = SearchType.MASTER)) {
+                                networkRepository.searchVinyl(
+                                    query,
+                                    type = SearchType.MASTER,
+                                    perPage = 1,
+                                    page = 1
+                                )) {
                                 is Resource.Success -> {
-                                    if (res.value?.firstOrNull()?.id != null) {
+                                    if (res.value?.results?.firstOrNull()?.id != null) {
                                         _state.update { it.copy(isLoading = false) }
                                         navigator?.navigateToMasterDetail(
-                                            res.value.firstOrNull()?.id!!,
-                                            image = res.value.firstOrNull()?.thumb
+                                            res.value.results?.firstOrNull()?.id!!,
+                                            image = res.value.results?.firstOrNull()?.thumb
                                         )
                                     } else {
                                         errorSnack(UiText.StringResourceId(Res.string.sorry_we_couldn_t_find_it))
