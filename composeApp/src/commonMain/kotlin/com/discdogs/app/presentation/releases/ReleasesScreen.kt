@@ -22,7 +22,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.discdogs.app.core.presentation.shimmerEffect
 import com.discdogs.app.core.presentation.theme.VETheme
+import com.discdogs.app.presentation.components.LoadingMore
 import com.discdogs.app.presentation.model.MastersVersionsUiModel
 import com.discdogs.app.presentation.model.PageState
 import discdog.composeapp.generated.resources.Res
@@ -154,28 +154,7 @@ fun ReleasesScreen(
                         // Loading indicator at the bottom when loading more
                         if (state.isLoadingMore) {
                             item {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(Res.drawable.ic_loading),
-                                            contentDescription = "Loading",
-                                            tint = VETheme.colors.whiteColor,
-                                            modifier = Modifier.size(16.dp)
-                                        )
-                                        Text(
-                                            text = "Loading more...",
-                                            style = VETheme.typography.text14TextColor100W400
-                                        )
-                                    }
-                                }
+                                LoadingMore()
                             }
                         }
                     }
