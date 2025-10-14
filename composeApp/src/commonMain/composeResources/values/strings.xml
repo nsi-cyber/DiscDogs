@@ -36,7 +36,7 @@
     <string name="scan_cover_image">Scan Cover Image</string>
     <string name="scan_cover_image_beta_description">This feature is on beta, and it can take 10 seconds to get a result</string>
     <string name="onboarding_first_title">Start scanning your records!</string>
-    <string name="onboarding_first_desc">It’s super easy, just scan the barcode or cover image* and get all the details about the record. Listen or add to favorites.</string>
+    <string name="onboarding_first_desc">It’s super easy, just scan the barcode or cover image and get all the details about the record. Listen or add to favorites.</string>
     <string name="onboarding_first_button">Place the record</string>
     <string name="onboarding_third_button">Get started</string>
     <string name="onboarding_third_title">Don’t forget what you’ve discovered!</string>
