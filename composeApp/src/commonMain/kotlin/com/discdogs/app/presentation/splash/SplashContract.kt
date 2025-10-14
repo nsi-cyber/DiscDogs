@@ -10,4 +10,5 @@ sealed interface SplashEffect {
 
 sealed class SplashEvent {
     object OnBackClicked : SplashEvent()
+    object OnInitialize : SplashEvent()
 }

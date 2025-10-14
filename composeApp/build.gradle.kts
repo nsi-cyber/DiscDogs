@@ -49,6 +49,7 @@ kotlin {
             implementation(libs.koin.androidx.compose)
             implementation(libs.ktor.client.okhttp)
             implementation("androidx.media3:media3-exoplayer:1.0.1")
+            implementation(libs.core.splashscreen)
 
 
         }

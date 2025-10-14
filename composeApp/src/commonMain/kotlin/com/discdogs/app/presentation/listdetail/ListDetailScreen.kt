@@ -40,8 +40,8 @@ import com.discdogs.app.presentation.model.VinylResultUiModel
 import discdog.composeapp.generated.resources.Res
 import discdog.composeapp.generated.resources.ic_chevron_left
 import discdog.composeapp.generated.resources.ic_delete
-import discdog.composeapp.generated.resources.ic_empty_drawer
 import discdog.composeapp.generated.resources.ic_loading
+import discdog.composeapp.generated.resources.image_not_found
 import discdog.composeapp.generated.resources.save_your_records_to_not_lose_them
 import discdog.composeapp.generated.resources.there_are_no_records_here_yet
 import org.jetbrains.compose.resources.painterResource
@@ -260,7 +260,7 @@ fun EmptyListState() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Image(
-            painter = painterResource(Res.drawable.ic_empty_drawer),
+            painter = painterResource(Res.drawable.image_not_found),
             contentDescription = "No Result",
             modifier = Modifier
                 .fillMaxWidth()

@@ -61,10 +61,10 @@ import com.discdogs.app.presentation.model.PageState
 import com.discdogs.app.presentation.model.VinylResultUiModel
 import discdog.composeapp.generated.resources.Res
 import discdog.composeapp.generated.resources.clear
-import discdog.composeapp.generated.resources.ic_empty_drawer
 import discdog.composeapp.generated.resources.ic_filter
 import discdog.composeapp.generated.resources.ic_loading
 import discdog.composeapp.generated.resources.ic_search
+import discdog.composeapp.generated.resources.image_not_found
 import discdog.composeapp.generated.resources.keep_hunting_try_to_search_with_different_keywords
 import discdog.composeapp.generated.resources.no_results_found
 import discdog.composeapp.generated.resources.recent_scans
@@ -555,7 +555,7 @@ private fun NoResultView() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Image(
-            painter = painterResource(Res.drawable.ic_empty_drawer),
+            painter = painterResource(Res.drawable.image_not_found),
             contentDescription = "No Result",
             modifier = Modifier
                 .fillMaxWidth()

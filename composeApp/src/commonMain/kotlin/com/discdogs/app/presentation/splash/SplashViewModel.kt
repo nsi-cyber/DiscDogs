@@ -24,10 +24,11 @@ class SplashViewModel(
     override fun process(event: SplashEvent) {
         when (event) {
             SplashEvent.OnBackClicked -> navigator?.navigateBack()
+            SplashEvent.OnInitialize -> initializeSplash()
         }
     }
 
-    init {
+    private fun initializeSplash() {
 
         viewModelScope.launch {
             val isFirstTime = libraryRepository.isFirstTime()
