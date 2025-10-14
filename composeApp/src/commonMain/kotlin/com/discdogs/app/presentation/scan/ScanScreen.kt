@@ -37,9 +37,9 @@ import com.discdogs.app.core.presentation.theme.VETheme
 import com.discdogs.app.presentation.components.VEButton
 import dev.icerock.moko.permissions.PermissionState
 import discdog.composeapp.generated.resources.Res
+import discdog.composeapp.generated.resources.camera_access_button
 import discdog.composeapp.generated.resources.camera_access_desc
 import discdog.composeapp.generated.resources.camera_access_title
-import discdog.composeapp.generated.resources.ic_camera
 import discdog.composeapp.generated.resources.ic_flash
 import discdog.composeapp.generated.resources.image_binoculars
 import discdog.composeapp.generated.resources.scan_barcode
@@ -107,6 +107,7 @@ fun ScanScreen(
         } else {
             // Camera permission not granted - show permission request UI
             PermissionRequestView(
+                modifier = Modifier.fillMaxSize().padding(padd),
                 onRequestPermission = {
                     viewModel.process(ScanEvent.ProvidePermission(false))
                 }
@@ -117,10 +118,11 @@ fun ScanScreen(
 
 @Composable
 fun PermissionRequestView(
+    modifier: Modifier,
     onRequestPermission: () -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
     ) {
         Column(
@@ -129,12 +131,12 @@ fun PermissionRequestView(
             modifier = Modifier.padding(32.dp)
         ) {
 
-                Icon(
-                    painter = painterResource(Res.drawable.image_binoculars),
-                    contentDescription = null,
-                    modifier = Modifier.size(200.dp),
-                    tint = VETheme.colors.primaryColor600
-                )
+            Icon(
+                painter = painterResource(Res.drawable.image_binoculars),
+                contentDescription = null,
+                modifier = Modifier.size(200.dp),
+                tint = VETheme.colors.primaryColor600
+            )
 
 
             // Title
@@ -162,7 +164,7 @@ fun PermissionRequestView(
                     .padding(horizontal = 16.dp)
             ) {
                 Text(
-                    text = "Allow Camera Access",
+                    text = stringResource(Res.string.camera_access_button),
                     color = VETheme.colors.whiteColor,
                     style = VETheme.typography.text16TextColorWhiteW500
                 )
@@ -232,7 +234,7 @@ fun CameraPreviewOverlay(
                         .size(84.dp)
                         .clip(CircleShape)
                         .border(3.dp, VETheme.colors.primaryColor600, CircleShape)
-                        .background(Color.White)
+                        .background(Color.Black)
                         .clickable {
                             if (isLoading == false)
                                 onPhoto()
@@ -241,12 +243,12 @@ fun CameraPreviewOverlay(
                     if (isLoading)
                         CircularProgressIndicator(
                             modifier = Modifier.fillMaxSize(),
-                            color = VETheme.colors.blackColor,
+                            color = VETheme.colors.primaryColor600,
                             strokeWidth = 6.dp
                         )
                     else
                         Icon(
-                            painter = painterResource(Res.drawable.ic_camera),
+                            painter = painterResource(Res.drawable.image_binoculars),
                             contentDescription = null,
                             tint = VETheme.colors.primaryColor600,
                             modifier = Modifier
