@@ -9,7 +9,7 @@ data class SearchState(
     val isLoadingMore: Boolean = false,
     val searchQuery: String = "",
     val resultList: List<VinylResultUiModel>? = null,
-    val searchType: SearchType = SearchType.MASTER,
+    val searchType: SearchType = SearchType.RELEASE,
     val recentSearchedReleases: List<VinylResultUiModel>? = null,
     val recentScannedReleases: List<VinylResultUiModel>? = null,
     val currentPage: Int = 1,
