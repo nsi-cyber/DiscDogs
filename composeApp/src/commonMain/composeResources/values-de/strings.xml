@@ -76,4 +76,5 @@
     <string name="camera_access_title">Kamera-Zugriff für diese Funktion erforderlich</string>
     <string name="camera_access_desc">DiscDog benötigt Kamera-Zugriff, um Barcodes zu scannen und Bilder zu erfassen zur Identifikation. Sie können andere Funktionen nutzen, wenn Sie keine Berechtigung erteilen möchten.</string>
     <string name="camera_access_button">Kamera-Zugriff Erlauben</string>
+    <string name="loading_more">Mehr wird geladen...</string>
 </resources>

@@ -76,4 +76,5 @@
     <string name="camera_access_title">এই বৈশিষ্ট্যের জন্য ক্যামেরা অ্যাক্সেস প্রয়োজন</string>
     <string name="camera_access_desc">DiscDog-এর বারকোড স্ক্যান করতে এবং সনাক্তকরণের জন্য ছবি ক্যাপচার করতে ক্যামেরা অ্যাক্সেস প্রয়োজন। আপনি যদি কোন অনুমতি দিতে না চান তাহলে আপনি অন্যান্য বৈশিষ্ট্য ব্যবহার করতে পারেন।</string>
     <string name="camera_access_button">ক্যামেরা অ্যাক্সেস অনুমতি দিন</string>
+    <string name="loading_more">আরো লোড হচ্ছে...</string>
 </resources>

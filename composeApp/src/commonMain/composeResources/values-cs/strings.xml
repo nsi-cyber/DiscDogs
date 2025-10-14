@@ -76,4 +76,5 @@
     <string name="camera_access_title">Pro tuto funkci je vyžadován přístup ke kameře</string>
     <string name="camera_access_desc">DiscDog potřebuje přístup ke kameře pro skenování čárových kódů a zachycování obrázků pro identifikaci. Můžete použít jiné funkce, pokud nechcete udělit žádná oprávnění.</string>
     <string name="camera_access_button">Povolit přístup ke kameře</string>
+    <string name="loading_more">Načítání dalších...</string>
 </resources>

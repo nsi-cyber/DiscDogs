@@ -76,4 +76,5 @@
     <string name="camera_access_title">ต้องใช้การเข้าถึงกล้องสำหรับฟีเจอร์นี้</string>
     <string name="camera_access_desc">DiscDog ต้องการการเข้าถึงกล้องเพื่อสแกนบาร์โค้ดและจับภาพเพื่อการระบุตัวตน คุณสามารถใช้ฟีเจอร์อื่นได้หากไม่ต้องการให้สิทธิ์ใดๆ</string>
     <string name="camera_access_button">อนุญาตการเข้าถึงกล้อง</string>
+    <string name="loading_more">กำลังโหลดเพิ่มเติม...</string>
 </resources>

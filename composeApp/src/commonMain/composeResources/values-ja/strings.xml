@@ -76,4 +76,5 @@
     <string name="camera_access_title">この機能にはカメラアクセスが必要です</string>
     <string name="camera_access_desc">DiscDogはバーコードをスキャンし、識別のために画像をキャプチャするためにカメラアクセスが必要です。権限を与えたくない場合は、他の機能を使用できます。</string>
     <string name="camera_access_button">カメラアクセスを許可</string>
+    <string name="loading_more">さらに読み込み中...</string>
 </resources>

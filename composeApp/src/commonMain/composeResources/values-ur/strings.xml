@@ -76,4 +76,5 @@
     <string name="camera_access_title">اس فیچر کے لیے کیمرہ تک رسائی ضروری ہے</string>
     <string name="camera_access_desc">DiscDog کو بارکوڈ سکین کرنے اور شناخت کے لیے تصاویر کھینچنے کے لیے کیمرہ تک رسائی کی ضرورت ہے۔ اگر آپ کوئی اجازت نہیں دینا چاہتے تو آپ دوسرے فیچرز استعمال کر سکتے ہیں۔</string>
     <string name="camera_access_button">کیمرہ تک رسائی کی اجازت دیں</string>
+    <string name="loading_more">مزید لوڈ ہو رہا ہے...</string>
 </resources>

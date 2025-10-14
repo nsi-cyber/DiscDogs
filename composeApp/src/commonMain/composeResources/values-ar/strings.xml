@@ -76,4 +76,5 @@
     <string name="camera_access_title">مطلوب الوصول للكاميرا لهذه الميزة</string>
     <string name="camera_access_desc">DiscDog يحتاج إلى الوصول للكاميرا لمسح الرموز الشريطية والتقاط الصور للتعرف. يمكنك استخدام ميزات أخرى إذا كنت لا تريد منح أي إذن.</string>
     <string name="camera_access_button">السماح بالوصول للكاميرا</string>
+    <string name="loading_more">جاري تحميل المزيد...</string>
 </resources>

@@ -76,4 +76,5 @@
     <string name="camera_access_title">Akses Kamera Diperlukan untuk Ciri Ini</string>
     <string name="camera_access_desc">DiscDog memerlukan akses kamera untuk mengimbas kod bar dan menangkap imej untuk pengenalan. Anda boleh menggunakan ciri lain jika tidak mahu memberikan sebarang kebenaran.</string>
     <string name="camera_access_button">Benarkan Akses Kamera</string>
+    <string name="loading_more">Memuatkan lebih banyak...</string>
 </resources>

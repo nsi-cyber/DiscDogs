@@ -15,7 +15,9 @@ import androidx.compose.ui.unit.dp
 import com.discdogs.app.core.presentation.theme.VETheme
 import discdog.composeapp.generated.resources.Res
 import discdog.composeapp.generated.resources.ic_loading
+import discdog.composeapp.generated.resources.loading_more
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun LoadingMore() {
@@ -36,7 +38,7 @@ fun LoadingMore() {
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = "Loading more...",
+                text = stringResource(Res.string.loading_more),
                 style = VETheme.typography.text14TextColor100W400
             )
         }

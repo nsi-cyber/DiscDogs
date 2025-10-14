@@ -76,4 +76,5 @@
     <string name="camera_access_title">Cameratoegang Vereist voor deze Functie</string>
     <string name="camera_access_desc">DiscDog heeft cameratoegang nodig om streepjescodes te scannen en afbeeldingen vast te leggen voor identificatie. Je kunt andere functies gebruiken als je geen toestemming wilt geven.</string>
     <string name="camera_access_button">Cameratoegang Toestaan</string>
+    <string name="loading_more">Meer laden...</string>
 </resources>

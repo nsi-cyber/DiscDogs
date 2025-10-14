@@ -76,4 +76,5 @@
     <string name="camera_access_title">Acesso à Câmera Necessário para esta Funcionalidade</string>
     <string name="camera_access_desc">DiscDog precisa de acesso à câmera para escanear códigos de barras e capturar imagens para identificação. Você pode usar outras funcionalidades se não quiser dar nenhuma permissão.</string>
     <string name="camera_access_button">Permitir Acesso à Câmera</string>
+    <string name="loading_more">Carregando mais...</string>
 </resources>

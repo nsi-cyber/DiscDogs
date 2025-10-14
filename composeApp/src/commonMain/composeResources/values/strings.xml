@@ -76,4 +76,5 @@
     <string name="camera_access_title">Camera Access Required for this Feature</string>
     <string name="camera_access_desc">DiscDog needs camera access to scan barcodes and capture images to identify. You can use other features if you dont want to give any permission.</string>
     <string name="camera_access_button">Allow Camera Access</string>
+    <string name="loading_more">Loading more...</string>
 </resources>

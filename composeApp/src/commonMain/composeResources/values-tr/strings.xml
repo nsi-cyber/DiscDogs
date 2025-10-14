@@ -76,4 +76,5 @@
     <string name="camera_access_title">Bu Özellik İçin Kamera Erişimi Gerekli</string>
     <string name="camera_access_desc">DiscDog barkod taramak ve tanımlamak için görüntü yakalamak için kamera erişimine ihtiyaç duyar. Herhangi bir izin vermek istemiyorsanız diğer özellikleri kullanabilirsiniz.</string>
     <string name="camera_access_button">Kamera Erişimine İzin Ver</string>
+    <string name="loading_more">Daha fazla yükleniyor...</string>
 </resources>
