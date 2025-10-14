@@ -9,11 +9,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -35,10 +34,14 @@ import androidx.compose.ui.unit.dp
 import com.discdogs.app.core.camera.ScannerController
 import com.discdogs.app.core.camera.ScannerView
 import com.discdogs.app.core.presentation.theme.VETheme
+import com.discdogs.app.presentation.components.VEButton
 import dev.icerock.moko.permissions.PermissionState
 import discdog.composeapp.generated.resources.Res
+import discdog.composeapp.generated.resources.camera_access_desc
+import discdog.composeapp.generated.resources.camera_access_title
 import discdog.composeapp.generated.resources.ic_camera
 import discdog.composeapp.generated.resources.ic_flash
+import discdog.composeapp.generated.resources.image_binoculars
 import discdog.composeapp.generated.resources.scan_barcode
 import discdog.composeapp.generated.resources.scan_cover_image
 import org.jetbrains.compose.resources.painterResource
@@ -118,54 +121,44 @@ fun PermissionRequestView(
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.TopCenter
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(24.dp),
             modifier = Modifier.padding(32.dp)
         ) {
-            // Camera icon with animation
-            Box(
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .background(VETheme.colors.primaryColor600.copy(alpha = 0.1f))
-                    .padding(24.dp),
-                contentAlignment = Alignment.Center
-            ) {
+
                 Icon(
-                    painter = painterResource(Res.drawable.ic_camera),
+                    painter = painterResource(Res.drawable.image_binoculars),
                     contentDescription = null,
-                    modifier = Modifier.size(72.dp),
+                    modifier = Modifier.size(200.dp),
                     tint = VETheme.colors.primaryColor600
                 )
-            }
+
 
             // Title
             Text(
-                text = "Camera Access Required for this Feature",
-                style = VETheme.typography.text24TextColor200W400,
+                text = stringResource(Res.string.camera_access_title),
+                style = VETheme.typography.text18TextColor200W400,
                 color = VETheme.colors.textColor200,
                 textAlign = TextAlign.Center
             )
 
             // Description
             Text(
-                text = "DiscDog needs camera access to scan barcodes and capture images for vinyl record for help you to identify that Vinyl. You can use other features if you dont want to give any permission.",
-                style = VETheme.typography.text16TextColor200W400,
+                text = stringResource(Res.string.camera_access_desc),
+                style = VETheme.typography.text14TextColor200W400,
                 color = VETheme.colors.textColor200,
                 textAlign = TextAlign.Center
             )
 
             // Request permission button
-            Button(
+            VEButton(
                 onClick = onRequestPermission,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = VETheme.colors.primaryColor600
-                ),
+
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             ) {
                 Text(

@@ -108,27 +108,34 @@ fun OnboardingScreen(viewModel: OnboardingViewModel) {
             ) { targetText ->
                 Column(
                     modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Image(
+                        painter = painterResource(state.currentPage.image),
+                        contentDescription = "",
+                        modifier = Modifier.fillMaxWidth(0.7f)
+                    )
                     Text(
+                        modifier = Modifier.fillMaxWidth(),
                         text = targetText.title.asString(),
                         style = VETheme.typography.text26TextColor200W600
                     )
                     Text(
+                        modifier = Modifier.fillMaxWidth(),
+
                         text = targetText.desc.asString(),
                         style = VETheme.typography.text13TextColor100W500
                     )
                 }
             }
 
-            Column(
+
+            VEButton(
                 modifier = Modifier
                     .animateContentSize()
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 24.dp),
-            ) {
-                VEButton(
-                    modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         viewModel.process(OnboardingEvent.OnPageChange(state.currentPageIndex.inc()))
 
@@ -151,7 +158,7 @@ fun OnboardingScreen(viewModel: OnboardingViewModel) {
                         }
                     },
                 )
-            }
+
         }
 
     }
