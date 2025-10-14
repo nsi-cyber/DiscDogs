@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -114,7 +115,7 @@ fun OnboardingScreen(viewModel: OnboardingViewModel) {
                     Image(
                         painter = painterResource(state.currentPage.image),
                         contentDescription = "",
-                        modifier = Modifier.fillMaxWidth(0.7f)
+                        modifier = Modifier.fillMaxWidth().height(300.dp)
                     )
                     Text(
                         modifier = Modifier.fillMaxWidth(),
