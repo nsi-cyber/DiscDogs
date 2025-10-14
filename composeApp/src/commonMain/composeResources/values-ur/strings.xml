@@ -71,4 +71,9 @@
     <string name="removed_from_list">فہرست سے ہٹایا گیا</string>
     <string name="added_to_list">فہرست میں شامل کیا گیا</string>
     <string name="error_default">خرابی ہوئی</string>
+    <string name="master">ماسٹر</string>
+    <string name="release">ریلیز</string>
+    <string name="camera_access_title">اس فیچر کے لیے کیمرہ تک رسائی ضروری ہے</string>
+    <string name="camera_access_desc">DiscDog کو بارکوڈ سکین کرنے اور شناخت کے لیے تصاویر کھینچنے کے لیے کیمرہ تک رسائی کی ضرورت ہے۔ اگر آپ کوئی اجازت نہیں دینا چاہتے تو آپ دوسرے فیچرز استعمال کر سکتے ہیں۔</string>
+    <string name="camera_access_button">کیمرہ تک رسائی کی اجازت دیں</string>
 </resources>

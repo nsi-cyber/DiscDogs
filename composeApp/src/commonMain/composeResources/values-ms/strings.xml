@@ -71,4 +71,9 @@
     <string name="removed_from_list">Dibuang dari senarai</string>
     <string name="added_to_list">Ditambah ke senarai</string>
     <string name="error_default">Ralat berlaku</string>
+    <string name="master">Master</string>
+    <string name="release">Release</string>
+    <string name="camera_access_title">Akses Kamera Diperlukan untuk Ciri Ini</string>
+    <string name="camera_access_desc">DiscDog memerlukan akses kamera untuk mengimbas kod bar dan menangkap imej untuk pengenalan. Anda boleh menggunakan ciri lain jika tidak mahu memberikan sebarang kebenaran.</string>
+    <string name="camera_access_button">Benarkan Akses Kamera</string>
 </resources>

@@ -71,4 +71,9 @@
     <string name="removed_from_list">Đã xóa khỏi danh sách</string>
     <string name="added_to_list">Đã thêm vào danh sách</string>
     <string name="error_default">Đã xảy ra lỗi</string>
+    <string name="master">Master</string>
+    <string name="release">Release</string>
+    <string name="camera_access_title">Cần Quyền Truy Cập Camera cho Tính Năng Này</string>
+    <string name="camera_access_desc">DiscDog cần quyền truy cập camera để quét mã vạch và chụp ảnh để nhận dạng. Bạn có thể sử dụng các tính năng khác nếu không muốn cấp quyền nào.</string>
+    <string name="camera_access_button">Cho Phép Truy Cập Camera</string>
 </resources>

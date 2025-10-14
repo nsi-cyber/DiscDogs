@@ -71,4 +71,9 @@
     <string name="removed_from_list">Listeden çıkarıldı</string>
     <string name="added_to_list">Listeye eklendi</string>
     <string name="error_default">Bir hata oluştu</string>
+    <string name="master">Master</string>
+    <string name="release">Release</string>
+    <string name="camera_access_title">Bu Özellik İçin Kamera Erişimi Gerekli</string>
+    <string name="camera_access_desc">DiscDog barkod taramak ve tanımlamak için görüntü yakalamak için kamera erişimine ihtiyaç duyar. Herhangi bir izin vermek istemiyorsanız diğer özellikleri kullanabilirsiniz.</string>
+    <string name="camera_access_button">Kamera Erişimine İzin Ver</string>
 </resources>

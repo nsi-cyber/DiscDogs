@@ -71,4 +71,9 @@
     <string name="removed_from_list">Удалено из списка</string>
     <string name="added_to_list">Добавлено в список</string>
     <string name="error_default">Произошла ошибка</string>
+    <string name="master">Мастер</string>
+    <string name="release">Релиз</string>
+    <string name="camera_access_title">Требуется доступ к камере для этой функции</string>
+    <string name="camera_access_desc">DiscDog нужен доступ к камере для сканирования штрих-кодов и захвата изображений для идентификации. Вы можете использовать другие функции, если не хотите предоставлять разрешения.</string>
+    <string name="camera_access_button">Разрешить доступ к камере</string>
 </resources>

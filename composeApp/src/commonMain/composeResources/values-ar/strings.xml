@@ -71,4 +71,9 @@
     <string name="removed_from_list">تم إزالته من القائمة</string>
     <string name="added_to_list">تم إضافته إلى القائمة</string>
     <string name="error_default">حدث خطأ</string>
+    <string name="master">ماستر</string>
+    <string name="release">إصدار</string>
+    <string name="camera_access_title">مطلوب الوصول للكاميرا لهذه الميزة</string>
+    <string name="camera_access_desc">DiscDog يحتاج إلى الوصول للكاميرا لمسح الرموز الشريطية والتقاط الصور للتعرف. يمكنك استخدام ميزات أخرى إذا كنت لا تريد منح أي إذن.</string>
+    <string name="camera_access_button">السماح بالوصول للكاميرا</string>
 </resources>

@@ -71,4 +71,9 @@
     <string name="removed_from_list">Verwijderd uit lijst</string>
     <string name="added_to_list">Toegevoegd aan lijst</string>
     <string name="error_default">Er is een fout opgetreden</string>
+    <string name="master">Master</string>
+    <string name="release">Release</string>
+    <string name="camera_access_title">Cameratoegang Vereist voor deze Functie</string>
+    <string name="camera_access_desc">DiscDog heeft cameratoegang nodig om streepjescodes te scannen en afbeeldingen vast te leggen voor identificatie. Je kunt andere functies gebruiken als je geen toestemming wilt geven.</string>
+    <string name="camera_access_button">Cameratoegang Toestaan</string>
 </resources>

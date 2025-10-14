@@ -71,4 +71,9 @@
     <string name="removed_from_list">Dihapus dari daftar</string>
     <string name="added_to_list">Ditambahkan ke daftar</string>
     <string name="error_default">Terjadi kesalahan</string>
+    <string name="master">Master</string>
+    <string name="release">Release</string>
+    <string name="camera_access_title">Akses Kamera Diperlukan untuk Fitur Ini</string>
+    <string name="camera_access_desc">DiscDog memerlukan akses kamera untuk memindai barcode dan menangkap gambar untuk identifikasi. Anda dapat menggunakan fitur lain jika tidak ingin memberikan izin apa pun.</string>
+    <string name="camera_access_button">Izinkan Akses Kamera</string>
 </resources>

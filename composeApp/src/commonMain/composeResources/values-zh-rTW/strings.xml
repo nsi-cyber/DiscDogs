@@ -71,4 +71,9 @@
     <string name="removed_from_list">已從清單中移除</string>
     <string name="added_to_list">已加入清單</string>
     <string name="error_default">發生錯誤</string>
+    <string name="master">母版</string>
+    <string name="release">發行版</string>
+    <string name="camera_access_title">此功能需要相機權限</string>
+    <string name="camera_access_desc">DiscDog需要相機權限來掃描條碼和擷取影像進行識別。如果您不想授予任何權限，可以使用其他功能。</string>
+    <string name="camera_access_button">允許相機存取</string>
 </resources>

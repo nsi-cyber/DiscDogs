@@ -71,4 +71,9 @@
     <string name="removed_from_list">Removido da lista</string>
     <string name="added_to_list">Adicionado à lista</string>
     <string name="error_default">Ocorreu um erro</string>
+    <string name="master">Master</string>
+    <string name="release">Release</string>
+    <string name="camera_access_title">Acesso à Câmera Necessário para esta Funcionalidade</string>
+    <string name="camera_access_desc">DiscDog precisa de acesso à câmera para escanear códigos de barras e capturar imagens para identificação. Você pode usar outras funcionalidades se não quiser dar nenhuma permissão.</string>
+    <string name="camera_access_button">Permitir Acesso à Câmera</string>
 </resources>
