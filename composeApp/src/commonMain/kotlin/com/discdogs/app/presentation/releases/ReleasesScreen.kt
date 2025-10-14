@@ -89,7 +89,7 @@ fun ReleasesScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .padding(top = 42.dp, bottom = 16.dp),
+                    .padding(top = 8.dp, bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
