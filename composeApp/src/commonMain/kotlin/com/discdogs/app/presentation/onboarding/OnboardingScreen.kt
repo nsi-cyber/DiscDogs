@@ -11,7 +11,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.with
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -57,86 +57,86 @@ fun OnboardingScreen(viewModel: OnboardingViewModel) {
     )
 
 
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(VETheme.colors.backgroundColorPrimary),
-    ) {
-        Box(modifier = Modifier.drawWithContent {
-            drawContent() // Önce resmi çiz
-            drawRect(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Transparent,
-                        Color.Black.copy(alpha = 0.6f),
-                        Color.Black.copy(alpha = 1f),
-
-                        ),
-                    startY = 0f,
-                    endY = size.height
-                )
-            )
-        }) {
-            Image(
-                painter = painterResource(Res.drawable.background_vinyl),
-                contentDescription = "",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .offset(
-                        x = (500 / 2.2).dp,
-                        y = -(1000 / 2.2).dp
-                    )
-                    .scale(2.6f)
-                    .rotate(rotation),
-
-                )
-        }
-
-
-        Column(
+    Scaffold(containerColor = VETheme.colors.backgroundColorPrimary) {
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-        ) {
-            AnimatedContent(
-                targetState = state.currentPage,
-                transitionSpec = {
-                    slideInHorizontally { fullWidth -> fullWidth } + fadeIn() with
-                            slideOutHorizontally { fullWidth -> -fullWidth } + fadeOut()
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) { targetText ->
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Image(
-                        painter = painterResource(state.currentPage.image),
-                        contentDescription = "",
-                        modifier = Modifier.fillMaxWidth().height(300.dp)
-                    )
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = targetText.title.asString(),
-                        style = VETheme.typography.text26TextColor200W600
-                    )
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
+                .fillMaxSize().padding(it)
 
-                        text = targetText.desc.asString(),
-                        style = VETheme.typography.text13TextColor100W500
+        ) {
+            Box(modifier = Modifier.drawWithContent {
+                drawContent() // Önce resmi çiz
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            Color.Black.copy(alpha = 0.6f),
+                            Color.Black.copy(alpha = 1f),
+
+                            ),
+                        startY = 0f,
+                        endY = size.height
                     )
-                }
+                )
+            }) {
+                Image(
+                    painter = painterResource(Res.drawable.background_vinyl),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .offset(
+                            x = (500 / 2.2).dp,
+                            y = -(1000 / 2.2).dp
+                        )
+                        .scale(2.6f)
+                        .rotate(rotation),
+
+                    )
             }
 
 
-            VEButton(
+            Column(
                 modifier = Modifier
-                    .animateContentSize()
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 24.dp),
+                    .align(Alignment.BottomCenter)
+            ) {
+                AnimatedContent(
+                    targetState = state.currentPage,
+                    transitionSpec = {
+                        slideInHorizontally { fullWidth -> fullWidth } + fadeIn() with
+                                slideOutHorizontally { fullWidth -> -fullWidth } + fadeOut()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) { targetText ->
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            painter = painterResource(state.currentPage.image),
+                            contentDescription = "",
+                            modifier = Modifier.fillMaxWidth().height(300.dp)
+                        )
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = targetText.title.asString(),
+                            style = VETheme.typography.text26TextColor200W600
+                        )
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+
+                            text = targetText.desc.asString(),
+                            style = VETheme.typography.text13TextColor100W500
+                        )
+                    }
+                }
+
+
+                VEButton(
+                    modifier = Modifier
+                        .animateContentSize()
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 24.dp),
                     onClick = {
                         viewModel.process(OnboardingEvent.OnPageChange(state.currentPageIndex.inc()))
 
@@ -160,8 +160,10 @@ fun OnboardingScreen(viewModel: OnboardingViewModel) {
                     },
                 )
 
-        }
+            }
 
+        }
     }
+
 }
 
