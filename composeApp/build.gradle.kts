@@ -110,7 +110,7 @@ android {
         applicationId = "com.nsicyber.vinylscan"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 36
+        versionCode = 37
         versionName = "4.1"
 
         // Add API keys to BuildConfig
