@@ -48,15 +48,15 @@ class LibraryViewModel(
             }
 
             LibraryEvent.OnCreateNewList -> {
-                _state.update { it.copy(showCreateListDialog = true) }
+                _state.update { it.copy(showCreateListBottomSheet = true) }
             }
 
             is LibraryEvent.OnCreateList -> {
                 createList(event.name)
             }
 
-            LibraryEvent.OnDismissCreateListDialog -> {
-                _state.update { it.copy(showCreateListDialog = false) }
+            LibraryEvent.OnDismissCreateListBottomSheet -> {
+                _state.update { it.copy(showCreateListBottomSheet = false) }
             }
 
             is LibraryEvent.OnDeleteList -> {
@@ -94,7 +94,7 @@ class LibraryViewModel(
         viewModelScope.launch {
             try {
                 libraryRepository.createList(name)
-                _state.update { it.copy(showCreateListDialog = false) }
+                _state.update { it.copy(showCreateListBottomSheet = false) }
             } catch (e: Exception) {
             }
         }

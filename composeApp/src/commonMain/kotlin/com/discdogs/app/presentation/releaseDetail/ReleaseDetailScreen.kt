@@ -27,15 +27,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,15 +61,12 @@ import com.discdogs.app.presentation.components.PagerWithSteppable
 import com.discdogs.app.presentation.components.PlayPreviewView
 import com.discdogs.app.presentation.components.TrackItemView
 import com.discdogs.app.presentation.components.bottomsheets.BarcodeBottomSheet
+import com.discdogs.app.presentation.components.bottomsheets.CreateListBottomSheet
 import com.discdogs.app.presentation.components.bottomsheets.ResultDetailMoreBottomSheet
 import com.discdogs.app.presentation.components.bottomsheets.SaveToListBottomSheet
 import com.discdogs.app.presentation.model.PageState
 import com.discdogs.app.presentation.model.VinylDetailUiModel
 import discdog.composeapp.generated.resources.Res
-import discdog.composeapp.generated.resources.cancel
-import discdog.composeapp.generated.resources.create
-import discdog.composeapp.generated.resources.create_list_placeholder
-import discdog.composeapp.generated.resources.create_list_title
 import discdog.composeapp.generated.resources.disc_count
 import discdog.composeapp.generated.resources.formats
 import discdog.composeapp.generated.resources.genres
@@ -100,10 +92,10 @@ fun ReleaseDetailScreen(
 ) {
     val moreBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val barcodeBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val createListBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val state by viewModel.state.collectAsState()
     val scope = rememberCoroutineScope()
-    var listName by remember { mutableStateOf("") }
 
 
     LaunchedEffect(Unit) {
@@ -415,19 +407,18 @@ fun ReleaseDetailScreen(
             onCreateNewList = { viewModel.process(ReleaseDetailEvent.OnCreateNewList) }
         )
     }
-    // Create List Dialog
-    if (state.showCreateListDialog) {
-        CreateListDialog(
-            listName = listName,
-            onListNameChange = { listName = it },
-            onConfirm = {
-                if (listName.isNotBlank()) {
-                    viewModel.process(ReleaseDetailEvent.OnCreateList(listName))
-                }
-            },
+    // Create List Bottom Sheet
+    if (state.showCreateListBottomSheet) {
+        CreateListBottomSheet(
+            sheetState = createListBottomSheetState,
             onDismiss = {
-                viewModel.process(ReleaseDetailEvent.OnDismissCreateListDialog)
-                listName = ""
+                scope.launch {
+                    createListBottomSheetState.hide()
+                }
+                viewModel.process(ReleaseDetailEvent.OnDismissCreateListBottomSheet)
+            },
+            onConfirm = { listName ->
+                viewModel.process(ReleaseDetailEvent.OnCreateList(listName))
             }
         )
     }
@@ -740,52 +731,4 @@ private fun ReleaseInfoDetailView(data: VinylDetailUiModel?) {
 
 
 
-@Composable
-fun CreateListDialog(
-    listName: String,
-    onListNameChange: (String) -> Unit,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(Res.string.create_list_title)) },
-        text = {
-            TextField(
-                value = listName,
-                onValueChange = onListNameChange,
-                placeholder = { Text(stringResource(Res.string.create_list_placeholder)) },
-                singleLine = true,
-                colors = TextFieldDefaults.colors()
-                    .copy(focusedIndicatorColor = VETheme.colors.primaryColor100)
-            )
-        },
-        confirmButton = {
-            Button(
-                onClick = onConfirm,
-                enabled = listName.isNotBlank(),
-                colors = ButtonDefaults.buttonColors().copy(
-                    containerColor = VETheme.colors.primaryColor500
-                )
-            ) {
-                Text(
-                    stringResource(Res.string.create),
-                    style = VETheme.typography.text14TextColor200W600
-                )
-            }
-        },
-        dismissButton = {
-            Button(
-                onClick = onDismiss, colors = ButtonDefaults.buttonColors().copy(
-                    containerColor = VETheme.colors.primaryColor950
-                )
-            ) {
-                Text(
-                    stringResource(Res.string.cancel),
-                    style = VETheme.typography.text14TextColor200W600
-                )
-            }
-        }
-    )
-}
 

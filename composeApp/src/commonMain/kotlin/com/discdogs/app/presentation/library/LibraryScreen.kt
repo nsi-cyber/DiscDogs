@@ -17,11 +17,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -30,14 +28,11 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,13 +42,10 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.discdogs.app.core.presentation.theme.VETheme
 import com.discdogs.app.data.database.model.ReleaseList
+import com.discdogs.app.presentation.components.bottomsheets.CreateListBottomSheet
 import com.discdogs.app.presentation.listdetail.EmptyListState
 import com.discdogs.app.presentation.model.VinylResultUiModel
 import discdog.composeapp.generated.resources.Res
-import discdog.composeapp.generated.resources.cancel
-import discdog.composeapp.generated.resources.create
-import discdog.composeapp.generated.resources.create_list_placeholder
-import discdog.composeapp.generated.resources.create_list_title
 import discdog.composeapp.generated.resources.create_new_list
 import discdog.composeapp.generated.resources.favorites
 import discdog.composeapp.generated.resources.ic_chevron_left
@@ -62,15 +54,18 @@ import discdog.composeapp.generated.resources.ic_loading
 import discdog.composeapp.generated.resources.ic_plus
 import discdog.composeapp.generated.resources.library
 import discdog.composeapp.generated.resources.lists
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryScreen(
     viewModel: LibraryViewModel
 ) {
     val state by viewModel.state.collectAsState()
-    var listName by remember { mutableStateOf("") }
+    val createListBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         containerColor = VETheme.colors.backgroundColorPrimary,
@@ -180,17 +175,19 @@ fun LibraryScreen(
     }
 
 
-    // Create List Dialog
-    if (state.showCreateListDialog) {
-        CreateListDialog(
-            listName = listName,
-            onListNameChange = { listName = it },
-            onConfirm = {
-                if (listName.isNotBlank()) {
-                    viewModel.process(LibraryEvent.OnCreateList(listName))
+    // Create List Bottom Sheet
+    if (state.showCreateListBottomSheet) {
+        CreateListBottomSheet(
+            sheetState = createListBottomSheetState,
+            onDismiss = {
+                scope.launch {
+                    createListBottomSheetState.hide()
                 }
+                viewModel.process(LibraryEvent.OnDismissCreateListBottomSheet)
             },
-            onDismiss = { viewModel.process(LibraryEvent.OnDismissCreateListDialog) }
+            onConfirm = { listName ->
+                viewModel.process(LibraryEvent.OnCreateList(listName))
+            }
         )
     }
 }
@@ -437,52 +434,4 @@ private fun ListItemView(
     }
 }
 
-@Composable
-fun CreateListDialog(
-    listName: String,
-    onListNameChange: (String) -> Unit,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(Res.string.create_list_title)) },
-        text = {
-            TextField(
-                value = listName,
-                onValueChange = onListNameChange,
-                placeholder = { Text(stringResource(Res.string.create_list_placeholder)) },
-                singleLine = true,
-                colors = TextFieldDefaults.colors()
-                    .copy(focusedIndicatorColor = VETheme.colors.primaryColor100)
-            )
-        },
-        confirmButton = {
-            Button(
-                onClick = onConfirm,
-                enabled = listName.isNotBlank(),
-                colors = ButtonDefaults.buttonColors().copy(
-                    containerColor = VETheme.colors.primaryColor500
-                )
-            ) {
-                Text(
-                    stringResource(Res.string.create),
-                    style = VETheme.typography.text14TextColor200W600
-                )
-            }
-        },
-        dismissButton = {
-            Button(
-                onClick = onDismiss, colors = ButtonDefaults.buttonColors().copy(
-                    containerColor = VETheme.colors.primaryColor950
-                )
-            ) {
-                Text(
-                    stringResource(Res.string.cancel),
-                    style = VETheme.typography.text14TextColor200W600
-                )
-            }
-        }
-    )
-}
 

@@ -191,7 +191,7 @@ class ReleaseDetailViewModel(
 
                     _state.update {
                         it.copy(
-                            showCreateListDialog = false,
+                            showCreateListBottomSheet = false,
                             saveToListSheetVisible = false
                         )
                     }
@@ -206,7 +206,7 @@ class ReleaseDetailViewModel(
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
-                            showCreateListDialog = true,
+                            showCreateListBottomSheet = true,
                         )
                     }
                 }
@@ -216,11 +216,11 @@ class ReleaseDetailViewModel(
                 createList(event.name)
             }
 
-            ReleaseDetailEvent.OnDismissCreateListDialog -> {
+            ReleaseDetailEvent.OnDismissCreateListBottomSheet -> {
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
-                            showCreateListDialog = false,
+                            showCreateListBottomSheet = false,
                         )
                     }
                 }
@@ -271,7 +271,7 @@ class ReleaseDetailViewModel(
 
             _state.update {
                 it.copy(
-                    showCreateListDialog = false,
+                    showCreateListBottomSheet = false,
                     saveToListSheetVisible = false
                 )
             }
@@ -301,7 +301,7 @@ class ReleaseDetailViewModel(
 
                 _state.update {
                     it.copy(
-                        showCreateListDialog = false,
+                        showCreateListBottomSheet = false,
                         saveToListSheetVisible = false
                     )
                 }
@@ -427,7 +427,7 @@ class ReleaseDetailViewModel(
 
             _state.update {
                 it.copy(
-                    showCreateListDialog = false,
+                    showCreateListBottomSheet = false,
                     saveToListSheetVisible = false
                 )
             }

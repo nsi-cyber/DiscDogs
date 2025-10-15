@@ -111,7 +111,7 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 35
-        versionName = "4.0"
+        versionName = "4.1"
 
         // Add API keys to BuildConfig
         buildConfigField(

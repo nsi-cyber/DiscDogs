@@ -19,7 +19,7 @@ data class ReleaseDetailState(
 
     val saveToListSheetVisible: Boolean = false,
     val lists: List<ReleaseList>? = null,
-    val showCreateListDialog: Boolean = false,
+    val showCreateListBottomSheet: Boolean = false,
     val releaseInLists: Set<Long> = emptySet()
 )
 
@@ -58,5 +58,5 @@ sealed class ReleaseDetailEvent {
     class OnAddToList(val listId: Long) : ReleaseDetailEvent()
     object OnCreateNewList : ReleaseDetailEvent()
     class OnCreateList(val name: String) : ReleaseDetailEvent()
-    object OnDismissCreateListDialog : ReleaseDetailEvent()
+    object OnDismissCreateListBottomSheet : ReleaseDetailEvent()
 }

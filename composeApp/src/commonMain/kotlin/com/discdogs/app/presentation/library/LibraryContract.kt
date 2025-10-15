@@ -8,7 +8,7 @@ data class LibraryState(
     val favoriteReleases: List<VinylResultUiModel>? = null,
     val selectedTab: LibraryTab = LibraryTab.FAVORITES,
     val lists: List<ReleaseList>? = null,
-    val showCreateListDialog: Boolean = false
+    val showCreateListBottomSheet: Boolean = false
 )
 
 enum class LibraryTab {
@@ -26,6 +26,6 @@ sealed class LibraryEvent {
     class OnListSelected(val listId: Long) : LibraryEvent()
     object OnCreateNewList : LibraryEvent()
     class OnCreateList(val name: String) : LibraryEvent()
-    object OnDismissCreateListDialog : LibraryEvent()
+    object OnDismissCreateListBottomSheet : LibraryEvent()
     class OnDeleteList(val listId: Long) : LibraryEvent()
 }
