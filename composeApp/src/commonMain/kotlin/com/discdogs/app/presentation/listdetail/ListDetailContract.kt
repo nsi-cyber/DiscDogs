@@ -17,7 +17,6 @@ sealed interface ListDetailEffect {
 
 sealed class ListDetailEvent {
     object OnBackClicked : ListDetailEvent()
-    class OnLoadList(val listId: Long) : ListDetailEvent()
     class OnReleaseClick(val release: VinylResultUiModel) : ListDetailEvent()
     class OnRemoveRelease(val releaseId: Int) : ListDetailEvent()
 }

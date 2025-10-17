@@ -1,6 +1,9 @@
 package com.discdogs.app.presentation.listdetail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.discdogs.app.app.Route
 import com.discdogs.app.core.presentation.BaseViewModel
 import com.discdogs.app.data.repository.LibraryRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,7 +16,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ListDetailViewModel(
-    private val libraryRepository: LibraryRepository
+    private val libraryRepository: LibraryRepository,
+    private val savedStateHandle: SavedStateHandle
+
 ) : BaseViewModel<ListDetailState, ListDetailEffect, ListDetailEvent, ListDetailNavigator>() {
 
     private val _state = MutableStateFlow(ListDetailState())
@@ -22,11 +27,16 @@ class ListDetailViewModel(
     private val _effect = MutableSharedFlow<ListDetailEffect>()
     override val effect: SharedFlow<ListDetailEffect> = _effect
 
+
+    init {
+        loadList(savedStateHandle.toRoute<Route.FavoriteList>().id)
+
+    }
+
+
     override fun process(event: ListDetailEvent) {
         when (event) {
-            is ListDetailEvent.OnLoadList -> {
-                loadList(event.listId)
-            }
+
 
             is ListDetailEvent.OnReleaseClick -> {
                 navigator?.navigateToReleaseDetail(event.release.id, event.release.thumb)
